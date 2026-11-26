@@ -1,0 +1,21 @@
+{
+  "name": "rapidnative-app-factory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal AI Cross-Platform Mobile App Factory powered by Antigravity + Kie.ai API + Expo",
+  "scripts": {
+    "app:new": "tsx scripts/create-app.ts",
+    "app:verify": "tsx scripts/verify-app.ts",
+    "app:web": "tsx scripts/run-app.ts web",
+    "app:phone": "tsx scripts/run-app.ts phone",
+    "app:build": "tsx scripts/run-app.ts build",
+    "assets:gen": "tsx scripts/kie-assets.ts batch",
+    "assets:single": "tsx scripts/kie-assets.ts single",
+    "typecheck:scripts": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.0"
+  }
+}

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Expo / Build outputs
+.expo/
+.expo-verify-web/
+dist/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,29 @@
+{
+  "defaultModel": "gpt-image-2-6/flare-text-to-image",
+  "stylePrefix": "Cohesive modern mobile product art direction, soft natural studio lighting, refined tactile surfaces, clean negative space, no text or watermarks",
+  "assets": [
+    {
+      "key": "appIcon",
+      "filename": "app-icon.png",
+      "prompt": "Minimalist modern iOS app icon, vibrant gradient background, clean geometric emblem in center, flat vector polish, 1024x1024",
+      "aspectRatio": "1:1",
+      "outputFormat": "png",
+      "resolution": "1K",
+      "quality": "high",
+      "copyTo": [
+        "assets/images/icon.png",
+        "assets/images/splash-icon.png",
+        "assets/images/android-icon-foreground.png"
+      ]
+    },
+    {
+      "key": "heroBanner",
+      "filename": "hero-banner.png",
+      "prompt": "Editorial mobile app hero illustration matching the brand color palette, atmospheric depth, centered focal subject",
+      "aspectRatio": "16:9",
+      "outputFormat": "png",
+      "resolution": "1K",
+      "quality": "medium"
+    }
+  ]
+}
