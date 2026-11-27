@@ -7,6 +7,7 @@ Turn `PRD.md` and `DESIGN.md` into concrete, structured screen-by-screen archite
 - `apps/<slug>/.factory/PRD.md`
 - `apps/<slug>/.factory/DESIGN.md`
 - `knowledge/component-catalog.json`
+- `knowledge/design-references/PATTERNS.md` & `index.json` (for flow/navigation/state inspiration)
 
 ## Deliverable
 `apps/<slug>/.factory/SCREENS.json` (must validate against `schemas/screens.schema.ts`).

@@ -1,0 +1,2561 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-11-27T06:19:26.404Z",
+  "sourceDirectory": "app uis",
+  "summary": {
+    "looseImages": 134,
+    "zipArchives": 39,
+    "archivedScreens": 376,
+    "totalIndexedScreens": 510,
+    "categories": {
+      "bottom-tab navigation": {
+        "images": 10,
+        "archives": 0,
+        "archiveScreens": 0
+      },
+      "designs": {
+        "images": 77,
+        "archives": 0,
+        "archiveScreens": 0
+      },
+      "LanguageLeaningApps": {
+        "images": 3,
+        "archives": 6,
+        "archiveScreens": 142
+      },
+      "LMS": {
+        "images": 31,
+        "archives": 16,
+        "archiveScreens": 118
+      },
+      "POS": {
+        "images": 0,
+        "archives": 1,
+        "archiveScreens": 3
+      },
+      "SocialMedia": {
+        "images": 7,
+        "archives": 15,
+        "archiveScreens": 104
+      },
+      "general": {
+        "images": 0,
+        "archives": 1,
+        "archiveScreens": 9
+      },
+      "weather app": {
+        "images": 1,
+        "archives": 0,
+        "archiveScreens": 0
+      },
+      "widgets": {
+        "images": 5,
+        "archives": 0,
+        "archiveScreens": 0
+      }
+    }
+  },
+  "images": [
+    {
+      "path": "app uis/bottom-tab navigation/BNB-01.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-01.png",
+      "format": "png",
+      "width": 2046,
+      "height": 1534,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-16.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-16.png",
+      "format": "png",
+      "width": 1962,
+      "height": 1144,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-22.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-22.png",
+      "format": "png",
+      "width": 2202,
+      "height": 1138,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-27.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-27.png",
+      "format": "png",
+      "width": 2104,
+      "height": 1112,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-31.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-31.png",
+      "format": "png",
+      "width": 1798,
+      "height": 908,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-36.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-36.png",
+      "format": "png",
+      "width": 1926,
+      "height": 904,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-37.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-37.png",
+      "format": "png",
+      "width": 2076,
+      "height": 1434,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-41.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-41.png",
+      "format": "png",
+      "width": 1992,
+      "height": 1138,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/BNB-46.png",
+      "category": "bottom-tab navigation",
+      "filename": "BNB-46.png",
+      "format": "png",
+      "width": 1928,
+      "height": 1138,
+      "tags": [
+        "navigation-tabbar"
+      ]
+    },
+    {
+      "path": "app uis/bottom-tab navigation/Home screen.png",
+      "category": "bottom-tab navigation",
+      "filename": "Home screen.png",
+      "format": "png",
+      "width": 1284,
+      "height": 2778,
+      "tags": [
+        "navigation-tabbar",
+        "home-dashboard"
+      ]
+    },
+    {
+      "path": "app uis/designs/1c450791cd0a9c6c2f8fd824014e8103.webp",
+      "category": "designs",
+      "filename": "1c450791cd0a9c6c2f8fd824014e8103.webp",
+      "format": "webp",
+      "width": 752,
+      "height": 564,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/2c11a62bc44e5ca51aa75d645c6a186e.webp",
+      "category": "designs",
+      "filename": "2c11a62bc44e5ca51aa75d645c6a186e.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/32abbba69b965ce332270e51aa4277e1.webp",
+      "category": "designs",
+      "filename": "32abbba69b965ce332270e51aa4277e1.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/385e4b29ce8dc75c49af64aa36dd0aad.webp",
+      "category": "designs",
+      "filename": "385e4b29ce8dc75c49af64aa36dd0aad.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/3b0d3092904704117d1061a2f59abfde.webp",
+      "category": "designs",
+      "filename": "3b0d3092904704117d1061a2f59abfde.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/40b75e88c945c8d41c2a95aa5a100a90.webp",
+      "category": "designs",
+      "filename": "40b75e88c945c8d41c2a95aa5a100a90.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/46388d2f57556a363510a77a07f59f20.webp",
+      "category": "designs",
+      "filename": "46388d2f57556a363510a77a07f59f20.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/4c219bb1a45a161da97b5fcb6c9adfaa.webp",
+      "category": "designs",
+      "filename": "4c219bb1a45a161da97b5fcb6c9adfaa.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/4effb7150e6e05c2c6dfc0d4fdc0f00a.webp",
+      "category": "designs",
+      "filename": "4effb7150e6e05c2c6dfc0d4fdc0f00a.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/52e4b17bda2d26625a8021392a859e2c.webp",
+      "category": "designs",
+      "filename": "52e4b17bda2d26625a8021392a859e2c.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/53530b48161b83725eb91e76c2ab6d49.webp",
+      "category": "designs",
+      "filename": "53530b48161b83725eb91e76c2ab6d49.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/613830b27c9a74e1b659d12a017b2c77.webp",
+      "category": "designs",
+      "filename": "613830b27c9a74e1b659d12a017b2c77.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/7565e847723da47f4c1164484ebba8fe.webp",
+      "category": "designs",
+      "filename": "7565e847723da47f4c1164484ebba8fe.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/7ace84faa925219339cf8562b07e618f.webp",
+      "category": "designs",
+      "filename": "7ace84faa925219339cf8562b07e618f.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/86d82873d5b2e880715d27af4d9d68ab.webp",
+      "category": "designs",
+      "filename": "86d82873d5b2e880715d27af4d9d68ab.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/880bf0a5cff5d8f80e9e6acc511ffa1f.webp",
+      "category": "designs",
+      "filename": "880bf0a5cff5d8f80e9e6acc511ffa1f.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/9a1527db5baa6674e2db337e46a3e151.webp",
+      "category": "designs",
+      "filename": "9a1527db5baa6674e2db337e46a3e151.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/a295ac8c4b7a871f59e6d62b86c73597.webp",
+      "category": "designs",
+      "filename": "a295ac8c4b7a871f59e6d62b86c73597.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/a41105e0aaa4f6b83292a46a3266c685.webp",
+      "category": "designs",
+      "filename": "a41105e0aaa4f6b83292a46a3266c685.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/ad banner illustration - Google Search.jfif",
+      "category": "designs",
+      "filename": "ad banner illustration - Google Search.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": [
+        "discovery-search"
+      ]
+    },
+    {
+      "path": "app uis/designs/AI Learning Assistant – Education Mobile App UI_UX Design by SK RADWOAN on Dribbble.jfif",
+      "category": "designs",
+      "filename": "AI Learning Assistant – Education Mobile App UI_UX Design by SK RADWOAN on Dribbble.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Alzea Arafat (@helloalzea) on X.jfif",
+      "category": "designs",
+      "filename": "Alzea Arafat (@helloalzea) on X.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1308,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/App Interface Inspiration.jfif",
+      "category": "designs",
+      "filename": "App Interface Inspiration.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 920,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/b04ab0966e26ca4ed1f4cb440da2e416.webp",
+      "category": "designs",
+      "filename": "b04ab0966e26ca4ed1f4cb440da2e416.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Banki_ru 3D style - Anton Fleming.jfif",
+      "category": "designs",
+      "filename": "Banki_ru 3D style - Anton Fleming.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Betterfly_ Turning Everyday Habits into Global Impact.jfif",
+      "category": "designs",
+      "filename": "Betterfly_ Turning Everyday Habits into Global Impact.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 920,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/c19134dc7665584de3f6917610fcb111.webp",
+      "category": "designs",
+      "filename": "c19134dc7665584de3f6917610fcb111.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/c2b057e5e090fb9400a204019b5166b2.webp",
+      "category": "designs",
+      "filename": "c2b057e5e090fb9400a204019b5166b2.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Career Insight Page – Mentorship App Figma UI.jfif",
+      "category": "designs",
+      "filename": "Career Insight Page – Mentorship App Figma UI.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1104,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Clean DSA Learning App UI Design.jfif",
+      "category": "designs",
+      "filename": "Clean DSA Learning App UI Design.jfif",
+      "format": "jpg",
+      "width": 735,
+      "height": 919,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Doctor Appointment App UI Design_ Find Doctors & Book Slots.jfif",
+      "category": "designs",
+      "filename": "Doctor Appointment App UI Design_ Find Doctors & Book Slots.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1104,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Doctor Booking App UI design.jfif",
+      "category": "designs",
+      "filename": "Doctor Booking App UI design.jfif",
+      "format": "jpg",
+      "width": 735,
+      "height": 919,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (1).jfif",
+      "category": "designs",
+      "filename": "download (1).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1308,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (10).jfif",
+      "category": "designs",
+      "filename": "download (10).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1472,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (11).jfif",
+      "category": "designs",
+      "filename": "download (11).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 920,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (12).jfif",
+      "category": "designs",
+      "filename": "download (12).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (13).jfif",
+      "category": "designs",
+      "filename": "download (13).jfif",
+      "format": "jpg",
+      "width": 702,
+      "height": 1249,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (2).jfif",
+      "category": "designs",
+      "filename": "download (2).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 966,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (3).jfif",
+      "category": "designs",
+      "filename": "download (3).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (4).jfif",
+      "category": "designs",
+      "filename": "download (4).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 857,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (5).jfif",
+      "category": "designs",
+      "filename": "download (5).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (6).jfif",
+      "category": "designs",
+      "filename": "download (6).jfif",
+      "format": "jpg",
+      "width": 735,
+      "height": 527,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (7).jfif",
+      "category": "designs",
+      "filename": "download (7).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1472,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (8).jfif",
+      "category": "designs",
+      "filename": "download (8).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1472,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download (9).jfif",
+      "category": "designs",
+      "filename": "download (9).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/download.jfif",
+      "category": "designs",
+      "filename": "download.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 607,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Duolingo-Inspired Gamified Language Learning App ___.jfif",
+      "category": "designs",
+      "filename": "Duolingo-Inspired Gamified Language Learning App ___.jfif",
+      "format": "jpg",
+      "width": 236,
+      "height": 177,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/e0ac7c5f381d5972fd790649eadcb24a.webp",
+      "category": "designs",
+      "filename": "e0ac7c5f381d5972fd790649eadcb24a.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/e17f7148a9e1e429932554203158e0d2.webp",
+      "category": "designs",
+      "filename": "e17f7148a9e1e429932554203158e0d2.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/e47d23088ba61518fb29f2edcd0fc5ed.webp",
+      "category": "designs",
+      "filename": "e47d23088ba61518fb29f2edcd0fc5ed.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/e4fc77caf2fc4a99ccd9e3c6a8fb51ca.webp",
+      "category": "designs",
+      "filename": "e4fc77caf2fc4a99ccd9e3c6a8fb51ca.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/f8d4959c5a938da6766f47cda7fc42f1.webp",
+      "category": "designs",
+      "filename": "f8d4959c5a938da6766f47cda7fc42f1.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/ffc0d3065c4d3ffcdbe2242bd8dbb782.webp",
+      "category": "designs",
+      "filename": "ffc0d3065c4d3ffcdbe2242bd8dbb782.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Food Scanner App UI – Smart Health Mobile App Design.jfif",
+      "category": "designs",
+      "filename": "Food Scanner App UI – Smart Health Mobile App Design.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 896,
+      "tags": [
+        "commerce-pos"
+      ]
+    },
+    {
+      "path": "app uis/designs/Gaming Leaderboard UI – Dark Gradient Concept_.jfif",
+      "category": "designs",
+      "filename": "Gaming Leaderboard UI – Dark Gradient Concept_.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 920,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/designs/hadal cta.jfif",
+      "category": "designs",
+      "filename": "hadal cta.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1307,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Leaderboard (Daily UI 19).jfif",
+      "category": "designs",
+      "filename": "Leaderboard (Daily UI 19).jfif",
+      "format": "jpg",
+      "width": 735,
+      "height": 551,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/designs/Leaderboard and Rewards.jfif",
+      "category": "designs",
+      "filename": "Leaderboard and Rewards.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/designs/Modern Mobile App UI – Minimalist Glassmorphism Dashboard.jfif",
+      "category": "designs",
+      "filename": "Modern Mobile App UI – Minimalist Glassmorphism Dashboard.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1104,
+      "tags": [
+        "home-dashboard"
+      ]
+    },
+    {
+      "path": "app uis/designs/Mood Tracker App UI.jfif",
+      "category": "designs",
+      "filename": "Mood Tracker App UI.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Movesync 🏋️.jfif",
+      "category": "designs",
+      "filename": "Movesync 🏋️.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 920,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Orely.jfif",
+      "category": "designs",
+      "filename": "Orely.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/original-3214bdb0b49a0527d805c4e7c255abb9.webp",
+      "category": "designs",
+      "filename": "original-3214bdb0b49a0527d805c4e7c255abb9.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/original-712d41c298414f34ba92093a38738fbb.webp",
+      "category": "designs",
+      "filename": "original-712d41c298414f34ba92093a38738fbb.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/original-af87e6387215e17c4def7e17d8560e18.webp",
+      "category": "designs",
+      "filename": "original-af87e6387215e17c4def7e17d8560e18.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/original-d0ba06fea32bddaef418833f23ceacc8.webp",
+      "category": "designs",
+      "filename": "original-d0ba06fea32bddaef418833f23ceacc8.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/original-d693133fa15e91f34c856a355b5d1f99.webp",
+      "category": "designs",
+      "filename": "original-d693133fa15e91f34c856a355b5d1f99.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/original-d90ac7d6ef0a1385d53f247a23ee16f4.webp",
+      "category": "designs",
+      "filename": "original-d90ac7d6ef0a1385d53f247a23ee16f4.webp",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/ozon bussines banners.jfif",
+      "category": "designs",
+      "filename": "ozon bussines banners.jfif",
+      "format": "jpg",
+      "width": 735,
+      "height": 1027,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Pet Social Media App UI.jfif",
+      "category": "designs",
+      "filename": "Pet Social Media App UI.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 753,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/designs/Pets _ inst_ @krisstinadiz.jfif",
+      "category": "designs",
+      "filename": "Pets _ inst_ @krisstinadiz.jfif",
+      "format": "jpg",
+      "width": 735,
+      "height": 702,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/please buddy me on airlearn.jfif",
+      "category": "designs",
+      "filename": "please buddy me on airlearn.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 907,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Promos and offers cards UI design _ Shipping app.jfif",
+      "category": "designs",
+      "filename": "Promos and offers cards UI design _ Shipping app.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/Quizly - Learning Mobile App_📝 Designed by_ @vektora_studio __👉 Follow @uiuxbunker for more UI inspiration_ and Daily Tips_⠀⠀⠀⠀⠀⠀_Use #uiuxbunker and tag us to be featured 😉 ⠀__⠀_#ui #ux #appd (1).jfif",
+      "category": "designs",
+      "filename": "Quizly - Learning Mobile App_📝 Designed by_ @vektora_studio __👉 Follow @uiuxbunker for more UI inspiration_ and Daily Tips_⠀⠀⠀⠀⠀⠀_Use #uiuxbunker and tag us to be featured 😉 ⠀__⠀_#ui #ux #appd (1).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 981,
+      "tags": [
+        "learning-exercise"
+      ]
+    },
+    {
+      "path": "app uis/designs/Quizly - Learning Mobile App_📝 Designed by_ @vektora_studio __👉 Follow @uiuxbunker for more UI inspiration_ and Daily Tips_⠀⠀⠀⠀⠀⠀_Use #uiuxbunker and tag us to be featured 😉 ⠀__⠀_#ui #ux #appdesig.jfif",
+      "category": "designs",
+      "filename": "Quizly - Learning Mobile App_📝 Designed by_ @vektora_studio __👉 Follow @uiuxbunker for more UI inspiration_ and Daily Tips_⠀⠀⠀⠀⠀⠀_Use #uiuxbunker and tag us to be featured 😉 ⠀__⠀_#ui #ux #appdesig.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 981,
+      "tags": [
+        "learning-exercise"
+      ]
+    },
+    {
+      "path": "app uis/designs/Smart Pet Care App UI 🐾.jfif",
+      "category": "designs",
+      "filename": "Smart Pet Care App UI 🐾.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": []
+    },
+    {
+      "path": "app uis/designs/STORIES.jfif",
+      "category": "designs",
+      "filename": "STORIES.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 736,
+      "tags": []
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/Card (1).png",
+      "category": "LanguageLeaningApps",
+      "filename": "Card (1).png",
+      "format": "png",
+      "width": 752,
+      "height": 590,
+      "tags": []
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/Card.png",
+      "category": "LanguageLeaningApps",
+      "filename": "Card.png",
+      "format": "png",
+      "width": 752,
+      "height": 494,
+      "tags": []
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/Dashboard.png",
+      "category": "LanguageLeaningApps",
+      "filename": "Dashboard.png",
+      "format": "png",
+      "width": 780,
+      "height": 1688,
+      "tags": [
+        "home-dashboard"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app1/Screen-1.jpg",
+      "category": "LMS",
+      "filename": "Screen-1.jpg",
+      "format": "jpg",
+      "width": 4320,
+      "height": 3072,
+      "tags": []
+    },
+    {
+      "path": "app uis/LMS/app1/Screen-2.jpg",
+      "category": "LMS",
+      "filename": "Screen-2.jpg",
+      "format": "jpg",
+      "width": 4320,
+      "height": 3072,
+      "tags": []
+    },
+    {
+      "path": "app uis/LMS/app1/Screen-3.jpg",
+      "category": "LMS",
+      "filename": "Screen-3.jpg",
+      "format": "jpg",
+      "width": 2880,
+      "height": 2048,
+      "tags": []
+    },
+    {
+      "path": "app uis/LMS/Dashboard.jpg",
+      "category": "LMS",
+      "filename": "Dashboard.jpg",
+      "format": "jpg",
+      "width": 4320,
+      "height": 3072,
+      "tags": [
+        "home-dashboard"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Connectivity 01.png",
+      "category": "LMS",
+      "filename": "Connectivity 01.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Connectivity 02.png",
+      "category": "LMS",
+      "filename": "Connectivity 02.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Connectivity 03.png",
+      "category": "LMS",
+      "filename": "Connectivity 03.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Connectivity 04.png",
+      "category": "LMS",
+      "filename": "Connectivity 04.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Connectivity 05.png",
+      "category": "LMS",
+      "filename": "Connectivity 05.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/E-Commerce 01.png",
+      "category": "LMS",
+      "filename": "E-Commerce 01.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "commerce-pos",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/E-Commerce 02.png",
+      "category": "LMS",
+      "filename": "E-Commerce 02.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "commerce-pos",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/E-Commerce 03.png",
+      "category": "LMS",
+      "filename": "E-Commerce 03.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "commerce-pos",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/E-Commerce 04.png",
+      "category": "LMS",
+      "filename": "E-Commerce 04.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "commerce-pos",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/E-Commerce 05.png",
+      "category": "LMS",
+      "filename": "E-Commerce 05.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "commerce-pos",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Messages 01.png",
+      "category": "LMS",
+      "filename": "Messages 01.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Messages 02.png",
+      "category": "LMS",
+      "filename": "Messages 02.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Messages 03.png",
+      "category": "LMS",
+      "filename": "Messages 03.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Messages 04.png",
+      "category": "LMS",
+      "filename": "Messages 04.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Messages 05.png",
+      "category": "LMS",
+      "filename": "Messages 05.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Social 01.png",
+      "category": "LMS",
+      "filename": "Social 01.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Social 02.png",
+      "category": "LMS",
+      "filename": "Social 02.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Social 03.png",
+      "category": "LMS",
+      "filename": "Social 03.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Social 04.png",
+      "category": "LMS",
+      "filename": "Social 04.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Social 05.png",
+      "category": "LMS",
+      "filename": "Social 05.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "social-chat",
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Wallet 01.png",
+      "category": "LMS",
+      "filename": "Wallet 01.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Wallet 02.png",
+      "category": "LMS",
+      "filename": "Wallet 02.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Wallet 03.png",
+      "category": "LMS",
+      "filename": "Wallet 03.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Wallet 04.png",
+      "category": "LMS",
+      "filename": "Wallet 04.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/empty_illustrations/Wallet 05.png",
+      "category": "LMS",
+      "filename": "Wallet 05.png",
+      "format": "png",
+      "width": 560,
+      "height": 560,
+      "tags": [
+        "empty-error-state"
+      ]
+    },
+    {
+      "path": "app uis/LMS/full_landingpage.png",
+      "category": "LMS",
+      "filename": "full_landingpage.png",
+      "format": "png",
+      "width": 2880,
+      "height": 18572,
+      "tags": []
+    },
+    {
+      "path": "app uis/LMS/siproka_landingpage.png",
+      "category": "LMS",
+      "filename": "siproka_landingpage.png",
+      "format": "png",
+      "width": 2880,
+      "height": 8603,
+      "tags": []
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Component 9.png",
+      "category": "SocialMedia",
+      "filename": "Component 9.png",
+      "format": "png",
+      "width": 796,
+      "height": 712,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Components.png",
+      "category": "SocialMedia",
+      "filename": "Components.png",
+      "format": "png",
+      "width": 1572,
+      "height": 3868,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Messages.png",
+      "category": "SocialMedia",
+      "filename": "Messages.png",
+      "format": "png",
+      "width": 2932,
+      "height": 5386,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Threads/colors.PNG",
+      "category": "SocialMedia",
+      "filename": "colors.PNG",
+      "format": "png",
+      "width": 481,
+      "height": 826,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Threads/spaces.PNG",
+      "category": "SocialMedia",
+      "filename": "spaces.PNG",
+      "format": "png",
+      "width": 472,
+      "height": 411,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Threads/Threads (1).png",
+      "category": "SocialMedia",
+      "filename": "Threads (1).png",
+      "format": "png",
+      "width": 780,
+      "height": 2658,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Threads/Threads.png",
+      "category": "SocialMedia",
+      "filename": "Threads.png",
+      "format": "png",
+      "width": 780,
+      "height": 2658,
+      "tags": [
+        "social-chat"
+      ]
+    },
+    {
+      "path": "app uis/weather app/WEATHER APP (Community).png",
+      "category": "weather app",
+      "filename": "WEATHER APP (Community).png",
+      "format": "png",
+      "width": 5757,
+      "height": 3432,
+      "tags": [
+        "weather-telemetry"
+      ]
+    },
+    {
+      "path": "app uis/widgets/download (1).jfif",
+      "category": "widgets",
+      "filename": "download (1).jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 818,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/widgets/download (2).jfif",
+      "category": "widgets",
+      "filename": "download (2).jfif",
+      "format": "jpg",
+      "width": 675,
+      "height": 1200,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/widgets/download.jfif",
+      "category": "widgets",
+      "filename": "download.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 1153,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/widgets/Educational App Widget _ Inspired by Duolingo App.jfif",
+      "category": "widgets",
+      "filename": "Educational App Widget _ Inspired by Duolingo App.jfif",
+      "format": "jpg",
+      "width": 736,
+      "height": 552,
+      "tags": [
+        "gamification"
+      ]
+    },
+    {
+      "path": "app uis/widgets/Fito App_ Duolingo-Style Streaks, Widgets & Your___.jfif",
+      "category": "widgets",
+      "filename": "Fito App_ Duolingo-Style Streaks, Widgets & Your___.jfif",
+      "format": "jpg",
+      "width": 236,
+      "height": 313,
+      "tags": [
+        "gamification"
+      ]
+    }
+  ],
+  "archives": [
+    {
+      "path": "app uis/LanguageLeaningApps/Bahasaku/[Free] BahasaKu E-learning local language ui kit (Community).zip",
+      "category": "LanguageLeaningApps",
+      "filename": "[Free] BahasaKu E-learning local language ui kit (Community).zip",
+      "screenCount": 31,
+      "tags": [
+        "empty-error-state",
+        "discovery-search",
+        "profile-settings",
+        "learning-exercise",
+        "home-dashboard",
+        "auth",
+        "onboarding"
+      ],
+      "sampleScreens": [
+        "Handling error no network.png",
+        "Search - not found.png",
+        "Language Detail.png",
+        "Search.png",
+        "Privacy.png",
+        "Achievement.png",
+        "Setting.png",
+        "Profile Page.png"
+      ],
+      "allScreens": [
+        "Handling error no network.png",
+        "Search - not found.png",
+        "Language Detail.png",
+        "Search.png",
+        "Privacy.png",
+        "Achievement.png",
+        "Setting.png",
+        "Profile Page.png",
+        "Profile Page - change account.png",
+        "Profile Page - Logout.png",
+        "Test Page 3 - Failed.png",
+        "Test Page 3 - Success.png",
+        "Test Page 3.png",
+        "Test Page 2 - Failed.png",
+        "Test Page 2 - Success.png",
+        "Test Page 2.png",
+        "Test Page 2- check.png",
+        "Test Page - Failed.png",
+        "Test Page - Success.png",
+        "Learning Page.png",
+        "Home Page.png",
+        "Profile - Password.png",
+        "Profile - Email.png",
+        "Profile - Name.png",
+        "Profile - Age.png",
+        "Register.png",
+        "Login.png",
+        "Login-1.png",
+        "Login - Google.png",
+        "Starter.png",
+        "Splash.png"
+      ]
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/DuoLingo/Duolingo App UI - Free UI Kit (Recreated) (Community) (1).zip",
+      "category": "LanguageLeaningApps",
+      "filename": "Duolingo App UI - Free UI Kit (Recreated) (Community) (1).zip",
+      "screenCount": 34,
+      "tags": [],
+      "sampleScreens": [
+        "Duolingo 09-01_9af7134c.png",
+        "Duolingo 09-03_9b1ab9f8.png",
+        "Duolingo 09-04_077e9d4d.png",
+        "Duolingo 09-05_61c2046a.png",
+        "Duolingo 09-06_a283b038.png",
+        "Duolingo 09-07_dfcf7818.png",
+        "Duolingo 09-08_9b544b21.png",
+        "Duolingo 09-09_a563facc.png"
+      ],
+      "allScreens": [
+        "Duolingo 09-01_9af7134c.png",
+        "Duolingo 09-03_9b1ab9f8.png",
+        "Duolingo 09-04_077e9d4d.png",
+        "Duolingo 09-05_61c2046a.png",
+        "Duolingo 09-06_a283b038.png",
+        "Duolingo 09-07_dfcf7818.png",
+        "Duolingo 09-08_9b544b21.png",
+        "Duolingo 09-09_a563facc.png",
+        "Duolingo 09-10_2dcca527.png",
+        "Duolingo 09-11_fe8ca003.png",
+        "Duolingo 09-12_96b66b50.png",
+        "Duolingo 09-13_49e937f5.png",
+        "Duolingo 09-14_66707807.png",
+        "Duolingo 09-15_efda1c7f.png",
+        "Duolingo 09-16_5ace64c2.png",
+        "Duolingo 09-17_5e4081a7.png",
+        "Duolingo 09-18_286098b2.png",
+        "Duolingo 09-18_286098b2-1.png",
+        "Duolingo 09-19_1b24bd2e.png",
+        "Duolingo 09-20_c7c56cf5.png",
+        "Duolingo 09-21_ceae2dda.png",
+        "Duolingo 09-23_da1f884b.png",
+        "Duolingo 09-24_25489449.png",
+        "Duolingo 09-24_25489449-1.png",
+        "Duolingo 09-25_aa848353.png",
+        "Duolingo 09-26_0fb6999b.png",
+        "Duolingo 09-27_7ac75ff8.png",
+        "Duolingo 09-28_c568afd9.png",
+        "Duolingo 09-29_26254297.png",
+        "Duolingo 09-30_7a197e76.png",
+        "Duolingo 09-30_7a197e76-1.png",
+        "Duolingo 09-31_ccafa74f.png",
+        "Duolingo 09-32_4bc9bbee.png",
+        "Duolingo 09-33_6eebf490.png"
+      ]
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/DuoLingo/Duolingo App UI - Free UI Kit (Recreated) (Community).zip",
+      "category": "LanguageLeaningApps",
+      "filename": "Duolingo App UI - Free UI Kit (Recreated) (Community).zip",
+      "screenCount": 3,
+      "tags": [],
+      "sampleScreens": [
+        "Duolingo 09-21.png",
+        "Duolingo 09-14.png",
+        "Duolingo 09-04.png"
+      ],
+      "allScreens": [
+        "Duolingo 09-21.png",
+        "Duolingo 09-14.png",
+        "Duolingo 09-04.png"
+      ]
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/Language Learning App (Community).zip",
+      "category": "LanguageLeaningApps",
+      "filename": "Language Learning App (Community).zip",
+      "screenCount": 48,
+      "tags": [
+        "gamification",
+        "profile-settings",
+        "monetization",
+        "home-dashboard",
+        "learning-exercise",
+        "auth",
+        "onboarding"
+      ],
+      "sampleScreens": [
+        "Set Weekly Goal 5.png",
+        "Set Weekly Goal 4.png",
+        "Set Weekly Goal 3.png",
+        "Set Weekly Goal 2.png",
+        "Set Weekly Goal 1.png",
+        "Title.png",
+        "Invite Friends.png",
+        "Settings.png"
+      ],
+      "allScreens": [
+        "Set Weekly Goal 5.png",
+        "Set Weekly Goal 4.png",
+        "Set Weekly Goal 3.png",
+        "Set Weekly Goal 2.png",
+        "Set Weekly Goal 1.png",
+        "Title.png",
+        "Invite Friends.png",
+        "Settings.png",
+        "Activity.png",
+        "Profile.png",
+        "Title-1.png",
+        "Premium Subscription.png",
+        "Featured Courses.png",
+        "Featured Courses-1.png",
+        "Title-2.png",
+        "Tasks.png",
+        "Progress.png",
+        "Title-3.png",
+        "Title Lesson Completed You have completed lesson 1 of the Dutch language course Back to home.png",
+        "Que - 8.png",
+        "Que - 7.png",
+        "Que - 6.png",
+        "Que - 5.png",
+        "Que - 4.png",
+        "Que - 3.png",
+        "Que - 2.png",
+        "Que - 1.png",
+        "Learning Tip.png",
+        "Home Page.png",
+        "Title-4.png",
+        "Congratulations.png",
+        "Course Overview.png",
+        "How did you hear about Fillolearn_.png",
+        "How old are you_.png",
+        "How old are you_-1.png",
+        "How much you know about Dutch_.png",
+        "What Is The Main Reason to Learn German_.png",
+        "What Is Your Mother Language.png",
+        "Title-5.png",
+        "Signup.png",
+        "Signup-1.png",
+        "Login.png",
+        "Title-6.png",
+        "Onboarding 5.png",
+        "Onboarding 6.png",
+        "Onboarding 7.png",
+        "Splash Screen.png",
+        "Title-7.png"
+      ]
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/language-learning-app-v1.01-anil (1).zip",
+      "category": "LanguageLeaningApps",
+      "filename": "language-learning-app-v1.01-anil (1).zip",
+      "screenCount": 20,
+      "tags": [
+        "discovery-search",
+        "profile-settings",
+        "gamification",
+        "learning-exercise"
+      ],
+      "sampleScreens": [
+        "input-field.png",
+        "input-field-1.png",
+        "input-field-2.png",
+        "search.png",
+        "button-button.png",
+        "play-button2.png",
+        "menu.png",
+        "profile-box.png"
+      ],
+      "allScreens": [
+        "input-field.png",
+        "input-field-1.png",
+        "input-field-2.png",
+        "search.png",
+        "button-button.png",
+        "play-button2.png",
+        "menu.png",
+        "profile-box.png",
+        "course-progress.png",
+        "repeat-button.png",
+        "search-1.png",
+        "help.png",
+        "selected.png",
+        "Listening-circle.png",
+        "play-button.png",
+        "favorite-button.png",
+        "download-button.png",
+        "Courses-box1.png",
+        "course-video-box.png",
+        "courses-box.png"
+      ]
+    },
+    {
+      "path": "app uis/LanguageLeaningApps/language-learning-app-v1.01-anil.zip",
+      "category": "LanguageLeaningApps",
+      "filename": "language-learning-app-v1.01-anil.zip",
+      "screenCount": 6,
+      "tags": [
+        "learning-exercise",
+        "onboarding",
+        "home-dashboard",
+        "auth"
+      ],
+      "sampleScreens": [
+        "vocabulary-test.png",
+        "get-started.png",
+        "home.png",
+        "courses-details.png",
+        "login.png",
+        "choose-language.png"
+      ],
+      "allScreens": [
+        "vocabulary-test.png",
+        "get-started.png",
+        "home.png",
+        "courses-details.png",
+        "login.png",
+        "choose-language.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (1).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (1).zip",
+      "screenCount": 10,
+      "tags": [
+        "voice-ai",
+        "auth",
+        "empty-error-state"
+      ],
+      "sampleScreens": [
+        "Authentication with phone.png",
+        "Verification code.png",
+        "Verification code active.png",
+        "Verification code active.jpg",
+        "Verification code error.png",
+        "Country list.png",
+        "Signup.jpg",
+        "Action sheet.jpg"
+      ],
+      "allScreens": [
+        "Authentication with phone.png",
+        "Verification code.png",
+        "Verification code active.png",
+        "Verification code active.jpg",
+        "Verification code error.png",
+        "Country list.png",
+        "Signup.jpg",
+        "Action sheet.jpg",
+        "Signin.png",
+        "Authentication with phone-1.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (2).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (2).zip",
+      "screenCount": 9,
+      "tags": [
+        "voice-ai",
+        "auth"
+      ],
+      "sampleScreens": [
+        "Forgot password.jpg",
+        "Change Pssword.png",
+        "Reset password.png",
+        "Verify email.jpg",
+        "Email Confirmed.jpg",
+        "Email Verify wrong.png",
+        "Native Language.png",
+        "Native Language-1.png"
+      ],
+      "allScreens": [
+        "Forgot password.jpg",
+        "Change Pssword.png",
+        "Reset password.png",
+        "Verify email.jpg",
+        "Email Confirmed.jpg",
+        "Email Verify wrong.png",
+        "Native Language.png",
+        "Native Language-1.png",
+        "Native Language.jpg"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (3).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (3).zip",
+      "screenCount": 5,
+      "tags": [
+        "voice-ai",
+        "learning-exercise",
+        "home-dashboard"
+      ],
+      "sampleScreens": [
+        "Review.png",
+        "Review-1.png",
+        "Home page.jpg",
+        "Home page-1.jpg",
+        "Navigation Drawer.jpg"
+      ],
+      "allScreens": [
+        "Review.png",
+        "Review-1.png",
+        "Home page.jpg",
+        "Home page-1.jpg",
+        "Navigation Drawer.jpg"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (4).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (4).zip",
+      "screenCount": 13,
+      "tags": [
+        "voice-ai",
+        "profile-settings"
+      ],
+      "sampleScreens": [
+        "Terms of Services.png",
+        "Privacy policy.png",
+        "Logout & delete account.png",
+        "Language.jpg",
+        "Notifications.png",
+        "profile.jpg",
+        "modal/change Profile photo.png",
+        "Country.png"
+      ],
+      "allScreens": [
+        "Terms of Services.png",
+        "Privacy policy.png",
+        "Logout & delete account.png",
+        "Language.jpg",
+        "Notifications.png",
+        "profile.jpg",
+        "modal/change Profile photo.png",
+        "Country.png",
+        "Help.png",
+        "Profile.png",
+        "Profile.jpg",
+        "SpeakUp Plus.jpg",
+        "SpeakUp Plus Plans.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (5).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (5).zip",
+      "screenCount": 3,
+      "tags": [
+        "voice-ai"
+      ],
+      "sampleScreens": [
+        "Courses.jpg",
+        "Courses 2.png",
+        "Courses 3.png"
+      ],
+      "allScreens": [
+        "Courses.jpg",
+        "Courses 2.png",
+        "Courses 3.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (6).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (6).zip",
+      "screenCount": 10,
+      "tags": [
+        "voice-ai",
+        "learning-exercise"
+      ],
+      "sampleScreens": [
+        "practices Resault [successfully].jpg",
+        "practices Resault [failed].png",
+        "Expandable Overlay.png",
+        "Expandable Overlay (ColorPicker).png",
+        "practices [listening ] page 1.jpg",
+        "practices [listening ] page 2.png",
+        "practices [listening ] page 3.png",
+        "video player practice.png"
+      ],
+      "allScreens": [
+        "practices Resault [successfully].jpg",
+        "practices Resault [failed].png",
+        "Expandable Overlay.png",
+        "Expandable Overlay (ColorPicker).png",
+        "practices [listening ] page 1.jpg",
+        "practices [listening ] page 2.png",
+        "practices [listening ] page 3.png",
+        "video player practice.png",
+        "practices [conversation].png",
+        "practices [Vocabulary].png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community) (7).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community) (7).zip",
+      "screenCount": 7,
+      "tags": [
+        "voice-ai",
+        "monetization",
+        "auth",
+        "profile-settings"
+      ],
+      "sampleScreens": [
+        "2_payment options.jpg",
+        "2_payment options.png",
+        "1_payment options.png",
+        "paypal.png",
+        "Apple pay.png",
+        "Verification apple pay Code.png",
+        "Privacy Policy.png"
+      ],
+      "allScreens": [
+        "2_payment options.jpg",
+        "2_payment options.png",
+        "1_payment options.png",
+        "paypal.png",
+        "Apple pay.png",
+        "Verification apple pay Code.png",
+        "Privacy Policy.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app2/Speak Up- Learning education English app Ui kit (Community).zip",
+      "category": "LMS",
+      "filename": "Speak Up- Learning education English app Ui kit (Community).zip",
+      "screenCount": 4,
+      "tags": [
+        "voice-ai",
+        "onboarding"
+      ],
+      "sampleScreens": [
+        "1.png",
+        "2.png",
+        "3.png",
+        "welcome.png"
+      ],
+      "allScreens": [
+        "1.png",
+        "2.png",
+        "3.png",
+        "welcome.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (1).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (1).zip",
+      "screenCount": 17,
+      "tags": [
+        "learning-exercise",
+        "home-dashboard",
+        "voice-ai"
+      ],
+      "sampleScreens": [
+        "Home.png",
+        "Home [Scroll].png",
+        "Home [Scroll]-1.png",
+        "Tutor.png",
+        "Detail Lesson - Overview.png",
+        "See All Mentors.png",
+        "Detail Lesson - Course.png",
+        "Detail Lesson - Achievements.png"
+      ],
+      "allScreens": [
+        "Home.png",
+        "Home [Scroll].png",
+        "Home [Scroll]-1.png",
+        "Tutor.png",
+        "Detail Lesson - Overview.png",
+        "See All Mentors.png",
+        "Detail Lesson - Course.png",
+        "Detail Lesson - Achievements.png",
+        "Detail Lesson - Achievements - Share Certificate.png",
+        "Detail Lesson - Resource.png",
+        "Detail Lesson - Course Reminder.png",
+        "Video Tutor - Notes.png",
+        "Video Tutor - Summary.png",
+        "Video Tutor - Attachment.png",
+        "Save Video.png",
+        "Success Download.png",
+        "Certificate.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (2).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (2).zip",
+      "screenCount": 5,
+      "tags": [
+        "learning-exercise"
+      ],
+      "sampleScreens": [
+        "Quiz - Default.png",
+        "Quiz - Correct.png",
+        "Quiz - Wrong.png",
+        "Quiz - Listerning.png",
+        "Quiz - Done.png"
+      ],
+      "allScreens": [
+        "Quiz - Default.png",
+        "Quiz - Correct.png",
+        "Quiz - Wrong.png",
+        "Quiz - Listerning.png",
+        "Quiz - Done.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (3).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (3).zip",
+      "screenCount": 4,
+      "tags": [
+        "learning-exercise",
+        "discovery-search"
+      ],
+      "sampleScreens": [
+        "Explore.png",
+        "Explore [Scroll].png",
+        "Explore [Search Result].png",
+        "Explore [Detail Article].png"
+      ],
+      "allScreens": [
+        "Explore.png",
+        "Explore [Scroll].png",
+        "Explore [Search Result].png",
+        "Explore [Detail Article].png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (4).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (4).zip",
+      "screenCount": 6,
+      "tags": [
+        "learning-exercise",
+        "voice-ai"
+      ],
+      "sampleScreens": [
+        "Quick Talk - Features.png",
+        "Quick Talk.png",
+        "Quick Talk [Recording Voice].png",
+        "Quick Talk [Generate].png",
+        "Quick Talk [Response].png",
+        "Rate the Quick Talk Feature.png"
+      ],
+      "allScreens": [
+        "Quick Talk - Features.png",
+        "Quick Talk.png",
+        "Quick Talk [Recording Voice].png",
+        "Quick Talk [Generate].png",
+        "Quick Talk [Response].png",
+        "Rate the Quick Talk Feature.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (5).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (5).zip",
+      "screenCount": 7,
+      "tags": [
+        "learning-exercise",
+        "profile-settings",
+        "monetization",
+        "gamification"
+      ],
+      "sampleScreens": [
+        "Settings.png",
+        "Language Preferences.png",
+        "Manage Subscription.png",
+        "Cancel Subscription [Reason].png",
+        "Cancel Subscription [Allert].png",
+        "Achievement Tracker - Goals.png",
+        "Achievement Tracker - Badge.png"
+      ],
+      "allScreens": [
+        "Settings.png",
+        "Language Preferences.png",
+        "Manage Subscription.png",
+        "Cancel Subscription [Reason].png",
+        "Cancel Subscription [Allert].png",
+        "Achievement Tracker - Goals.png",
+        "Achievement Tracker - Badge.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (6).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (6).zip",
+      "screenCount": 3,
+      "tags": [
+        "learning-exercise",
+        "gamification"
+      ],
+      "sampleScreens": [
+        "Lesson.png",
+        "Progress.png",
+        "Progress (Scroll).png"
+      ],
+      "allScreens": [
+        "Lesson.png",
+        "Progress.png",
+        "Progress (Scroll).png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview) (7).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview) (7).zip",
+      "screenCount": 2,
+      "tags": [
+        "learning-exercise"
+      ],
+      "sampleScreens": [
+        "Landing page.png",
+        "Landing page-1.png"
+      ],
+      "allScreens": [
+        "Landing page.png",
+        "Landing page-1.png"
+      ]
+    },
+    {
+      "path": "app uis/LMS/app3_learna/Learna - Language Learning Mobile App UI Kit (Preview).zip",
+      "category": "LMS",
+      "filename": "Learna - Language Learning Mobile App UI Kit (Preview).zip",
+      "screenCount": 13,
+      "tags": [
+        "learning-exercise",
+        "onboarding",
+        "auth",
+        "profile-settings"
+      ],
+      "sampleScreens": [
+        "Splash Screen.png",
+        "Splash Screen-1.png",
+        "Splash Screen-2.png",
+        "Sign In.png",
+        "Create New Account.png",
+        "Create New Account-1.png",
+        "Select Plan.png",
+        "Confirm Plan.png"
+      ],
+      "allScreens": [
+        "Splash Screen.png",
+        "Splash Screen-1.png",
+        "Splash Screen-2.png",
+        "Sign In.png",
+        "Create New Account.png",
+        "Create New Account-1.png",
+        "Select Plan.png",
+        "Confirm Plan.png",
+        "Success Select Plan.png",
+        "Fluency Level.png",
+        "Language Selection.png",
+        "Language Selection-1.png",
+        "Select Country.png"
+      ]
+    },
+    {
+      "path": "app uis/POS/Point of Sales POS Mobile App UI (Community).zip",
+      "category": "POS",
+      "filename": "Point of Sales POS Mobile App UI (Community).zip",
+      "screenCount": 3,
+      "tags": [
+        "commerce-pos",
+        "home-dashboard"
+      ],
+      "sampleScreens": [
+        "Scan Products.png",
+        "Products.png",
+        "Dashboard.png"
+      ],
+      "allScreens": [
+        "Scan Products.png",
+        "Products.png",
+        "Dashboard.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram Android - New Design (Community) (1).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram Android - New Design (Community) (1).zip",
+      "screenCount": 11,
+      "tags": [
+        "social-chat",
+        "profile-settings"
+      ],
+      "sampleScreens": [
+        "Private Chat.png",
+        "Not Accepted.png",
+        "Accepted.png",
+        "Profile.png",
+        "Profile - On Scroll.png",
+        "Without Topics.png",
+        "With Topics.png",
+        "Add to Tags.png"
+      ],
+      "allScreens": [
+        "Private Chat.png",
+        "Not Accepted.png",
+        "Accepted.png",
+        "Profile.png",
+        "Profile - On Scroll.png",
+        "Without Topics.png",
+        "With Topics.png",
+        "Add to Tags.png",
+        "Channel.png",
+        "Pop-Up.png",
+        "Story Page.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram Android - New Design (Community).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram Android - New Design (Community).zip",
+      "screenCount": 10,
+      "tags": [
+        "social-chat",
+        "profile-settings"
+      ],
+      "sampleScreens": [
+        "Chats.png",
+        "Chats - On Scroll.png",
+        "Contacts.png",
+        "Contacts - On Scroll.png",
+        "New Contact.png",
+        "Settings.png",
+        "Settings - Other Account.png",
+        "Edit Profile.png"
+      ],
+      "allScreens": [
+        "Chats.png",
+        "Chats - On Scroll.png",
+        "Contacts.png",
+        "Contacts - On Scroll.png",
+        "New Contact.png",
+        "Settings.png",
+        "Settings - Other Account.png",
+        "Edit Profile.png",
+        "Free User.png",
+        "Premium User.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (1).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (1).zip",
+      "screenCount": 4,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "01-1.png",
+        "02.png",
+        "02-1.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "01-1.png",
+        "02.png",
+        "02-1.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (10).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (10).zip",
+      "screenCount": 7,
+      "tags": [
+        "social-chat",
+        "discovery-search"
+      ],
+      "sampleScreens": [
+        "Details - 01.png",
+        "Search - 01.png",
+        "Search - 02.png",
+        "Search - 03.png",
+        "Search - 04.png",
+        "Editing.png",
+        "Details - 02.png"
+      ],
+      "allScreens": [
+        "Details - 01.png",
+        "Search - 01.png",
+        "Search - 02.png",
+        "Search - 03.png",
+        "Search - 04.png",
+        "Editing.png",
+        "Details - 02.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (11).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (11).zip",
+      "screenCount": 6,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "Forwarding - 01.png",
+        "Forwarding - 02.png",
+        "Forwarding - 03.png",
+        "Forwarding - 04.png",
+        "Forwarding - 05.png",
+        "Forwarding - 06.png"
+      ],
+      "allScreens": [
+        "Forwarding - 01.png",
+        "Forwarding - 02.png",
+        "Forwarding - 03.png",
+        "Forwarding - 04.png",
+        "Forwarding - 05.png",
+        "Forwarding - 06.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (2).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (2).zip",
+      "screenCount": 10,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png",
+        "05.png",
+        "06.png",
+        "01-1.png",
+        "02-1.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png",
+        "05.png",
+        "06.png",
+        "01-1.png",
+        "02-1.png",
+        "03-1.png",
+        "04-1.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (3).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (3).zip",
+      "screenCount": 2,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (4).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (4).zip",
+      "screenCount": 4,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (5).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (5).zip",
+      "screenCount": 12,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png",
+        "Main Frame.png",
+        "01-1.png",
+        "02-1.png",
+        "03.png",
+        "02-2.png",
+        "03-1.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png",
+        "Main Frame.png",
+        "01-1.png",
+        "02-1.png",
+        "03.png",
+        "02-2.png",
+        "03-1.png",
+        "04.png",
+        "05.png",
+        "02-3.png",
+        "03-2.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (6).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (6).zip",
+      "screenCount": 6,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png",
+        "05.png",
+        "06.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png",
+        "05.png",
+        "06.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (7).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (7).zip",
+      "screenCount": 13,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png",
+        "01-1.png",
+        "01-2.png",
+        "03.png",
+        "02-1.png",
+        "01-3.png",
+        "02-2.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png",
+        "01-1.png",
+        "01-2.png",
+        "03.png",
+        "02-1.png",
+        "01-3.png",
+        "02-2.png",
+        "04.png",
+        "05.png",
+        "06.png",
+        "07.png",
+        "02-3.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (8).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (8).zip",
+      "screenCount": 3,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "Edit Message.png",
+        "Component 10.png",
+        "Component 11.png"
+      ],
+      "allScreens": [
+        "Edit Message.png",
+        "Component 10.png",
+        "Component 11.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community) (9).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community) (9).zip",
+      "screenCount": 4,
+      "tags": [
+        "social-chat",
+        "home-dashboard"
+      ],
+      "sampleScreens": [
+        "Home.png",
+        "Replying - 01.png",
+        "03.png",
+        "Replying - 02.png"
+      ],
+      "allScreens": [
+        "Home.png",
+        "Replying - 01.png",
+        "03.png",
+        "Replying - 02.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Telegram/Telegram UI Kit +310 Screens (Community).zip",
+      "category": "SocialMedia",
+      "filename": "Telegram UI Kit +310 Screens (Community).zip",
+      "screenCount": 5,
+      "tags": [
+        "social-chat"
+      ],
+      "sampleScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png",
+        "05.png"
+      ],
+      "allScreens": [
+        "01.png",
+        "02.png",
+        "03.png",
+        "04.png",
+        "05.png"
+      ]
+    },
+    {
+      "path": "app uis/SocialMedia/Threads/Threads Ui Kit [+Variables] (Community).zip",
+      "category": "SocialMedia",
+      "filename": "Threads Ui Kit [+Variables] (Community).zip",
+      "screenCount": 7,
+      "tags": [
+        "social-chat",
+        "navigation-tabbar"
+      ],
+      "sampleScreens": [
+        "Icons.png",
+        "Avatar.png",
+        "Tab bar.png",
+        "thread-card.png",
+        "[Replace me].png",
+        "Status Bar.png",
+        "threads-animation.png"
+      ],
+      "allScreens": [
+        "Icons.png",
+        "Avatar.png",
+        "Tab bar.png",
+        "thread-card.png",
+        "[Replace me].png",
+        "Status Bar.png",
+        "threads-animation.png"
+      ]
+    },
+    {
+      "path": "app uis/streaks.zip",
+      "category": "general",
+      "filename": "streaks.zip",
+      "screenCount": 9,
+      "tags": [
+        "gamification"
+      ],
+      "sampleScreens": [
+        "StreakDay.png",
+        "State=Current, Streak Type=Flash.png",
+        "State=Current, Streak Type=Fire.png",
+        "State=Broken, Streak Type=Flash.png",
+        "State=Broken, Streak Type=Fire.png",
+        "State=Saved, Streak Type=Flash.png",
+        "State=Saved, Streak Type=Fire.png",
+        "ContinuedStreak.png"
+      ],
+      "allScreens": [
+        "StreakDay.png",
+        "State=Current, Streak Type=Flash.png",
+        "State=Current, Streak Type=Fire.png",
+        "State=Broken, Streak Type=Flash.png",
+        "State=Broken, Streak Type=Fire.png",
+        "State=Saved, Streak Type=Flash.png",
+        "State=Saved, Streak Type=Fire.png",
+        "ContinuedStreak.png",
+        "Icons.png"
+      ]
+    }
+  ]
+}

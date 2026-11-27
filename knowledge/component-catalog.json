@@ -154,6 +154,42 @@
       "motion": true,
       "usage": "Subtle staggered fade-and-lift entrance wrapper honoring reduced-motion accessibility.",
       "antiUse": "Do not wrap every single tiny element on screen; limit to key top-level sections or list items."
+    },
+    {
+      "id": "CapsuleTabBar",
+      "category": "navigation",
+      "source": "components/ui/CapsuleTabBar.tsx",
+      "dependencies": ["expo-router", "react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "Floating capsule tab bar where only the active tab expands to show icon + label; ideal for 4–5 tabs on 390px screens.",
+      "antiUse": "Avoid when every tab label must remain permanently visible for first-time accessibility."
+    },
+    {
+      "id": "NotchedFabTabBar",
+      "category": "navigation",
+      "source": "components/ui/NotchedFabTabBar.tsx",
+      "dependencies": ["expo-router", "lucide-react-native", "react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "Bottom bar with a raised circular center primary action button (AI coach, scanner, quick create, record).",
+      "antiUse": "Avoid unless the app has one unmistakable primary action worth elevating above navigation."
+    },
+    {
+      "id": "BarChart",
+      "category": "data-visualization",
+      "source": "components/ui/BarChart.tsx",
+      "dependencies": ["react-native-reanimated"],
+      "motion": true,
+      "usage": "Animated rounded-bar activity or finance chart with tappable bar selection readout.",
+      "antiUse": "Avoid for more than 12 bars without horizontal scrolling or aggregation."
+    },
+    {
+      "id": "SkillBentoTile",
+      "category": "data-visualization",
+      "source": "components/ui/SkillBentoTile.tsx",
+      "dependencies": ["lucide-react-native"],
+      "motion": true,
+      "usage": "Compact 2x2 progress bento tile with icon, corner arrow cue, and slim completion bar.",
+      "antiUse": "Avoid stacking more than 4 tiles in one grid without clear grouping."
     }
   ]
 }

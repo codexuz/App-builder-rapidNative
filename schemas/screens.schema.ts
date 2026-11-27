@@ -25,7 +25,14 @@ export const ScreenSpecSchema = z.object({
 export const ScreensSpecSchema = z.object({
   schemaVersion: z.literal('1.0.0').default('1.0.0'),
   navigation: z.object({
-    type: z.enum(['floating-pill-tabs', 'native-tabs', 'stack-only', 'drawer-plus-stack']),
+    type: z.enum([
+      'floating-pill-tabs',
+      'capsule-tabs',
+      'notched-fab-tabs',
+      'native-tabs',
+      'stack-only',
+      'drawer-plus-stack',
+    ]),
     tabs: z
       .array(
         z.object({

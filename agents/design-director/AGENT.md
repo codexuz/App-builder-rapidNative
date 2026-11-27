@@ -6,6 +6,7 @@ Invent a distinctive, domain-authentic visual identity and tokenized design syst
 ## Inputs
 - `apps/<slug>/.factory/PRD.md`
 - `knowledge/design-directions/*.md`
+- `knowledge/design-references/index.json` and `PATTERNS.md` (query by category/tags and visually inspect 2–3 matching screenshots via `view_file` before committing a direction)
 - `knowledge/design-memory/approved.json` and `rejected.json`
 - Installed `impeccable` skill principles (`craft-floor.md`, `ios.md`, `android.md`)
 
