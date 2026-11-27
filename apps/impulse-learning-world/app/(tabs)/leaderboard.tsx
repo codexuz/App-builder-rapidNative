@@ -1,57 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  ArrowUpRight,
-  BookOpen,
-  Crown,
-  Flame,
-  Gem,
-  Map,
-  Mic,
-  Sparkles,
-  Trophy,
-  Zap,
-} from 'lucide-react-native';
-import { GameHud, ProgressBar } from '@/components/game';
+import { Crown, Flame, Trophy } from 'lucide-react-native';
+import { Coin3D, GameHud, XpBolt3D } from '@/components/game';
+import { LEO_ART, LeoMascot } from '@/components/mascot/LeoMascot';
 import {
   AnimatedCounter,
   Badge,
   Card,
+  Chip,
   Screen,
   SectionHeader,
+  SegmentedControl,
   StaggeredEntrance,
 } from '@/components/ui';
 import { GeneratedAssets } from '@/constants/GeneratedAssets';
-import { RegionPalette, useAppTheme } from '@/constants/Theme';
-import { useGame } from '@/store/GameContext';
-import type { Achievement } from '@/types/game';
+import { useAppTheme } from '@/constants/Theme';
+import { api } from '@/lib/api';
+import type { LeaderboardScope } from '@/lib/api/types';
+import { useKidsApp } from '@/providers/KidsAppProvider';
 
-function AchievementIcon({ name, color }: { name: Achievement['iconName']; color: string }) {
-  switch (name) {
-    case 'flame':
-      return <Flame size={20} color={color} />;
-    case 'map':
-      return <Map size={20} color={color} />;
-    case 'mic':
-      return <Mic size={20} color={color} />;
-    case 'sparkles':
-      return <Sparkles size={20} color={color} />;
-    case 'trophy':
-      return <Trophy size={20} color={color} />;
-    case 'book':
-      return <BookOpen size={20} color={color} />;
-  }
+interface DisplayRow {
+  id: string;
+  name: string;
+  avatarUrl?: string | null;
+  score: number;
+  unitLabel: string;
+  streak: number;
+  me: boolean;
+  rank: number;
 }
 
-export default function LeaderboardScreen() {
+const SCOPES: Array<{ key: LeaderboardScope; label: string }> = [
+  { key: 'center', label: 'Center' },
+  { key: 'branch', label: 'Branch' },
+  { key: 'level', label: 'Level' },
+  { key: 'group', label: 'Group' },
+];
+
+export default function KidsLeaderboardScreen() {
   const router = useRouter();
   const { colors, typography, radii } = useAppTheme();
-  const { player, leaderboard } = useGame();
+  const {
+    league,
+    leaderboard,
+    leaderboardScope,
+    gamification,
+    studentId,
+    loadLeaderboardScope,
+  } = useKidsApp();
+  const [boardMode, setBoardMode] = useState<'league' | 'coins'>('league');
 
-  const topThree = leaderboard.slice(0, 3);
+  const leagueRows: DisplayRow[] = (league?.members ?? []).map((m) => ({
+    id: m.studentId,
+    name: m.name,
+    avatarUrl: m.avatarUrl,
+    score: m.xp,
+    unitLabel: 'XP',
+    streak: 0,
+    me: m.me,
+    rank: m.rank,
+  }));
+
+  const coinRows: DisplayRow[] = leaderboard.map((entry, idx) => {
+    const first = entry.student?.contact?.firstName ?? 'Student';
+    const last = entry.student?.contact?.lastName ?? '';
+    return {
+      id: entry.studentId,
+      name: `${first} ${last}`.trim(),
+      avatarUrl: entry.student?.contact?.avatarUrl,
+      score: entry.cachedCoinBalance,
+      unitLabel: 'Coins',
+      streak: entry.student?.streak?.currentStreak ?? 0,
+      me: entry.studentId === studentId,
+      rank: idx + 1,
+    };
+  });
+
+  const rows = boardMode === 'league' ? leagueRows : coinRows;
+  const topThree = rows.slice(0, 3);
   const podiumOrder = [topThree[1], topThree[0], topThree[2]].filter(Boolean);
-  const myRank = leaderboard.findIndex((e) => e.isCurrentUser) + 1;
+  const myRow = rows.find((r) => r.me);
+  const tierName = league?.tiers?.[league.tier] ?? 'League';
+  const totalXp = gamification?.wallet?.cachedXp ?? 0;
+  const totalCoins = gamification?.wallet?.cachedCoinBalance ?? 0;
 
   return (
     <Screen hasTabBar>
@@ -59,24 +91,52 @@ export default function LeaderboardScreen() {
 
       <View style={styles.headerBlock}>
         <Text style={[typography.display, { color: colors.textPrimary }]}>
-          Explorer League
+          Impulse League
         </Text>
         <Text style={[typography.body, { color: colors.textSecondary }]}>
-          Top 3 explorers advance to Astral Division this week!
+          {league?.promote
+            ? `Top ${league.promote} students climb to the next league each week!`
+            : 'Complete lessons with Leo to earn XP and Coins!'}
         </Text>
       </View>
 
-      {/* Dark Contrast 3D Stepped Podium Stadium Card (inspired by modern kids leaderboards) */}
+      <SegmentedControl
+        value={boardMode}
+        onChange={setBoardMode}
+        options={[
+          { label: 'Weekly League', value: 'league' },
+          { label: 'Coin Leaders', value: 'coins' },
+        ]}
+      />
+
+      {boardMode === 'coins' ? (
+        <View style={styles.scopeRow}>
+          {SCOPES.map((s) => (
+            <Chip
+              key={s.key}
+              label={s.label}
+              selected={leaderboardScope === s.key}
+              onPress={() => void loadLeaderboardScope(s.key)}
+            />
+          ))}
+        </View>
+      ) : null}
+
+      {/* Deep Midnight 3D Stepped Podium Stadium */}
       <StaggeredEntrance index={0}>
         <View style={[styles.stadiumCard, { borderRadius: radii.xl }]}>
           <View style={styles.stadiumKpiRow}>
             <View style={[styles.kpiPill, { backgroundColor: '#7C3AED' }]}>
-              <Text style={styles.kpiValue}>{player.weeklyXp} XP</Text>
-              <Text style={styles.kpiLabel}>Your Weekly XP</Text>
+              <Text style={styles.kpiValue}>
+                {boardMode === 'league' ? `${myRow?.score ?? 0} XP` : `${totalCoins} Coins`}
+              </Text>
+              <Text style={styles.kpiLabel}>
+                {boardMode === 'league' ? 'Your Weekly XP' : 'Your Coins'}
+              </Text>
             </View>
             <View style={[styles.kpiPill, { backgroundColor: '#F59E0B' }]}>
-              <Text style={styles.kpiValue}>#{myRank || 4}</Text>
-              <Text style={styles.kpiLabel}>Crystal Division</Text>
+              <Text style={styles.kpiValue}>#{myRow?.rank ?? '-'}</Text>
+              <Text style={styles.kpiLabel}>{tierName}</Text>
             </View>
           </View>
 
@@ -89,192 +149,139 @@ export default function LeaderboardScreen() {
               />
               <View style={styles.trophyScoreTextCol}>
                 <AnimatedCounter
-                  value={player.xp}
-                  suffix=" XP"
+                  value={boardMode === 'league' ? totalXp : totalCoins}
+                  suffix={boardMode === 'league' ? ' XP' : ' Coins'}
                   style={styles.totalScoreNumber}
                 />
                 <View style={styles.divisionChip}>
                   <Trophy size={12} color="#FFFFFF" />
-                  <Text style={styles.divisionChipText}>3 days left in season</Text>
+                  <Text style={styles.divisionChipText}>{tierName}</Text>
                 </View>
               </View>
             </View>
           </View>
 
-          <View style={styles.podiumRow}>
-            {podiumOrder.map((entry) => {
-              const rank = leaderboard.findIndex((e) => e.id === entry.id) + 1;
-              const isFirst = rank === 1;
-              const pillarHeight = rank === 1 ? 104 : rank === 2 ? 76 : 62;
-              const pillarColor =
-                rank === 1 ? '#F59E0B' : rank === 2 ? '#2563EB' : '#6366F1';
-              const ringColor =
-                rank === 1 ? '#FDE047' : rank === 2 ? '#93C5FD' : '#C4B5FD';
+          {podiumOrder.length > 0 ? (
+            <View style={styles.podiumRow}>
+              {podiumOrder.map((entry) => {
+                const isFirst = entry.rank === 1;
+                const pillarHeight = entry.rank === 1 ? 104 : entry.rank === 2 ? 76 : 62;
+                const pillarColor =
+                  entry.rank === 1 ? '#F59E0B' : entry.rank === 2 ? '#1055F8' : '#6366F1';
+                const ringColor =
+                  entry.rank === 1 ? '#FDE047' : entry.rank === 2 ? '#93C5FD' : '#C4B5FD';
+                const avatarUri = api.assetUrl(entry.avatarUrl);
 
-              return (
-                <View key={entry.id} style={styles.podiumCol}>
-                  {isFirst ? <Crown size={22} color="#FDE047" fill="#FDE047" /> : null}
-                  <View style={[styles.podiumAvatarWrap, { borderColor: ringColor }]}>
-                    <Image
-                      source={GeneratedAssets[entry.avatarKey]}
-                      style={isFirst ? styles.podiumAvatarLg : styles.podiumAvatarSm}
-                    />
-                  </View>
-                  <Text style={styles.podiumName} numberOfLines={1}>
-                    {entry.isCurrentUser ? 'You' : entry.name.split(' ')[0]}
-                  </Text>
-                  <Text style={styles.podiumXp}>{entry.weeklyXp} XP</Text>
+                return (
+                  <View key={entry.id} style={styles.podiumCol}>
+                    {isFirst ? <Crown size={22} color="#FDE047" fill="#FDE047" /> : null}
+                    <View style={[styles.podiumAvatarWrap, { borderColor: ringColor }]}>
+                      <Image
+                        source={avatarUri ? { uri: avatarUri } : LEO_ART[isFirst ? 'cheer' : 'wave']}
+                        style={isFirst ? styles.podiumAvatarLg : styles.podiumAvatarSm}
+                      />
+                    </View>
+                    <Text style={styles.podiumName} numberOfLines={1}>
+                      {entry.me ? 'You' : entry.name.split(' ')[0]}
+                    </Text>
+                    <Text style={styles.podiumXp}>
+                      {entry.score} {entry.unitLabel}
+                    </Text>
 
-                  <View
-                    style={[
-                      styles.pillar,
-                      {
-                        height: pillarHeight,
-                        backgroundColor: pillarColor,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.pillarNum}>{rank}</Text>
+                    <View
+                      style={[
+                        styles.pillar,
+                        { height: pillarHeight, backgroundColor: pillarColor },
+                      ]}
+                    >
+                      <Text style={styles.pillarNum}>{entry.rank}</Text>
+                    </View>
                   </View>
-                </View>
-              );
-            })}
-          </View>
+                );
+              })}
+            </View>
+          ) : (
+            <View style={styles.emptyStadium}>
+              <LeoMascot pose="cheer" size={84} />
+              <Text style={styles.emptyStadiumText}>
+                Complete 1 lesson to enter this week’s podium!
+              </Text>
+            </View>
+          )}
         </View>
       </StaggeredEntrance>
 
-      {/* Weekly Standings */}
-      <SectionHeader title="Weekly Standings" subtitle="Earn XP in any city to climb" />
+      <SectionHeader
+        title={boardMode === 'league' ? 'Weekly Standings' : 'Coin Leaders'}
+        subtitle="Live rankings from Impulse"
+      />
 
-      <View style={styles.listStack}>
-        {leaderboard.map((entry, idx) => {
-          const rank = idx + 1;
-          const levelColor = RegionPalette[entry.level].primary;
-          const showCutoff = idx === 3;
-
-          return (
-            <React.Fragment key={entry.id}>
-              {showCutoff ? (
-                <View style={styles.cutoffRow}>
-                  <View style={[styles.cutoffLine, { backgroundColor: colors.success }]} />
-                  <View style={[styles.cutoffPill, { backgroundColor: colors.successMuted }]}>
-                    <ArrowUpRight size={13} color={colors.success} />
-                    <Text style={[styles.cutoffText, { color: colors.success }]}>
-                      Promotion Zone
-                    </Text>
-                  </View>
-                  <View style={[styles.cutoffLine, { backgroundColor: colors.success }]} />
-                </View>
-              ) : null}
-
+      {rows.length > 0 ? (
+        <View style={styles.list}>
+          {rows.map((entry) => {
+            const avatarUri = api.assetUrl(entry.avatarUrl);
+            return (
               <Card
-                variant="elevated"
+                key={entry.id}
                 style={[
-                  styles.rankRowCard,
-                  entry.isCurrentUser && {
-                    borderColor: colors.accent,
-                    borderWidth: 2,
-                    backgroundColor: colors.accentMuted,
-                  },
+                  styles.rankRow,
+                  entry.me
+                    ? { borderColor: '#1055F8', borderWidth: 2, backgroundColor: colors.accentMuted }
+                    : null,
                 ]}
               >
                 <Text
                   style={[
-                    styles.rankNum,
-                    { color: rank <= 3 ? colors.coin : colors.textSecondary },
+                    styles.rankIndex,
+                    { color: entry.rank <= 3 ? '#F59E0B' : colors.textSecondary },
                   ]}
                 >
-                  {rank}
+                  {entry.rank}
                 </Text>
-                <Image
-                  source={GeneratedAssets[entry.avatarKey]}
-                  style={styles.listAvatar}
-                />
-                <View style={styles.listInfo}>
-                  <View style={styles.nameLine}>
-                    <Text
-                      style={[typography.headline, { color: colors.textPrimary }]}
-                      numberOfLines={1}
-                    >
+                <View style={styles.rowAvatarBox}>
+                  <Image
+                    source={avatarUri ? { uri: avatarUri } : LEO_ART.idle}
+                    style={styles.rowAvatar}
+                  />
+                </View>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <View style={styles.nameRow}>
+                    <Text style={[typography.headline, { color: colors.textPrimary }]} numberOfLines={1}>
                       {entry.name}
                     </Text>
-                    {entry.isCurrentUser ? <Badge label="You" tone="accent" /> : null}
+                    {entry.me ? <Badge label="You" tone="accent" /> : null}
                   </View>
-                  <View style={styles.subLine}>
-                    <Text style={[typography.caption, { color: levelColor }]}>
-                      Level {entry.level}
-                    </Text>
-                    <Text style={[typography.caption, { color: colors.textTertiary }]}>·</Text>
-                    <Flame size={12} color={colors.streak} />
-                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                      {entry.streak}d
-                    </Text>
-                  </View>
+                  {entry.streak > 0 ? (
+                    <View style={styles.subRow}>
+                      <Flame size={12} color={colors.streak} fill={colors.streak} />
+                      <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                        {entry.streak}d streak
+                      </Text>
+                    </View>
+                  ) : null}
                 </View>
-                <View
-                  style={[
-                    styles.xpBadge,
-                    { backgroundColor: colors.surface, borderRadius: radii.pill },
-                  ]}
-                >
-                  <Zap size={12} color={colors.xp} />
-                  <Text style={[styles.xpText, { color: colors.xp }]}>{entry.weeklyXp}</Text>
+                <View style={styles.scoreChip}>
+                  {boardMode === 'league' ? <XpBolt3D size={16} /> : <Coin3D size={16} />}
+                  <Text
+                    style={[
+                      styles.rowScore,
+                      { color: boardMode === 'league' ? '#3B8700' : '#B45309' },
+                    ]}
+                  >
+                    {entry.score}
+                  </Text>
                 </View>
               </Card>
-            </React.Fragment>
-          );
-        })}
-      </View>
-
-      {/* Achievements Shelf */}
-      <SectionHeader
-        title="Trophy Badges"
-        subtitle={`${player.achievements.filter((a) => a.unlocked).length}/${player.achievements.length} unlocked`}
-      />
-
-      <View style={styles.listStack}>
-        {player.achievements.map((ach) => (
-          <Card key={ach.id} style={styles.achCard}>
-            <View style={styles.achTop}>
-              <View
-                style={[
-                  styles.achIconBox,
-                  {
-                    backgroundColor: ach.unlocked ? colors.coinMuted : colors.surfaceMuted,
-                    borderRadius: radii.md,
-                  },
-                ]}
-              >
-                <AchievementIcon
-                  name={ach.iconName}
-                  color={ach.unlocked ? colors.coin : colors.textTertiary}
-                />
-              </View>
-              <View style={styles.achInfo}>
-                <View style={styles.achTitleRow}>
-                  <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]}>
-                    {ach.title}
-                  </Text>
-                  <View style={[styles.gemPill, { backgroundColor: colors.gemMuted }]}>
-                    <Gem size={12} color={colors.gem} />
-                    <Text style={[styles.gemText, { color: colors.gem }]}>
-                      +{ach.rewardGems}
-                    </Text>
-                  </View>
-                </View>
-                <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                  {ach.description}
-                </Text>
-              </View>
-            </View>
-            <ProgressBar
-              progress={ach.progress / ach.target}
-              color={ach.unlocked ? colors.coin : colors.accent}
-              height={8}
-            />
-          </Card>
-        ))}
-      </View>
+            );
+          })}
+        </View>
+      ) : (
+        <Card style={styles.emptyCard}>
+          <Text style={[typography.callout, { color: colors.textSecondary, textAlign: 'center' }]}>
+            No leaderboard entries yet for this scope.
+          </Text>
+        </Card>
+      )}
     </Screen>
   );
 }
@@ -282,6 +289,11 @@ export default function LeaderboardScreen() {
 const styles = StyleSheet.create({
   headerBlock: {
     gap: 4,
+  },
+  scopeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
   stadiumCard: {
     backgroundColor: '#111827',
@@ -297,25 +309,24 @@ const styles = StyleSheet.create({
   kpiPill: {
     flex: 1,
     borderRadius: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingVertical: 11,
+    paddingHorizontal: 10,
     alignItems: 'center',
     gap: 2,
   },
   kpiValue: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 17,
+    fontWeight: '900',
     fontVariant: ['tabular-nums'],
   },
   kpiLabel: {
-    color: 'rgba(255,255,255,0.85)',
+    color: 'rgba(255,255,255,0.86)',
     fontSize: 11,
     fontWeight: '700',
   },
   totalScoreCenter: {
     alignItems: 'center',
-    gap: 6,
   },
   trophyScoreRow: {
     flexDirection: 'row',
@@ -332,14 +343,14 @@ const styles = StyleSheet.create({
   },
   totalScoreNumber: {
     color: '#FFFFFF',
-    fontSize: 28,
+    fontSize: 27,
     fontWeight: '900',
   },
   divisionChip: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#2563EB',
+    backgroundColor: '#1055F8',
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 999,
@@ -365,16 +376,17 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 999,
     padding: 2,
+    backgroundColor: '#1F2937',
   },
   podiumAvatarLg: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
   },
   podiumAvatarSm: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
   },
   podiumName: {
     color: '#FFFFFF',
@@ -383,10 +395,8 @@ const styles = StyleSheet.create({
   },
   podiumXp: {
     color: '#9CA3AF',
-    fontSize: 11.5,
+    fontSize: 11,
     fontWeight: '700',
-    fontVariant: ['tabular-nums'],
-    marginBottom: 4,
   },
   pillar: {
     width: '100%',
@@ -396,114 +406,71 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pillarNum: {
-    color: 'rgba(255,255,255,0.9)',
-    fontSize: 32,
+    color: '#FFFFFF',
+    fontSize: 28,
     fontWeight: '900',
   },
-  listStack: {
-    gap: 10,
-  },
-  cutoffRow: {
-    flexDirection: 'row',
+  emptyStadium: {
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 4,
+    paddingBottom: 18,
   },
-  cutoffLine: {
-    flex: 1,
-    height: 1.5,
-    opacity: 0.4,
+  emptyStadiumText: {
+    color: 'rgba(255,255,255,0.88)',
+    fontSize: 13,
+    fontWeight: '700',
+    textAlign: 'center',
   },
-  cutoffPill: {
+  list: {
+    gap: 10,
+  },
+  emptyCard: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  rankRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
+    gap: 11,
+    paddingVertical: 11,
   },
-  cutoffText: {
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  rankRowCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    gap: 12,
-  },
-  rankNum: {
-    width: 22,
+  rankIndex: {
+    width: 24,
     textAlign: 'center',
     fontSize: 15,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
+    fontWeight: '900',
   },
-  listAvatar: {
+  rowAvatarBox: {
     width: 42,
     height: 42,
     borderRadius: 21,
+    overflow: 'hidden',
+    backgroundColor: '#EFF6FF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  listInfo: {
-    flex: 1,
-    gap: 2,
+  rowAvatar: {
+    width: 42,
+    height: 42,
   },
-  nameLine: {
+  nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  subLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  xpBadge: {
+  subRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
   },
-  xpText: {
-    fontSize: 13,
-    fontWeight: '800',
+  scoreChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  rowScore: {
+    fontSize: 15,
+    fontWeight: '900',
     fontVariant: ['tabular-nums'],
-  },
-  achCard: {
-    gap: 12,
-  },
-  achTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  achIconBox: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  achInfo: {
-    flex: 1,
-    gap: 3,
-  },
-  achTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  gemPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  gemText: {
-    fontSize: 12,
-    fontWeight: '800',
   },
 });

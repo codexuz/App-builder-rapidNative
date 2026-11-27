@@ -1,11 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   BookOpen,
   Check,
-  Headphones,
-  Mic,
+  ChevronRight,
+  Play,
   Volume2,
   VolumeX,
   X,
@@ -13,767 +21,773 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ConfettiBurst,
-  FeedbackBottomSheet,
   GameButton,
   MascotChatBubble,
   ProgressBar,
   SentenceBuilderStage,
-  SoundWaveVisualizer,
   VictoryCelebration,
   speakEnglishText,
+  type VictorySummaryData,
 } from '@/components/game';
+import { LeoMascot } from '@/components/mascot/LeoMascot';
 import { AnimatedPressable, Badge, Card } from '@/components/ui';
-import { RegionPalette, useAppTheme } from '@/constants/Theme';
-import { getCityById, getLessonById } from '@/data/worldData';
-import { useGame, type LessonCompletionSummary } from '@/store/GameContext';
-import type { LessonStageType } from '@/types/game';
+import { useAppTheme } from '@/constants/Theme';
+import { api } from '@/lib/api';
+import type {
+  AttemptResult,
+  Lesson,
+  LessonExercise,
+  Question,
+  VocabularyWord,
+} from '@/lib/api/types';
+import { useKidsApp } from '@/providers/KidsAppProvider';
 import {
   playCorrectFeedback,
   playTileTapSound,
   playVictoryFeedback,
-  playWrongFeedback,
 } from '@/utils/soundFeedback';
 
-const STAGE_META: Record<LessonStageType, { label: string; pipHint: string }> = {
-  vocabulary: { label: 'Vocabulary', pipHint: 'Tap the speaker to hear each new word!' },
-  grammar: { label: 'Grammar', pipHint: 'Spot the pattern and unlock the rule!' },
-  listening: { label: 'Listening', pipHint: 'Listen closely to our local guide!' },
-  reading: { label: 'Reading', pipHint: 'Read the clue card to find the answer!' },
-  speaking: { label: 'Speaking', pipHint: 'Say it loud and proud — you have got this!' },
-  interactive: { label: 'Sentence Builder', pipHint: 'Tap the word tiles in order!' },
-};
-
-export default function LessonExpeditionScreen() {
+/**
+ * 100% Live Backend Impulse Kids Lesson & Interactive Exercise Player:
+ * - Loads GET /lms/lessons/:id?studentId=...
+ * - Phase 1 (study): Theory & Magic Words with Leo voice playback + exercise selector
+ * - Phase 2 (play): Interactive Duolingo-style question runner (SINGLE_CHOICE, MULTI_CHOICE,
+ *   TRUE_FALSE, ORDER Sentence Builder, TEXT/NUMERIC/ESSAY) wired to POST /lms/exercises/:id/start
+ *   and POST /lms/exercises/:id/submit
+ * - Phase 3 (victory): Server-graded AttemptResult inside 3D Leo VictoryCelebration
+ * - Phase 4 (review): Full per-question server grading review when answersShown is enabled
+ */
+export default function KidsLessonScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
   const { colors, typography, radii } = useAppTheme();
-  const { player, completeLesson } = useGame();
+  const {
+    studentId,
+    courses,
+    soundEnabled,
+    setSoundEnabled,
+    loadLessonDetail,
+    submitExerciseAttempt,
+  } = useKidsApp();
 
-  const lesson = useMemo(
-    () => getLessonById(typeof params.id === 'string' ? params.id : ''),
-    [params.id]
-  );
-  const city = lesson ? getCityById(lesson.cityId) : undefined;
-  const palette = lesson ? RegionPalette[lesson.level] : RegionPalette.A1;
+  const lessonId = typeof params.id === 'string' ? params.id : '';
+  const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [phase, setPhase] = useState<'study' | 'play' | 'victory' | 'review'>('study');
 
-  const [stageIndex, setStageIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [checked, setChecked] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [correctCount, setCorrectCount] = useState(0);
+  // Exercise state
+  const [exerciseIdx, setExerciseIdx] = useState(0);
+  const [attemptId, setAttemptId] = useState<string | undefined>(undefined);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [qIdx, setQIdx] = useState(0);
+  const [answersMap, setAnswersMap] = useState<Record<string, unknown>>({});
 
-  // Listening state
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [showTranscript, setShowTranscript] = useState(false);
+  // Current question input states
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [selectedMulti, setSelectedMulti] = useState<string[]>([]);
+  const [selectedBool, setSelectedBool] = useState<boolean | null>(null);
+  const [selectedOrderIndices, setSelectedOrderIndices] = useState<number[]>([]);
+  const [textAnswer, setTextAnswer] = useState('');
+
+  // Submission & celebration state
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [attemptResult, setAttemptResult] = useState<AttemptResult | null>(null);
+  const [confettiKey, setConfettiKey] = useState(0);
+  const [isLeoSpeaking, setIsLeoSpeaking] = useState(false);
+  const [victory, setVictory] = useState<VictorySummaryData | null>(null);
+
+  const startedAtRef = useRef<number>(Date.now());
   const stopAudioRef = useRef<(() => void) | null>(null);
 
-  // Speaking state
-  const [isRecording, setIsRecording] = useState(false);
-  const [speakingScore, setSpeakingScore] = useState<number | null>(null);
-
-  // Interactive tile builder state
-  const [selectedTileIndices, setSelectedTileIndices] = useState<number[]>([]);
-
-  // Completion & celebration state
-  const [summary, setSummary] = useState<LessonCompletionSummary | null>(null);
-  const [confettiKey, setConfettiKey] = useState(0);
-  const [confettiIntensity, setConfettiIntensity] = useState<'small' | 'grand'>('small');
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [isPipSpeaking, setIsPipSpeaking] = useState(false);
-
-  const triggerConfetti = (intensity: 'small' | 'grand') => {
-    setConfettiIntensity(intensity);
-    setConfettiKey((k) => k + 1);
-  };
+  const fetchLesson = useCallback(() => {
+    if (!lessonId) {
+      setLoadError('Lesson ID is missing.');
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setLoadError(null);
+    loadLessonDetail(lessonId)
+      .then((data) => {
+        if (!data) {
+          setLoadError('Could not load this lesson.');
+        } else {
+          setLesson(data);
+          setExerciseIdx(0);
+          setQuestions(data.exercises?.[0]?.questions ?? []);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoadError(err instanceof Error ? err.message : 'Failed to load lesson.');
+        setLoading(false);
+      });
+  }, [lessonId, loadLessonDetail]);
 
   useEffect(() => {
+    fetchLesson();
     return () => {
       stopAudioRef.current?.();
     };
-  }, []);
+  }, [fetchLesson]);
 
-  if (!lesson) {
+  const activeExercise: LessonExercise | null = lesson?.exercises?.[exerciseIdx] ?? null;
+  const currentQuestion: Question | null = questions[qIdx] ?? null;
+
+  const parentCourse = useMemo(() => {
+    const cid = lesson?.unit?.course?.id;
+    return courses.find((c) => c.id === cid) ?? null;
+  }, [courses, lesson]);
+
+  const speakAsLeo = (text: string) => {
+    if (!soundEnabled) return;
+    stopAudioRef.current?.();
+    setIsLeoSpeaking(true);
+    stopAudioRef.current = speakEnglishText(text, () => setIsLeoSpeaking(false));
+  };
+
+  const resetQuestionInputs = () => {
+    setSelectedChoice(null);
+    setSelectedMulti([]);
+    setSelectedBool(null);
+    setSelectedOrderIndices([]);
+    setTextAnswer('');
+    setSubmitError(null);
+  };
+
+  const handleStartQuiz = async (idx = exerciseIdx) => {
+    const targetEx = lesson?.exercises?.[idx] ?? null;
+    startedAtRef.current = Date.now();
+    setSubmitError(null);
+
+    if (!targetEx) {
+      if (studentId && lesson) {
+        await api.markLessonViewed(lesson.id, studentId).catch(() => {});
+      }
+      setVictory({
+        accuracyPercent: 100,
+        xpEarned: 0,
+        coinsEarned: parentCourse?.lessonRewardCoins ?? 0,
+        streakDays: 0,
+      });
+      setPhase('victory');
+      setConfettiKey((k) => k + 1);
+      playVictoryFeedback(soundEnabled);
+      return;
+    }
+
+    setExerciseIdx(idx);
+    let runQuestions = targetEx.questions ?? [];
+    let nextAttemptId: string | undefined;
+
+    if (studentId && (targetEx.settings?.startRequired || targetEx.mine?.openAttempt)) {
+      try {
+        const started = await api.startAttempt(targetEx.id, studentId);
+        nextAttemptId = started.attempt.id;
+        runQuestions = started.questions;
+      } catch (err) {
+        setSubmitError(err instanceof Error ? err.message : 'Could not start exercise.');
+        return;
+      }
+    }
+
+    setAttemptId(nextAttemptId);
+    setQuestions(runQuestions);
+    setQIdx(0);
+    setAnswersMap({});
+    resetQuestionInputs();
+    setPhase('play');
+  };
+
+  const getCurrentAnswer = (): unknown => {
+    if (!currentQuestion) return null;
+    if (currentQuestion.type === 'SINGLE_CHOICE') return selectedChoice;
+    if (currentQuestion.type === 'MULTI_CHOICE') return selectedMulti;
+    if (currentQuestion.type === 'TRUE_FALSE') return selectedBool;
+    if (currentQuestion.type === 'ORDER') {
+      const items = currentQuestion.data.items ?? [];
+      return selectedOrderIndices.map((idx) => items[idx]?.id).filter(Boolean);
+    }
+    return textAnswer.trim();
+  };
+
+  const canAdvance = (() => {
+    if (!currentQuestion) return false;
+    if (currentQuestion.type === 'SINGLE_CHOICE') return selectedChoice !== null;
+    if (currentQuestion.type === 'MULTI_CHOICE') return selectedMulti.length > 0;
+    if (currentQuestion.type === 'TRUE_FALSE') return selectedBool !== null;
+    if (currentQuestion.type === 'ORDER') {
+      return selectedOrderIndices.length === (currentQuestion.data.items ?? []).length;
+    }
+    return textAnswer.trim().length > 0;
+  })();
+
+  const handleNextOrSubmit = async () => {
+    if (!currentQuestion || !canAdvance || !activeExercise) return;
+
+    const currentAns = getCurrentAnswer();
+    const updatedAnswers = { ...answersMap, [currentQuestion.id]: currentAns };
+    setAnswersMap(updatedAnswers);
+
+    if (qIdx + 1 < questions.length) {
+      playCorrectFeedback(soundEnabled);
+      setQIdx((i) => i + 1);
+      resetQuestionInputs();
+      return;
+    }
+
+    // Final question -> submit to live backend POST /lms/exercises/:id/submit
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const durationSeconds = Math.max(1, Math.round((Date.now() - startedAtRef.current) / 1000));
+      const formattedAnswers = Object.entries(updatedAnswers).map(([questionId, answer]) => ({
+        questionId,
+        answer,
+      }));
+
+      const result = await submitExerciseAttempt({
+        exerciseId: activeExercise.id,
+        attemptId,
+        durationSeconds,
+        answers: formattedAnswers,
+      });
+
+      setAttemptResult(result);
+
+      const maxScoreNum = Number(result.maxScore) || 0;
+      const scoreNum = Number(result.score ?? 0);
+      const accuracyPercent =
+        maxScoreNum > 0 ? Math.max(0, Math.min(100, Math.round((scoreNum / maxScoreNum) * 100))) : 100;
+
+      const allLessons = parentCourse?.units.flatMap((u) => u.lessons) ?? [];
+      const curPos = allLessons.findIndex((l) => l.id === lessonId);
+      const nextUnlocked = curPos >= 0 ? allLessons[curPos + 1]?.title ?? null : null;
+
+      setVictory({
+        accuracyPercent,
+        xpEarned: result.reward?.xp.gained ?? 0,
+        coinsEarned: result.streak?.coins ?? 0,
+        streakDays: result.streak?.after ?? 0,
+        unlockedNextLessonTitle: nextUnlocked,
+      });
+      setPhase('victory');
+      setConfettiKey((k) => k + 1);
+      playVictoryFeedback(soundEnabled);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to submit attempt.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <View style={styles.missingWrap}>
-          <Text style={[typography.title1, { color: colors.textPrimary }]}>
-            Expedition Not Found
-          </Text>
-          <GameButton label="Back to World Map" onPress={() => router.back()} />
+      <SafeAreaView style={[styles.safe, styles.center, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color="#1055F8" />
+        <Text style={[typography.callout, { color: colors.textSecondary, marginTop: 10 }]}>
+          Loading lesson from Impulse...
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (loadError || !lesson) {
+    return (
+      <SafeAreaView style={[styles.safe, styles.center, { backgroundColor: colors.background, padding: 24 }]}>
+        <LeoMascot pose="oops" size={120} />
+        <Text style={[typography.title2, { color: colors.textPrimary, textAlign: 'center', marginTop: 8 }]}>
+          Could Not Open Lesson
+        </Text>
+        <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center', marginBottom: 16 }]}>
+          {loadError ?? 'Lesson not found.'}
+        </Text>
+        <View style={{ width: '100%', maxWidth: 260, gap: 10 }}>
+          <GameButton label="Try Again" color="#1055F8" depthColor="#0A3BB3" onPress={fetchLesson} />
+          <GameButton label="Go Back" color="#64748B" depthColor="#475569" onPress={() => router.back()} />
         </View>
       </SafeAreaView>
     );
   }
 
-  const totalStages = lesson.stages.length;
-  const stage = lesson.stages[stageIndex];
+  if (phase === 'review' && attemptResult) {
+    return (
+      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+        <View style={styles.topBar}>
+          <Pressable
+            onPress={() => setPhase('victory')}
+            style={[styles.closeBtn, { backgroundColor: colors.surfaceMuted }]}
+          >
+            <X size={20} color={colors.textPrimary} />
+          </Pressable>
+          <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]}>
+            Answer Review
+          </Text>
+          <Badge
+            label={`${attemptResult.score ?? 0}/${attemptResult.maxScore}`}
+            tone="accent"
+          />
+        </View>
 
-  const resetStageInputs = () => {
-    stopAudioRef.current?.();
-    setSelectedOption(null);
-    setChecked(false);
-    setIsCorrect(false);
-    setIsPlayingAudio(false);
-    setIsPipSpeaking(false);
-    setShowTranscript(false);
-    setIsRecording(false);
-    setSpeakingScore(null);
-    setSelectedTileIndices([]);
-  };
-
-  const playVoice = (text: string) => {
-    stopAudioRef.current?.();
-    setIsPlayingAudio(true);
-    stopAudioRef.current = speakEnglishText(text, () => setIsPlayingAudio(false));
-  };
-
-  const speakAsPip = (text: string) => {
-    if (!soundEnabled) return;
-    stopAudioRef.current?.();
-    setIsPipSpeaking(true);
-    stopAudioRef.current = speakEnglishText(text, () => setIsPipSpeaking(false));
-  };
-
-  const handleCheck = () => {
-    if (stage.type === 'vocabulary' || stage.type === 'grammar' || stage.type === 'listening' || stage.type === 'reading') {
-      if (selectedOption === null) return;
-      const right = selectedOption === stage.correctIndex;
-      setChecked(true);
-      setIsCorrect(right);
-      if (right) {
-        setCorrectCount((c) => c + 1);
-        triggerConfetti('small');
-        playCorrectFeedback(soundEnabled);
-      } else {
-        playWrongFeedback(soundEnabled);
-      }
-      return;
-    }
-
-    if (stage.type === 'interactive') {
-      const built = selectedTileIndices.map((idx) => stage.tiles[idx]).join(' ').trim();
-      const right = built.toLowerCase() === stage.correctSentence.toLowerCase();
-      setChecked(true);
-      setIsCorrect(right);
-      if (right) {
-        setCorrectCount((c) => c + 1);
-        triggerConfetti('small');
-        playCorrectFeedback(soundEnabled);
-      } else {
-        playWrongFeedback(soundEnabled);
-      }
-    }
-  };
-
-  const handleRecordSpeak = () => {
-    if (isRecording) return;
-    setIsRecording(true);
-    setSpeakingScore(null);
-    setTimeout(() => {
-      setIsRecording(false);
-      const score = 92 + Math.floor(Math.random() * 7);
-      setSpeakingScore(score);
-      setChecked(true);
-      setIsCorrect(true);
-      setCorrectCount((c) => c + 1);
-      triggerConfetti('small');
-      playCorrectFeedback(soundEnabled);
-    }, 1700);
-  };
-
-  const handleNext = () => {
-    if (stageIndex + 1 < totalStages) {
-      setStageIndex((i) => i + 1);
-      resetStageInputs();
-    } else {
-      const accuracy = Math.round((correctCount / totalStages) * 100);
-      const result = completeLesson(lesson.id, Math.max(60, Math.min(100, accuracy)));
-      setSummary(result);
-      triggerConfetti('grand');
-      playVictoryFeedback(soundEnabled);
-    }
-  };
-
-  const toggleTile = (tileIdx: number) => {
-    if (checked) return;
-    const isAdding = !selectedTileIndices.includes(tileIdx);
-    if (stage.type === 'interactive') {
-      playTileTapSound(isAdding ? stage.tiles[tileIdx] : undefined, soundEnabled);
-    }
-    setSelectedTileIndices((prev) =>
-      prev.includes(tileIdx) ? prev.filter((i) => i !== tileIdx) : [...prev, tileIdx]
+        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+          {questions.map((q, idx) => {
+            const ans = attemptResult.answers.find((a) => a.questionId === q.id);
+            const ok = ans?.isCorrect === true;
+            return (
+              <Card
+                key={q.id}
+                style={[
+                  styles.reviewCard,
+                  { borderColor: ok ? '#58CC02' : '#FF4B4B', borderWidth: 1.5 },
+                ]}
+              >
+                <View style={styles.reviewHead}>
+                  <Badge label={`Q${idx + 1}`} tone={ok ? 'success' : 'danger'} />
+                  <Badge label={ok ? 'Correct' : 'Check Again'} tone={ok ? 'success' : 'danger'} />
+                </View>
+                <Text style={[typography.headline, { color: colors.textPrimary }]}>{q.prompt}</Text>
+                {ans?.feedback ? (
+                  <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                    {ans.feedback}
+                  </Text>
+                ) : null}
+              </Card>
+            );
+          })}
+        </ScrollView>
+      </SafeAreaView>
     );
-  };
+  }
 
-  if (summary) {
-    const cityLessonIds = city?.lessons.map((l) => l.id) ?? [lesson.id];
-    const cityCompletedCount = cityLessonIds.filter(
-      (lid) => lid === lesson.id || player.completedLessonIds.includes(lid)
+  if (phase === 'victory' && victory) {
+    const allLessons = parentCourse?.units.flatMap((u) => u.lessons) ?? [];
+    const completedCount = allLessons.filter(
+      (l) => l.id === lessonId || l.progress?.status === 'COMPLETED'
     ).length;
 
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
         <VictoryCelebration
           lessonTitle={lesson.title}
-          cityName={city?.name ?? 'Impulse World'}
-          cityCompletedCount={cityCompletedCount}
-          cityTotalCount={cityLessonIds.length}
-          summary={summary}
-          accentColor={palette.primary}
-          deepColor={palette.deep}
+          courseName={parentCourse?.title ?? lesson.unit?.course?.title ?? 'Impulse Kids'}
+          completedCount={completedCount}
+          totalCount={Math.max(1, allLessons.length)}
+          summary={victory}
+          accentColor="#1055F8"
+          deepColor="#0A3BB3"
           confettiKey={confettiKey}
           onClaimAndExit={() => router.back()}
           onPracticeAgain={() => {
-            setSummary(null);
-            setStageIndex(0);
-            setCorrectCount(0);
-            resetStageInputs();
+            if (attemptResult?.answersShown) {
+              setPhase('review');
+            } else {
+              setVictory(null);
+              setPhase('study');
+              resetQuestionInputs();
+            }
           }}
         />
       </SafeAreaView>
     );
   }
 
-  const canCheck =
-    stage.type === 'speaking'
-      ? false
-      : stage.type === 'interactive'
-        ? selectedTileIndices.length > 0
-        : selectedOption !== null;
+  // PHASE 1: STORY & VOCABULARY WARM-UP
+  if (phase === 'study') {
+    const textBlocks = (lesson.contentBlocks ?? []).filter((b) => b.type === 'TEXT');
+    const vocabItems: VocabularyWord[] = (lesson.contentBlocks ?? [])
+      .filter((b) => b.type === 'VOCABULARY')
+      .flatMap((b) => b.content.items ?? []);
 
-  const pipBubbleMessage =
-    stage.type === 'interactive'
-      ? stage.instruction
-      : stage.type === 'speaking'
-        ? stage.context
-        : STAGE_META[stage.type].pipHint;
+    return (
+      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+        <View style={styles.topBar}>
+          <Pressable
+            onPress={() => router.back()}
+            style={[styles.closeBtn, { backgroundColor: colors.surfaceMuted }]}
+          >
+            <X size={20} color={colors.textPrimary} />
+          </Pressable>
+          <View style={{ flex: 1 }}>
+            <Text style={[typography.headline, { color: colors.textPrimary }]} numberOfLines={1}>
+              {lesson.title}
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>
+              {lesson.unit?.course?.title ?? 'Impulse Kids'}
+            </Text>
+          </View>
+          <Badge label={`${lesson.exercises.length} Ex`} tone="accent" />
+        </View>
 
-  const pipBubbleHint =
-    stage.type === 'interactive' ? stage.promptHint : undefined;
+        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+          <MascotChatBubble
+            eyebrow={lesson.unit?.title ?? 'Lesson Guide'}
+            message={
+              lesson.description ??
+              'Read the lesson and listen to the new words, then start the quiz!'
+            }
+            pose="wave"
+            accentColor="#1055F8"
+            softAccentColor="#DBEAFE"
+            isSpeaking={isLeoSpeaking}
+            onSpeakPress={() =>
+              speakAsLeo(`${lesson.title}. ${lesson.description ?? ''}`)
+            }
+          />
 
-  const pipSpeechText =
-    stage.type === 'interactive'
-      ? `${stage.instruction}. ${stage.promptHint}`
-      : stage.type === 'speaking'
-        ? `${stage.context}. ${stage.targetPhrase}`
-        : `${stage.title}. ${STAGE_META[stage.type].pipHint}`;
+          {submitError ? (
+            <Card variant="muted" style={styles.errorBanner}>
+              <Text style={styles.errorText}>{submitError}</Text>
+            </Card>
+          ) : null}
+
+          {textBlocks.map((block) => (
+            <Card key={block.id} style={styles.theoryCard}>
+              <View style={styles.theoryHead}>
+                <BookOpen size={17} color="#1055F8" />
+                <Text style={[typography.headline, { color: colors.textPrimary }]}>
+                  Lesson Notes
+                </Text>
+              </View>
+              <Text style={[typography.body, { color: colors.textPrimary, lineHeight: 24 }]}>
+                {(block.content.markdown ?? '').replace(/\*\*/g, '').replace(/\*/g, '')}
+              </Text>
+            </Card>
+          ))}
+
+          {vocabItems.length > 0 ? (
+            <View style={styles.vocabStack}>
+              <Text style={[typography.title2, { color: colors.textPrimary }]}>
+                Magic Words
+              </Text>
+              {vocabItems.map((w) => (
+                <Card key={w.term} style={styles.vocabCard}>
+                  <View style={styles.vocabTop}>
+                    <View style={{ flex: 1, gap: 2 }}>
+                      <Text style={[typography.title2, { color: colors.textPrimary }]}>
+                        {w.term}
+                      </Text>
+                      {w.pronunciation ? (
+                        <Text style={[typography.caption, { color: colors.textTertiary }]}>
+                          {w.pronunciation} {w.partOfSpeech ? `· ${w.partOfSpeech}` : ''}
+                        </Text>
+                      ) : null}
+                    </View>
+                    <AnimatedPressable
+                      onPress={() => speakAsLeo(`${w.term}. ${w.example ?? ''}`)}
+                      style={[styles.audioBtn, { backgroundColor: '#DBEAFE' }]}
+                    >
+                      <Volume2 size={18} color="#1055F8" />
+                    </AnimatedPressable>
+                  </View>
+                  <Text style={[typography.callout, { color: '#3B8700' }]}>{w.meaning}</Text>
+                  {w.example ? (
+                    <Text
+                      style={[
+                        typography.caption,
+                        { color: colors.textSecondary, fontStyle: 'italic' },
+                      ]}
+                    >
+                      "{w.example}"
+                    </Text>
+                  ) : null}
+                </Card>
+              ))}
+            </View>
+          ) : null}
+
+          {lesson.exercises.length > 1 ? (
+            <View style={styles.vocabStack}>
+              <Text style={[typography.title2, { color: colors.textPrimary }]}>
+                Exercises
+              </Text>
+              {lesson.exercises.map((ex, idx) => (
+                <AnimatedPressable
+                  key={ex.id}
+                  onPress={() => void handleStartQuiz(idx)}
+                  style={[
+                    styles.exPickCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radii.lg },
+                  ]}
+                >
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <Text style={[typography.headline, { color: colors.textPrimary }]}>
+                      {ex.title}
+                    </Text>
+                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                      {ex.questions.length} questions · Max {ex.maxScore} pts
+                    </Text>
+                  </View>
+                  <ChevronRight size={18} color={colors.textTertiary} />
+                </AnimatedPressable>
+              ))}
+            </View>
+          ) : null}
+        </ScrollView>
+
+        <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
+          <GameButton
+            label={
+              activeExercise
+                ? `Start ${activeExercise.title} (${activeExercise.questions.length} Qs)`
+                : 'Mark Lesson Complete'
+            }
+            color="#58CC02"
+            depthColor="#46A302"
+            icon={<Play size={17} color="#FFFFFF" fill="#FFFFFF" />}
+            onPress={() => void handleStartQuiz(0)}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // PHASE 2: INTERACTIVE LIVE EXERCISE PLAYER
+  const orderItems = currentQuestion?.data.items ?? [];
+  const orderTiles = orderItems.map((it) => it.text);
+  const progressValue = (qIdx + 1) / Math.max(1, questions.length);
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-      <ConfettiBurst triggerKey={confettiKey} intensity={confettiIntensity} />
-      {/* Top Expedition Progress Header */}
+      <ConfettiBurst triggerKey={confettiKey} intensity="small" />
+
       <View style={styles.topBar}>
         <Pressable
           onPress={() => {
             stopAudioRef.current?.();
-            router.back();
+            setPhase('study');
           }}
           hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel="Exit lesson"
           style={[styles.closeBtn, { backgroundColor: colors.surfaceMuted }]}
         >
           <X size={20} color={colors.textPrimary} />
         </Pressable>
 
-        <View style={styles.progressWrap}>
-          <ProgressBar
-            progress={(stageIndex + (checked ? 1 : 0.35)) / totalStages}
-            color={palette.primary}
-            height={14}
-          />
+        <View style={{ flex: 1 }}>
+          <ProgressBar progress={progressValue} color="#1055F8" height={14} />
         </View>
 
         <Pressable
           onPress={() => {
             if (soundEnabled) stopAudioRef.current?.();
-            setSoundEnabled((v) => !v);
+            setSoundEnabled(!soundEnabled);
           }}
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={soundEnabled ? 'Mute voice and sound effects' : 'Unmute voice and sound effects'}
-          style={[styles.soundToggleBtn, { backgroundColor: colors.surfaceMuted }]}
+          style={[styles.soundBtn, { backgroundColor: colors.surfaceMuted }]}
         >
           {soundEnabled ? (
-            <Volume2 size={17} color={palette.primary} />
+            <Volume2 size={17} color="#1055F8" />
           ) : (
             <VolumeX size={17} color={colors.textTertiary} />
           )}
         </Pressable>
 
-        <Badge label={`${stageIndex + 1}/${totalStages}`} tone="accent" />
+        <Badge label={`${qIdx + 1}/${Math.max(1, questions.length)}`} tone="accent" />
       </View>
 
-      <ScrollView
-        contentContainerStyle={[
-          styles.stageScroll,
-          checked ? styles.stageScrollWithSheet : null,
-        ]}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.stageHeader}>
-          <Text style={[typography.title1, { color: colors.textPrimary }]}>{stage.title}</Text>
-          <MascotChatBubble
-            eyebrow={`${lesson.level} · ${STAGE_META[stage.type].label}`}
-            message={pipBubbleMessage}
-            subHint={pipBubbleHint}
-            accentColor={palette.primary}
-            softAccentColor={palette.soft}
-            isSpeaking={isPipSpeaking}
-            onSpeakPress={() => speakAsPip(pipSpeechText)}
-          />
-        </View>
-
-        {/* 1. VOCABULARY STAGE */}
-        {stage.type === 'vocabulary' ? (
-          <View style={styles.stageBody}>
-            {stage.words.map((item) => (
-              <Card key={item.word} style={styles.vocabCard}>
-                <View style={styles.vocabTop}>
-                  <View style={styles.vocabWordCol}>
-                    <Text style={[typography.title2, { color: colors.textPrimary }]}>
-                      {item.word}
-                    </Text>
-                    <Text style={[typography.caption, { color: colors.textTertiary }]}>
-                      {item.phonetic} · {item.partOfSpeech}
-                    </Text>
-                  </View>
-                  <AnimatedPressable
-                    onPress={() => playVoice(`${item.word}. ${item.example}`)}
-                    style={[styles.audioIconBtn, { backgroundColor: palette.soft }]}
-                    accessibilityLabel={`Listen to ${item.word}`}
-                  >
-                    <Volume2 size={18} color={palette.primary} />
-                  </AnimatedPressable>
-                </View>
-                <Text style={[typography.body, { color: colors.textPrimary }]}>
-                  {item.definition}
-                </Text>
-                <Text style={[typography.caption, { color: colors.textSecondary, fontStyle: 'italic' }]}>
-                  "{item.example}"
-                </Text>
-              </Card>
-            ))}
-
-            <Text style={[typography.headline, { color: colors.textPrimary, marginTop: 6 }]}>
-              {stage.checkPrompt}
-            </Text>
-            <OptionList
-              options={stage.options}
-              selected={selectedOption}
-              correctIndex={stage.correctIndex}
-              checked={checked}
-              accent={palette.primary}
-              onSelect={setSelectedOption}
-            />
-          </View>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {submitError ? (
+          <Card variant="muted" style={styles.errorBanner}>
+            <Text style={styles.errorText}>{submitError}</Text>
+          </Card>
         ) : null}
 
-        {/* 2. GRAMMAR STAGE */}
-        {stage.type === 'grammar' ? (
-          <View style={styles.stageBody}>
-            <Card variant="muted" style={styles.ruleCard}>
-              <View style={styles.ruleHeader}>
-                <BookOpen size={17} color={palette.primary} />
-                <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]}>
-                  {stage.ruleHeadline}
-                </Text>
+        {currentQuestion ? (
+          <>
+            <MascotChatBubble
+              eyebrow={
+                currentQuestion.type === 'ORDER'
+                  ? 'Sentence Builder'
+                  : currentQuestion.type === 'TRUE_FALSE'
+                    ? 'True or False'
+                    : currentQuestion.type === 'MULTI_CHOICE'
+                      ? 'Pick All That Fit'
+                      : 'Quiz Challenge'
+              }
+              message={currentQuestion.prompt}
+              subHint={currentQuestion.data.hint ?? undefined}
+              pose={canAdvance ? 'cheer' : 'think'}
+              accentColor="#1055F8"
+              softAccentColor="#DBEAFE"
+              isSpeaking={isLeoSpeaking}
+              onSpeakPress={() => speakAsLeo(currentQuestion.prompt)}
+            />
+
+            {/* SINGLE_CHOICE & MULTI_CHOICE */}
+            {currentQuestion.type === 'SINGLE_CHOICE' || currentQuestion.type === 'MULTI_CHOICE' ? (
+              <View style={styles.optionsCol}>
+                {(currentQuestion.data.options ?? []).map((opt, idx) => {
+                  const isMulti = currentQuestion.type === 'MULTI_CHOICE';
+                  const isSel = isMulti
+                    ? selectedMulti.includes(opt.id)
+                    : selectedChoice === opt.id;
+
+                  const bg = isSel ? '#DDF4FF' : colors.surface;
+                  const border = isSel ? '#1CB0F6' : '#CBD5E1';
+                  const lip = isSel ? '#1899D6' : '#94A3B8';
+                  const capBg = isSel ? '#1CB0F6' : '#F8FAFC';
+                  const labelColor = isSel ? '#0369A1' : colors.textPrimary;
+
+                  return (
+                    <AnimatedPressable
+                      key={opt.id}
+                      onPress={() => {
+                        playTileTapSound(undefined, soundEnabled);
+                        if (isMulti) {
+                          setSelectedMulti((prev) =>
+                            prev.includes(opt.id)
+                              ? prev.filter((id) => id !== opt.id)
+                              : [...prev, opt.id]
+                          );
+                        } else {
+                          setSelectedChoice(opt.id);
+                        }
+                      }}
+                      style={[
+                        styles.optionBtn3D,
+                        { backgroundColor: bg, borderColor: border, borderBottomColor: lip },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.optionKeycap,
+                          { backgroundColor: capBg, borderColor: lip, borderBottomColor: lip },
+                        ]}
+                      >
+                        {isSel ? (
+                          <Check size={15} color="#FFFFFF" strokeWidth={3} />
+                        ) : (
+                          <Text style={{ color: '#64748B', fontSize: 12.5, fontWeight: '900' }}>
+                            {String.fromCharCode(65 + idx)}
+                          </Text>
+                        )}
+                      </View>
+                      <Text
+                        style={[
+                          typography.body,
+                          { color: labelColor, fontWeight: isSel ? '800' : '600', flex: 1 },
+                        ]}
+                      >
+                        {opt.text}
+                      </Text>
+                    </AnimatedPressable>
+                  );
+                })}
               </View>
-              <Text style={[typography.body, { color: colors.textSecondary }]}>
-                {stage.ruleSummary}
-              </Text>
-            </Card>
+            ) : null}
 
-            <Text style={[typography.title2, { color: colors.textPrimary }]}>{stage.prompt}</Text>
-            <OptionList
-              options={stage.options}
-              selected={selectedOption}
-              correctIndex={stage.correctIndex}
-              checked={checked}
-              accent={palette.primary}
-              onSelect={setSelectedOption}
-            />
-          </View>
-        ) : null}
+            {/* TRUE_FALSE */}
+            {currentQuestion.type === 'TRUE_FALSE' ? (
+              <View style={styles.tfRow}>
+                {[
+                  { label: 'True', val: true },
+                  { label: 'False', val: false },
+                ].map((choice) => {
+                  const isSel = selectedBool === choice.val;
+                  const bg = isSel ? '#DDF4FF' : colors.surface;
+                  const border = isSel ? '#1CB0F6' : '#CBD5E1';
+                  const lip = isSel ? '#1899D6' : '#94A3B8';
+                  const textCol = isSel ? '#0369A1' : colors.textPrimary;
 
-        {/* 3. LISTENING STAGE */}
-        {stage.type === 'listening' ? (
-          <View style={styles.stageBody}>
-            <Card style={styles.audioPlayerCard}>
-              <View style={styles.speakerRow}>
-                <View style={[styles.speakerIcon, { backgroundColor: palette.soft }]}>
-                  <Headphones size={20} color={palette.primary} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                    {stage.speakerName}
-                  </Text>
-                  <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                    {stage.speakerRole}
-                  </Text>
-                </View>
-                <GameButton
-                  label={isPlayingAudio ? 'Playing...' : 'Listen'}
-                  size="md"
-                  fullWidth={false}
-                  color={palette.primary}
-                  depthColor={palette.deep}
-                  icon={<Volume2 size={16} color="#FFFFFF" />}
-                  onPress={() => playVoice(stage.audioScript)}
-                />
+                  return (
+                    <AnimatedPressable
+                      key={choice.label}
+                      containerStyle={{ flex: 1, minWidth: 0 }}
+                      onPress={() => {
+                        playTileTapSound(choice.label, soundEnabled);
+                        setSelectedBool(choice.val);
+                      }}
+                      style={[
+                        styles.tfBtn3D,
+                        { backgroundColor: bg, borderColor: border, borderBottomColor: lip },
+                      ]}
+                    >
+                      <Text style={[typography.title2, { color: textCol }]}>{choice.label}</Text>
+                    </AnimatedPressable>
+                  );
+                })}
               </View>
+            ) : null}
 
-              <SoundWaveVisualizer active={isPlayingAudio} color={palette.primary} />
-
-              <Pressable
-                onPress={() => setShowTranscript((v) => !v)}
-                style={styles.transcriptToggle}
-              >
-                <Text style={[typography.caption, { color: palette.primary }]}>
-                  {showTranscript ? 'Hide Transcript' : 'Need a hint? Show Transcript'}
-                </Text>
-              </Pressable>
-
-              {showTranscript ? (
-                <Text style={[typography.body, { color: colors.textSecondary }]}>
-                  "{stage.audioScript}"
-                </Text>
-              ) : null}
-            </Card>
-
-            <Text style={[typography.headline, { color: colors.textPrimary }]}>
-              {stage.question}
-            </Text>
-            <OptionList
-              options={stage.options}
-              selected={selectedOption}
-              correctIndex={stage.correctIndex}
-              checked={checked}
-              accent={palette.primary}
-              onSelect={setSelectedOption}
-            />
-          </View>
-        ) : null}
-
-        {/* 4. READING STAGE */}
-        {stage.type === 'reading' ? (
-          <View style={styles.stageBody}>
-            <Card style={styles.readingCard}>
-              <Text style={[typography.headline, { color: palette.primary }]}>
-                {stage.passageTitle}
-              </Text>
-              <Text style={[typography.body, { color: colors.textPrimary, lineHeight: 24 }]}>
-                {stage.passage}
-              </Text>
-            </Card>
-
-            <Text style={[typography.headline, { color: colors.textPrimary }]}>
-              {stage.question}
-            </Text>
-            <OptionList
-              options={stage.options}
-              selected={selectedOption}
-              correctIndex={stage.correctIndex}
-              checked={checked}
-              accent={palette.primary}
-              onSelect={setSelectedOption}
-            />
-          </View>
-        ) : null}
-
-        {/* 5. SPEAKING STAGE */}
-        {stage.type === 'speaking' ? (
-          <View style={styles.stageBody}>
-            <Text style={[typography.body, { color: colors.textSecondary }]}>{stage.context}</Text>
-
-            <Card style={styles.speakCard}>
-              <Text style={[typography.title2, { color: colors.textPrimary }]}>
-                "{stage.targetPhrase}"
-              </Text>
-              <Text style={[typography.caption, { color: colors.textTertiary }]}>
-                {stage.phoneticGuide}
-              </Text>
-              <Pressable
-                onPress={() => playVoice(stage.targetPhrase)}
-                style={[styles.hearModelBtn, { backgroundColor: palette.soft, borderRadius: radii.pill }]}
-              >
-                <Volume2 size={15} color={palette.primary} />
-                <Text style={[typography.caption, { color: palette.primary }]}>
-                  Hear model pronunciation
-                </Text>
-              </Pressable>
-            </Card>
-
-            <Card variant="muted" style={styles.tipsCard}>
-              {stage.tips.map((tip, idx) => (
-                <Text key={idx} style={[typography.caption, { color: colors.textSecondary }]}>
-                  • {tip}
-                </Text>
-              ))}
-            </Card>
-
-            <View style={styles.micZone}>
-              <SoundWaveVisualizer active={isRecording} color={palette.primary} />
-              <GameButton
-                label={
-                  isRecording
-                    ? 'Listening to your voice...'
-                    : speakingScore
-                      ? `Fluency ${speakingScore}% · Try Again`
-                      : 'Tap to Speak Aloud'
-                }
-                color={isRecording ? colors.streak : palette.primary}
-                depthColor={isRecording ? '#9A3412' : palette.deep}
-                icon={<Mic size={18} color="#FFFFFF" />}
-                onPress={handleRecordSpeak}
+            {/* ORDER — Notebook-Lined 3D Sentence Builder */}
+            {currentQuestion.type === 'ORDER' ? (
+              <SentenceBuilderStage
+                tiles={orderTiles}
+                selectedTileIndices={selectedOrderIndices}
+                checked={false}
+                isCorrect={false}
+                accentColor="#1055F8"
+                deepColor="#0A3BB3"
+                onToggleTile={(idx) => {
+                  const adding = !selectedOrderIndices.includes(idx);
+                  playTileTapSound(adding ? orderTiles[idx] : undefined, soundEnabled);
+                  setSelectedOrderIndices((prev) =>
+                    prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]
+                  );
+                }}
+                onClear={() => setSelectedOrderIndices([])}
               />
-            </View>
-          </View>
-        ) : null}
+            ) : null}
 
-        {/* 6. INTERACTIVE SENTENCE BUILDER STAGE (Duolingo notebook lines + 3D word buttons) */}
-        {stage.type === 'interactive' ? (
-          <SentenceBuilderStage
-            tiles={stage.tiles}
-            selectedTileIndices={selectedTileIndices}
-            checked={checked}
-            isCorrect={isCorrect}
-            accentColor={palette.primary}
-            deepColor={palette.deep}
-            onToggleTile={toggleTile}
-            onClear={() => setSelectedTileIndices([])}
-          />
+            {/* TEXT / NUMERIC / ESSAY / OTHER */}
+            {currentQuestion.type !== 'SINGLE_CHOICE' &&
+            currentQuestion.type !== 'MULTI_CHOICE' &&
+            currentQuestion.type !== 'TRUE_FALSE' &&
+            currentQuestion.type !== 'ORDER' ? (
+              <Card style={styles.textInputCard}>
+                <TextInput
+                  value={textAnswer}
+                  onChangeText={setTextAnswer}
+                  placeholder="Type your answer here..."
+                  placeholderTextColor={colors.textTertiary}
+                  keyboardType={currentQuestion.type === 'NUMERIC' ? 'decimal-pad' : 'default'}
+                  multiline={currentQuestion.type === 'ESSAY'}
+                  style={[
+                    styles.textInput,
+                    {
+                      color: colors.textPrimary,
+                      borderColor: colors.borderStrong,
+                      borderRadius: radii.md,
+                    },
+                  ]}
+                />
+              </Card>
+            ) : null}
+          </>
         ) : null}
       </ScrollView>
 
-      {/* Bottom Sticky Action Footer (hidden while Duolingo FeedbackBottomSheet is open) */}
-      {!checked ? (
-        <View
-          style={[
-            styles.footer,
-            { backgroundColor: colors.surface, borderTopColor: colors.border },
-          ]}
-        >
-          {stage.type === 'speaking' ? (
-            <GameButton
-              label="Skip Speaking for Now"
-              color={colors.surfaceMuted}
-              depthColor={colors.borderStrong}
-              textColor={colors.textPrimary}
-              onPress={() => {
-                setSpeakingScore(80);
-                setChecked(true);
-                setIsCorrect(true);
-                setCorrectCount((c) => c + 1);
-                playCorrectFeedback(soundEnabled);
-              }}
-            />
-          ) : (
-            <GameButton
-              label="Check Answer"
-              disabled={!canCheck}
-              color={palette.primary}
-              depthColor={palette.deep}
-              onPress={handleCheck}
-            />
-          )}
-        </View>
-      ) : null}
-
-      {/* Duolingo-Style Sliding Feedback Bottom Sheet (includes Continue / Finish button) */}
-      <FeedbackBottomSheet
-        visible={checked}
-        isCorrect={isCorrect}
-        headline={
-          stage.type === 'speaking'
-            ? `Great pacing! Fluency ${speakingScore}%`
-            : isCorrect
-              ? 'Spot on!'
-              : 'Not quite — try this!'
-        }
-        correctSolution={
-          !isCorrect
-            ? stage.type === 'interactive'
-              ? stage.correctSentence
-              : 'options' in stage && 'correctIndex' in stage
-                ? stage.options[stage.correctIndex]
-                : undefined
-            : undefined
-        }
-        detail={'explanation' in stage ? stage.explanation : undefined}
-        buttonLabel={
-          stageIndex + 1 === totalStages
-            ? 'Finish Expedition'
-            : isCorrect
-              ? 'Continue'
-              : 'Got It'
-        }
-        onContinue={handleNext}
-        onReplayVoice={
-          stage.type === 'interactive'
-            ? () => speakAsPip(stage.correctSentence)
-            : stage.type === 'speaking'
-              ? () => speakAsPip(stage.targetPhrase)
-              : 'explanation' in stage
-                ? () => speakAsPip(stage.explanation)
-                : undefined
-        }
-      />
+      <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
+        <GameButton
+          label={
+            submitting
+              ? 'Leo is checking your answers...'
+              : qIdx + 1 === questions.length
+                ? 'Submit & See Score!'
+                : 'Next Question'
+          }
+          disabled={!canAdvance || submitting}
+          color={qIdx + 1 === questions.length ? '#58CC02' : '#1055F8'}
+          depthColor={qIdx + 1 === questions.length ? '#46A302' : '#0A3BB3'}
+          onPress={() => void handleNextOrSubmit()}
+        />
+      </View>
     </SafeAreaView>
   );
 }
 
-function OptionList({
-  options,
-  selected,
-  correctIndex,
-  checked,
-  accent,
-  onSelect,
-}: {
-  options: string[];
-  selected: number | null;
-  correctIndex: number;
-  checked: boolean;
-  accent: string;
-  onSelect: (index: number) => void;
-}) {
-  const { colors, typography } = useAppTheme();
-
-  return (
-    <View style={styles.optionsCol}>
-      {options.map((opt, idx) => {
-        const isSelected = selected === idx;
-        const isRight = checked && idx === correctIndex;
-        const isWrong = checked && isSelected && idx !== correctIndex;
-
-        const bg = isRight
-          ? '#D7FFB8'
-          : isWrong
-            ? '#FFDFE0'
-            : isSelected
-              ? '#DDF4FF'
-              : colors.surface;
-
-        const borderColor = isRight
-          ? '#58CC02'
-          : isWrong
-            ? '#FF4B4B'
-            : isSelected
-              ? '#1CB0F6'
-              : '#CBD5E1';
-
-        const lipColor = isRight
-          ? '#46A302'
-          : isWrong
-            ? '#EA2B2B'
-            : isSelected
-              ? '#1899D6'
-              : '#94A3B8';
-
-        const keycapBg = isRight
-          ? '#58CC02'
-          : isWrong
-            ? '#FF4B4B'
-            : isSelected
-              ? '#1CB0F6'
-              : '#F8FAFC';
-
-        const keycapBorder = isRight
-          ? '#46A302'
-          : isWrong
-            ? '#EA2B2B'
-            : isSelected
-              ? '#1899D6'
-              : '#CBD5E1';
-
-        const labelColor = isRight
-          ? '#2E6B00'
-          : isWrong
-            ? '#CC1D1D'
-            : isSelected
-              ? '#0369A1'
-              : colors.textPrimary;
-
-        return (
-          <AnimatedPressable
-            key={opt}
-            disabled={checked}
-            onPress={() => {
-              playTileTapSound(undefined, true);
-              onSelect(idx);
-            }}
-            haptic="selection"
-            style={[
-              styles.optionBtn,
-              {
-                backgroundColor: bg,
-                borderColor,
-                borderBottomColor: lipColor,
-              },
-            ]}
-          >
-            <View
-              style={[
-                styles.optionIndex,
-                {
-                  backgroundColor: keycapBg,
-                  borderColor: keycapBorder,
-                  borderBottomColor: keycapBorder,
-                },
-              ]}
-            >
-              {isRight ? (
-                <Check size={15} color="#FFFFFF" strokeWidth={3} />
-              ) : isWrong ? (
-                <X size={15} color="#FFFFFF" strokeWidth={3} />
-              ) : (
-                <Text
-                  style={{
-                    color: isSelected ? '#FFFFFF' : '#64748B',
-                    fontSize: 12.5,
-                    fontWeight: '900',
-                  }}
-                >
-                  {String.fromCharCode(65 + idx)}
-                </Text>
-              )}
-            </View>
-            <Text
-              style={[
-                typography.body,
-                {
-                  color: labelColor,
-                  fontWeight: isRight || isWrong || isSelected ? '800' : '600',
-                  flex: 1,
-                },
-              ]}
-            >
-              {opt}
-            </Text>
-          </AnimatedPressable>
-        );
-      })}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
-  missingWrap: {
-    flex: 1,
-    padding: 24,
+  safe: { flex: 1 },
+  center: {
+    alignItems: 'center',
     justifyContent: 'center',
-    gap: 16,
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    gap: 12,
+    gap: 10,
   },
   closeBtn: {
     width: 38,
@@ -782,51 +796,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  soundToggleBtn: {
+  soundBtn: {
     width: 34,
     height: 34,
     borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  progressWrap: {
-    flex: 1,
-  },
-  stageScroll: {
+  scroll: {
     paddingHorizontal: 16,
     paddingBottom: 28,
     gap: 16,
   },
-  stageScrollWithSheet: {
-    paddingBottom: 230,
+  errorBanner: {
+    backgroundColor: '#FFDFE0',
+    borderColor: '#FF4B4B',
+    borderWidth: 1.5,
   },
-  stageHeader: {
-    gap: 12,
+  errorText: {
+    color: '#CC1D1D',
+    fontSize: 13.5,
+    fontWeight: '700',
   },
-  pipBubbleRow: {
+  theoryCard: {
+    gap: 8,
+  },
+  theoryHead: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
+  },
+  vocabStack: {
     gap: 10,
-  },
-  pipCutoutWrap: {
-    width: 56,
-    height: 56,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pipAvatar: {
-    width: 56,
-    height: 56,
-  },
-  pipSpeech: {
-    flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderWidth: 1.25,
-    gap: 2,
-  },
-  stageBody: {
-    gap: 14,
   },
   vocabCard: {
     gap: 6,
@@ -834,101 +835,26 @@ const styles = StyleSheet.create({
   vocabTop: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
+    gap: 10,
   },
-  vocabWordCol: {
-    flex: 1,
-    gap: 2,
-  },
-  audioIconBtn: {
+  audioBtn: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ruleCard: {
-    gap: 8,
-  },
-  ruleHeader: {
+  exPickCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  audioPlayerCard: {
-    gap: 14,
-  },
-  speakerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  speakerIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  transcriptToggle: {
-    alignSelf: 'flex-start',
-  },
-  readingCard: {
-    gap: 10,
-  },
-  speakCard: {
-    gap: 10,
-  },
-  hearModelBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 6,
-  },
-  tipsCard: {
-    gap: 6,
-  },
-  micZone: {
-    gap: 14,
-    paddingTop: 6,
-  },
-  builderHintRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  sentenceTray: {
-    minHeight: 74,
-    justifyContent: 'center',
-  },
-  clearRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    gap: 5,
-  },
-  tilesWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  wordTile: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    padding: 14,
     borderWidth: 1.5,
-  },
-  wordTileSelectedText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700',
+    gap: 10,
   },
   optionsCol: {
     gap: 12,
   },
-  optionBtn: {
+  optionBtn3D: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,
@@ -937,13 +863,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderBottomWidth: 5,
     gap: 12,
-    shadowColor: '#0F172A',
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
   },
-  optionIndex: {
+  optionKeycap: {
     width: 30,
     height: 30,
     borderRadius: 10,
@@ -952,55 +873,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  feedbackBanner: {
-    gap: 6,
-    borderWidth: 1.5,
-  },
-  feedbackTitleRow: {
+  tfRow: {
     flexDirection: 'row',
+    gap: 12,
+  },
+  tfBtn3D: {
+    paddingVertical: 22,
+    borderRadius: 18,
+    borderWidth: 2,
+    borderBottomWidth: 5,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInputCard: {
+    padding: 12,
+  },
+  textInput: {
+    borderWidth: 1.75,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  reviewCard: {
     gap: 8,
+  },
+  reviewHead: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   footer: {
     paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 14,
+    paddingVertical: 12,
     borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  victoryScroll: {
-    flexGrow: 1,
-    padding: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 18,
-  },
-  trophyCircle: {
-    width: 132,
-    height: 132,
-    borderRadius: 36,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  victoryChestImg: {
-    width: '100%',
-    height: '100%',
-  },
-  victoryStats: {
-    flexDirection: 'row',
-    gap: 10,
-    width: '100%',
-  },
-  victoryTile: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 16,
-  },
-  unlockCallout: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    width: '100%',
   },
 });

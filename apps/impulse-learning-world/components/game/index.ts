@@ -7,5 +7,8 @@ export { MascotChatBubble, type MascotChatBubbleProps } from './MascotChatBubble
 export { ProgressBar, type ProgressBarProps } from './ProgressBar';
 export { SentenceBuilderStage, type SentenceBuilderStageProps } from './SentenceBuilderStage';
 export { SoundWaveVisualizer, speakEnglishText } from './SoundWaveVisualizer';
-export { VictoryCelebration, type VictoryCelebrationProps } from './VictoryCelebration';
-export { WorldCitySection } from './WorldJourneyMap';
+export {
+  VictoryCelebration,
+  type VictoryCelebrationProps,
+  type VictorySummaryData,
+} from './VictoryCelebration';

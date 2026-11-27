@@ -1,25 +1,25 @@
 {
   "expo": {
-    "name": "Impulse Learning World",
-    "slug": "impulse-learning-world",
+    "name": "Impulse Kids",
+    "slug": "impulse-kids",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "impulselearningworld",
-    "userInterfaceStyle": "automatic",
+    "scheme": "kids.impulse.uz",
+    "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rapidnative.impulselearningworld"
+      "bundleIdentifier": "kids.impulse.uz"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1055F8",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.rapidnative.impulselearningworld"
+      "package": "kids.impulse.uz"
     },
     "web": {
       "bundler": "metro",
@@ -28,15 +28,26 @@
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
       [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#F5F8FF"
         }
       ]
     ],
+    "extra": {
+      "studentBrand": {
+        "apiBase": "https://api.neezam.uz/api/v1",
+        "center": "impulse",
+        "appName": "Impulse Kids",
+        "color": "#1055F8",
+        "audience": "kids",
+        "ageRange": "5-13"
+      }
+    },
     "experiments": {
       "typedRoutes": true
     }

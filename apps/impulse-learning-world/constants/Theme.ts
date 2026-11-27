@@ -1,7 +1,8 @@
 import { Platform, type TextStyle, type ViewStyle } from 'react-native';
 import { useColorScheme } from '@/components/useColorScheme';
 import { CompiledTokens } from '@/constants/CompiledTokens';
-import type { CEFRLevel } from '@/types/game';
+
+export type CEFRLevel = 'A1' | 'A2' | 'B1' | 'B2';
 
 export interface ThemeColors {
   background: string;
@@ -48,10 +49,10 @@ export const RegionPalette: Record<
   { primary: string; deep: string; soft: string; gradient: readonly [string, string] }
 > = {
   A1: {
-    primary: '#0EA5E9',
-    deep: '#0369A1',
-    soft: '#E0F2FE',
-    gradient: ['#2563EB', '#0EA5E9'],
+    primary: '#1055F8',
+    deep: '#0A3BB3',
+    soft: '#DBEAFE',
+    gradient: ['#1055F8', '#0EA5E9'],
   },
   A2: {
     primary: '#7C3AED',
@@ -76,7 +77,9 @@ export const RegionPalette: Record<
 export const ThemePresets = {
   skyPlayLight: {
     ...CompiledTokens.colors.light,
-    accentDark: '#1D4ED8',
+    accent: '#1055F8',
+    accentDark: '#0A3BB3',
+    accentMuted: '#EFF6FF',
     coin: '#D97706',
     coinMuted: '#FEF3C7',
     gem: '#0284C7',
@@ -87,13 +90,12 @@ export const ThemePresets = {
     xpMuted: '#DCFCE7',
     violet: '#7C3AED',
     violetMuted: '#EDE9FE',
-    // Crisp high-contrast floating dark capsule nav bar (inspired by modern kids/media apps)
     tabBarBg: '#111827',
     tabBarBorder: '#1F2937',
     tabBarInactive: '#9CA3AF',
     overlay: 'rgba(17, 24, 39, 0.55)',
     mapTrail: '#CBD5E1',
-    mapTrailActive: '#2563EB',
+    mapTrailActive: '#1055F8',
   },
   skyPlayDark: {
     ...CompiledTokens.colors.dark,

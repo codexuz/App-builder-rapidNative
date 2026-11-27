@@ -11,21 +11,29 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
+import { LeoMascot } from '@/components/mascot/LeoMascot';
 import { AnimatedCounter, Card, StaggeredEntrance } from '@/components/ui';
 import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { useAppTheme } from '@/constants/Theme';
-import type { LessonCompletionSummary } from '@/store/GameContext';
 import { ConfettiBurst } from './ConfettiBurst';
 import { GameButton } from './GameButton';
-import { Coin3D, Gem3D, Star3D, Target3D, XpBolt3D } from './GameIcons3D';
+import { Coin3D, Star3D, Target3D, XpBolt3D } from './GameIcons3D';
 import { ProgressBar } from './ProgressBar';
+
+export interface VictorySummaryData {
+  accuracyPercent: number;
+  xpEarned: number;
+  coinsEarned: number;
+  streakDays: number;
+  unlockedNextLessonTitle?: string | null;
+}
 
 export interface VictoryCelebrationProps {
   lessonTitle: string;
-  cityName: string;
-  cityCompletedCount: number;
-  cityTotalCount: number;
-  summary: LessonCompletionSummary;
+  courseName: string;
+  completedCount: number;
+  totalCount: number;
+  summary: VictorySummaryData;
   accentColor: string;
   deepColor: string;
   confettiKey: number;
@@ -48,7 +56,6 @@ function SunburstBackdrop() {
     transform: [{ rotate: `${rotation.value}deg` }],
   }));
 
-  // 12 warm golden celebratory sunburst wedges
   const rays = Array.from({ length: 12 }, (_, idx) => {
     const startDeg = idx * 30;
     const endDeg = startDeg + 14;
@@ -108,11 +115,7 @@ function PoppingStar({
   }, [delayMs, scale]);
 
   const animStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: liftY },
-      { rotate: `${tiltDeg}deg` },
-      { scale: scale.value },
-    ],
+    transform: [{ translateY: liftY }, { rotate: `${tiltDeg}deg` }, { scale: scale.value }],
   }));
 
   return (
@@ -122,53 +125,16 @@ function PoppingStar({
   );
 }
 
-function FloatingHeroPair() {
-  const bob = useSharedValue(0);
-
-  useEffect(() => {
-    bob.value = withRepeat(
-      withSequence(
-        withTiming(-5, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.ease) })
-      ),
-      -1,
-      true
-    );
-  }, [bob]);
-
-  const bobStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: bob.value }],
-  }));
-
-  return (
-    <Animated.View style={[styles.heroPair, bobStyle]}>
-      <Image
-        source={GeneratedAssets.mascotPip}
-        style={styles.heroPip}
-        resizeMode="contain"
-      />
-      <Image
-        source={GeneratedAssets.treasureChest}
-        style={styles.heroChest}
-        resizeMode="contain"
-      />
-    </Animated.View>
-  );
-}
-
 /**
- * Duolingo-inspired gamified Victory Celebration screen featuring:
- * - Animated golden sunburst backdrop + 3-Star mastery arc
- * - Frameless floating transparent Pip mascot + Golden Treasure Chest
- * - Tactile colored reward cards with bespoke 3D SVG icons (XpBolt3D, Coin3D, Gem3D)
- * - Glossy Skia/Canvas city progress bar + Next Stop unlock banner
- * - Physics ConfettiBurst overlay
+ * Duolingo-style Impulse Kids Victory Celebration featuring Leo cheering beside
+ * the Golden Treasure Chest, 3-Star mastery arc, sunburst, and 3D SVG reward cards
+ * matching real erp-lms rewards (XP, Coins, Streak).
  */
 export function VictoryCelebration({
   lessonTitle,
-  cityName,
-  cityCompletedCount,
-  cityTotalCount,
+  courseName,
+  completedCount,
+  totalCount,
   summary,
   accentColor,
   deepColor,
@@ -184,11 +150,11 @@ export function VictoryCelebration({
   const accuracyLabel =
     summary.accuracyPercent >= 95
       ? 'PERFECT'
-      : summary.accuracyPercent >= 85
+      : summary.accuracyPercent >= 80
         ? 'AMAZING'
         : 'GREAT JOB';
 
-  const cityRatio = Math.min(1, cityCompletedCount / Math.max(1, cityTotalCount));
+  const progressRatio = Math.min(1, completedCount / Math.max(1, totalCount));
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
@@ -198,7 +164,6 @@ export function VictoryCelebration({
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Top Celebration Stage: Sunburst + 3-Star Arc + Floating Pip & Chest */}
         <View style={styles.stageContainer}>
           <SunburstBackdrop />
 
@@ -208,10 +173,16 @@ export function VictoryCelebration({
             <PoppingStar filled={starsEarned >= 3} size={44} delayMs={280} tiltDeg={14} liftY={8} />
           </View>
 
-          <FloatingHeroPair />
+          <View style={styles.heroPair}>
+            <LeoMascot pose="cheer" size={116} style={styles.heroLeo} />
+            <Image
+              source={GeneratedAssets.treasureChest}
+              style={styles.heroChest}
+              resizeMode="contain"
+            />
+          </View>
         </View>
 
-        {/* Celebratory Headline + Accuracy Pill */}
         <StaggeredEntrance index={0}>
           <View style={styles.headlineBlock}>
             <View style={[styles.accuracyPill, { backgroundColor: '#D7FFB8', borderColor: '#58CC02' }]}>
@@ -225,15 +196,14 @@ export function VictoryCelebration({
               Lesson Complete!
             </Text>
             <Text style={[typography.body, styles.subText, { color: colors.textSecondary }]}>
-              Pip cheered you through "{lessonTitle}" in {cityName}!
+              Leo is so proud! You cleared "{lessonTitle}"!
             </Text>
           </View>
         </StaggeredEntrance>
 
-        {/* Duolingo-Style Tactile Colored Reward Cards with 3D SVG Icons */}
+        {/* Duolingo-Style Tactile Colored Reward Cards (XP, Coins, Accuracy) */}
         <StaggeredEntrance index={1}>
           <View style={styles.rewardRow}>
-            {/* TOTAL XP Card */}
             <View style={[styles.duoCard, { backgroundColor: '#58CC02', borderColor: '#46A302', borderRadius: radii.lg }]}>
               <Text style={styles.duoCardHeader}>TOTAL XP</Text>
               <View style={[styles.duoCardInner, { borderRadius: radii.md }]}>
@@ -246,7 +216,6 @@ export function VictoryCelebration({
               </View>
             </View>
 
-            {/* COINS Card */}
             <View style={[styles.duoCard, { backgroundColor: '#F59E0B', borderColor: '#D97706', borderRadius: radii.lg }]}>
               <Text style={styles.duoCardHeader}>COINS</Text>
               <View style={[styles.duoCardInner, { borderRadius: radii.md }]}>
@@ -259,40 +228,39 @@ export function VictoryCelebration({
               </View>
             </View>
 
-            {/* GEMS Card */}
-            <View style={[styles.duoCard, { backgroundColor: '#0EA5E9', borderColor: '#0284C7', borderRadius: radii.lg }]}>
-              <Text style={styles.duoCardHeader}>GEMS</Text>
+            <View style={[styles.duoCard, { backgroundColor: '#1055F8', borderColor: '#0A3BB3', borderRadius: radii.lg }]}>
+              <Text style={styles.duoCardHeader}>SCORE</Text>
               <View style={[styles.duoCardInner, { borderRadius: radii.md }]}>
-                <Gem3D size={32} />
+                <Target3D size={32} />
                 <AnimatedCounter
-                  value={summary.gemsEarned}
-                  prefix="+"
-                  style={[styles.duoCardValue, { color: '#0369A1' }]}
+                  value={summary.accuracyPercent}
+                  suffix="%"
+                  style={[styles.duoCardValue, { color: '#1055F8' }]}
                 />
               </View>
             </View>
           </View>
         </StaggeredEntrance>
 
-        {/* City Progress + Next Stop Unlock Card */}
+        {/* Course Progress + Next Stop Unlock Card */}
         <StaggeredEntrance index={2}>
           <Card style={styles.progressCard}>
             <View style={styles.cityHeaderRow}>
-              <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                {cityName} Progress
+              <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]} numberOfLines={1}>
+                {courseName}
               </Text>
               <Text style={[typography.callout, { color: accentColor }]}>
-                {cityCompletedCount}/{cityTotalCount} Stops
+                {completedCount}/{totalCount} Done
               </Text>
             </View>
-            <ProgressBar progress={cityRatio} color={accentColor} height={13} />
+            <ProgressBar progress={progressRatio} color={accentColor} height={13} />
 
             {summary.unlockedNextLessonTitle ? (
               <View style={[styles.unlockBanner, { backgroundColor: colors.accentMuted, borderRadius: radii.md }]}>
                 <Star3D size={24} filled />
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.unlockKicker, { color: accentColor }]}>
-                    NEW STOP UNLOCKED
+                    NEXT LESSON UNLOCKED
                   </Text>
                   <Text style={[typography.callout, { color: colors.textPrimary }]} numberOfLines={1}>
                     {summary.unlockedNextLessonTitle}
@@ -304,7 +272,6 @@ export function VictoryCelebration({
         </StaggeredEntrance>
       </ScrollView>
 
-      {/* Pinned Bottom Duolingo-Style 3D Action Footer */}
       <View style={[styles.footer, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
         <GameButton
           label="CLAIM REWARDS"
@@ -366,15 +333,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
     zIndex: 2,
   },
-  heroPip: {
-    width: 112,
-    height: 112,
+  heroLeo: {
     marginRight: -16,
   },
   heroChest: {
-    width: 118,
-    height: 118,
-    marginLeft: -8,
+    width: 112,
+    height: 112,
+    marginLeft: -4,
   },
   headlineBlock: {
     alignItems: 'center',
@@ -390,7 +355,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   accuracyPillText: {
-    color: '#15803D',
+    color: '#3B8700',
     fontSize: 12,
     fontWeight: '900',
     letterSpacing: 0.4,

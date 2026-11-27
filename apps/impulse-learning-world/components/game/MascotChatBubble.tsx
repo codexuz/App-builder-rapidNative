@@ -1,36 +1,39 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Volume2 } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
+import { LeoMascot, type LeoPose } from '@/components/mascot/LeoMascot';
 import { AnimatedPressable } from '@/components/ui';
-import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { useAppTheme } from '@/constants/Theme';
 
 export interface MascotChatBubbleProps {
-  /** Small eyebrow tag (e.g., "A1 · Sentence Builder") */
+  /** Small eyebrow tag (e.g., "KIDS 1 · SENTENCE BUILDER") */
   eyebrow: string;
-  /** Main instruction spoken by Pip */
+  /** Main instruction spoken by Leo */
   message: string;
   /** Optional subtle hint underneath */
   subHint?: string;
+  /** Official Leo mascot pose */
+  pose?: LeoPose;
   /** Accent color for speaker button & eyebrow */
   accentColor: string;
   /** Soft pastel background for speaker button */
   softAccentColor: string;
-  /** Whether Pip is currently reading aloud */
+  /** Whether Leo is currently reading aloud */
   isSpeaking?: boolean;
   /** Triggered when tapping the bubble or speaker icon */
   onSpeakPress: () => void;
 }
 
 /**
- * Duolingo-style mascot chat bubble: Pip the Compass Fox stands beside a pointed
+ * Duolingo-style Leo mascot chat bubble: Leo the snow leopard stands beside a pointed
  * white speech bubble with a tappable read-aloud speaker button.
  */
 export function MascotChatBubble({
   eyebrow,
   message,
   subHint,
+  pose = 'wave',
   accentColor,
   softAccentColor,
   isSpeaking = false,
@@ -40,23 +43,12 @@ export function MascotChatBubble({
 
   return (
     <View style={styles.row}>
-      <AnimatedPressable
-        onPress={onSpeakPress}
-        accessibilityLabel="Have Pip read the instruction aloud"
-        style={styles.mascotWrap}
-      >
-        <Image
-          source={GeneratedAssets.mascotPip}
-          style={styles.mascotImg}
-          resizeMode="contain"
-        />
-      </AnimatedPressable>
+      <LeoMascot pose={pose} size={74} onPress={onSpeakPress} style={styles.mascotWrap} />
 
       {/* Pointed Speech Bubble with SVG Tail */}
       <View style={styles.bubbleOuter}>
         <View style={styles.tailWrap} pointerEvents="none">
           <Svg width={13} height={20} viewBox="0 0 13 20">
-            {/* Outer border stroke */}
             <Path
               d="M13 2 L2 10 L13 18"
               fill={colors.surface}
@@ -64,7 +56,6 @@ export function MascotChatBubble({
               strokeWidth={1.8}
               strokeLinejoin="round"
             />
-            {/* Mask right seam so tail merges seamlessly into bubble */}
             <Path d="M11.5 2 L13 2 L13 18 L11.5 18 Z" fill={colors.surface} />
           </Svg>
         </View>
@@ -114,15 +105,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   mascotWrap: {
-    width: 72,
-    height: 76,
-    alignItems: 'center',
-    justifyContent: 'center',
     marginLeft: -4,
-  },
-  mascotImg: {
-    width: 72,
-    height: 76,
   },
   bubbleOuter: {
     flex: 1,

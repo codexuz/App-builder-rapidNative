@@ -1,79 +1,77 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  CheckCircle2,
-  Coins,
-  Compass,
-  Crown,
-  Flame,
-  Gem,
-  Lamp,
-  Sparkles,
-  Telescope,
-  TrainFront,
-  Zap,
-} from 'lucide-react-native';
+import { Gift, Sparkles } from 'lucide-react-native';
 import {
   Coin3D,
   ConfettiBurst,
   GameButton,
   GameHud,
-  Gem3D,
   ProgressBar,
-  XpBolt3D,
+  Star3D,
 } from '@/components/game';
+import { LeoMascot } from '@/components/mascot/LeoMascot';
 import { Badge, Card, Screen, SectionHeader, StaggeredEntrance } from '@/components/ui';
 import { GeneratedAssets } from '@/constants/GeneratedAssets';
-import { RegionPalette, useAppTheme } from '@/constants/Theme';
-import { COLLECTIBLE_RELICS } from '@/data/mockState';
-import { useGame } from '@/store/GameContext';
-import type { CollectibleRelic } from '@/types/game';
+import { useAppTheme } from '@/constants/Theme';
+import { api } from '@/lib/api';
+import type { DayQuest, QuestType } from '@/lib/api/types';
+import { useKidsApp } from '@/providers/KidsAppProvider';
+import { playCorrectFeedback, playVictoryFeedback } from '@/utils/soundFeedback';
 
-function RelicIcon({ name, color }: { name: CollectibleRelic['iconName']; color: string }) {
-  switch (name) {
-    case 'compass':
-      return <Compass size={26} color={color} />;
-    case 'lighthouse':
-      return <Flame size={26} color={color} />;
-    case 'train':
-      return <TrainFront size={26} color={color} />;
-    case 'lantern':
-      return <Lamp size={26} color={color} />;
-    case 'telescope':
-      return <Telescope size={26} color={color} />;
-    case 'crown':
-      return <Crown size={26} color={color} />;
-  }
-}
+const QUEST_COPY: Record<QuestType, { title: string; desc: (t: number) => string }> = {
+  EXERCISES: {
+    title: 'Complete Exercises',
+    desc: (t) => `Finish ${t} fun ${t === 1 ? 'exercise' : 'exercises'} with Leo today.`,
+  },
+  GOOD_SCORE: {
+    title: 'Super Accuracy',
+    desc: (t) => `Score high on ${t} ${t === 1 ? 'exercise' : 'exercises'} today.`,
+  },
+  WORDS: {
+    title: 'Word Explorer',
+    desc: (t) => `Review ${t} English flashcards in Word Cards.`,
+  },
+  MISTAKES: {
+    title: 'Fix Mistakes',
+    desc: (t) => `Practice ${t} tricky ${t === 1 ? 'question' : 'questions'}.`,
+  },
+  XP: {
+    title: 'Earn Daily XP',
+    desc: (t) => `Collect ${t} XP across your Impulse Kids courses.`,
+  },
+};
 
-export default function QuestsScreen() {
+export default function KidsQuestsScreen() {
   const router = useRouter();
-  const { colors, typography, radii } = useAppTheme();
-  const { player, claimQuest, buyRelic } = useGame();
+  const { colors, typography } = useAppTheme();
+  const { today, products, gamification, soundEnabled, openDailyChest, orderShopProduct } =
+    useKidsApp();
+
   const [notice, setNotice] = useState<string | null>(null);
   const [confettiKey, setConfettiKey] = useState(0);
 
-  const completedQuests = player.dailyQuests.filter(
-    (q) => q.claimed || q.progress >= q.target
-  ).length;
-  const claimableCount = player.dailyQuests.filter(
-    (q) => !q.claimed && q.progress >= q.target
-  ).length;
+  const quests: DayQuest[] = today?.quests ?? [];
+  const doneCount = quests.filter((q) => q.done).length;
+  const chestReady = Boolean(today?.chest.ready && !today?.chest.openedAt);
+  const chestOpened = Boolean(today?.chest.openedAt);
+  const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
 
-  const handleClaim = (questId: string, title: string) => {
-    const ok = claimQuest(questId);
-    if (ok) {
-      setNotice(`Treasure unlocked for "${title}"!`);
-      setConfettiKey((k) => k + 1);
-    }
-  };
-
-  const handleBuyRelic = (relicId: string) => {
-    const res = buyRelic(relicId);
+  const handleOpenChest = async () => {
+    const res = await openDailyChest();
     setNotice(res.message);
     if (res.ok) {
       setConfettiKey((k) => k + 1);
+      playVictoryFeedback(soundEnabled);
+    }
+  };
+
+  const handleBuy = async (prod: (typeof products)[number]) => {
+    const res = await orderShopProduct(prod);
+    setNotice(res.message);
+    if (res.ok) {
+      setConfettiKey((k) => k + 1);
+      playCorrectFeedback(soundEnabled);
     }
   };
 
@@ -82,216 +80,184 @@ export default function QuestsScreen() {
       <Screen hasTabBar>
         <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
-      {/* Glowing Treasure Chest Daily Goal Hero */}
-      <StaggeredEntrance index={0}>
-        <Card variant="gradient" gradientColors={['#F59E0B', '#EA580C']} style={styles.chestHero}>
-          <View style={styles.chestRow}>
-            <View style={styles.chestStage}>
-              <Image
-                source={GeneratedAssets.treasureChest}
-                style={styles.chestImg}
-                resizeMode="contain"
+        {/* Glowing Daily Treasure Chest Hero */}
+        <StaggeredEntrance index={0}>
+          <Card variant="gradient" gradientColors={['#F59E0B', '#EA580C']} style={styles.chestHero}>
+            <View style={styles.chestRow}>
+              <View style={styles.chestStage}>
+                <Image
+                  source={GeneratedAssets.treasureChest}
+                  style={styles.chestImg}
+                  resizeMode="contain"
+                />
+              </View>
+              <View style={styles.chestInfo}>
+                <Text style={[typography.title1, { color: '#FFFFFF' }]}>
+                  Daily Treasure Chest
+                </Text>
+                <Text style={styles.chestSub}>
+                  {chestOpened && today?.chest.reward
+                    ? `Opened today! You won +${today.chest.reward.coins} Coins${today.chest.reward.freeze ? ' & 1 Freeze' : ''}.`
+                    : chestOpened
+                      ? 'Chest opened today! Come back tomorrow for new loot!'
+                      : chestReady
+                        ? 'Your chest is unlocked! Tap below to claim your reward!'
+                        : 'Finish today’s quests with Leo to unlock your bonus chest!'}
+                </Text>
+                <View style={styles.chestProgressRow}>
+                  <ProgressBar
+                    progress={quests.length > 0 ? doneCount / quests.length : 0}
+                    color="#FEF08A"
+                    secondaryColor="#FFFFFF"
+                    trackColor="rgba(255,255,255,0.28)"
+                    height={10}
+                    style={{ flex: 1 }}
+                  />
+                  <Text style={styles.chestCount}>
+                    {doneCount}/{quests.length}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {chestReady ? (
+              <GameButton
+                label="Open Treasure Chest!"
+                color="#58CC02"
+                depthColor="#46A302"
+                icon={<Gift size={17} color="#FFFFFF" />}
+                onPress={handleOpenChest}
               />
-            </View>
-            <View style={styles.chestInfo}>
-              <Text style={[typography.title1, { color: '#FFFFFF' }]}>
-                Daily Treasure Chest
-              </Text>
-              <Text style={styles.chestSub}>
-                Finish today's missions to earn bonus coins, gems & stickers!
-              </Text>
-              <View style={styles.chestProgressRow}>
-                <ProgressBar
-                  progress={completedQuests / Math.max(1, player.dailyQuests.length)}
-                  color="#FEF08A"
-                  trackColor="rgba(255,255,255,0.28)"
-                  height={9}
-                  style={{ flex: 1 }}
-                />
-                <Text style={styles.chestCount}>
-                  {completedQuests}/{player.dailyQuests.length}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </Card>
-      </StaggeredEntrance>
+            ) : null}
+          </Card>
+        </StaggeredEntrance>
 
-      {notice ? (
-        <Card variant="muted" style={styles.noticeBanner}>
-          <Sparkles size={16} color={colors.accent} />
-          <Text style={[typography.callout, { color: colors.textPrimary, flex: 1 }]}>
-            {notice}
-          </Text>
-        </Card>
-      ) : null}
+        {notice ? (
+          <Card variant="muted" style={styles.noticeBanner}>
+            <Sparkles size={16} color="#1055F8" />
+            <Text style={[typography.callout, { color: colors.textPrimary, flex: 1 }]}>
+              {notice}
+            </Text>
+          </Card>
+        ) : null}
 
-      <SectionHeader
-        title="Daily Quests"
-        subtitle={
-          claimableCount > 0
-            ? `${claimableCount} reward waiting to claim!`
-            : 'Play any city stop to fill your bars'
-        }
-      />
+        <SectionHeader
+          title="Daily Quests"
+          subtitle={`${doneCount} of ${quests.length} quests completed today`}
+        />
 
-      <View style={styles.listStack}>
-        {player.dailyQuests.map((quest, idx) => {
-          const ratio = quest.progress / quest.target;
-          const isReady = quest.progress >= quest.target;
+        {quests.length > 0 ? (
+          <View style={styles.listStack}>
+            {quests.map((quest, idx) => {
+              const meta = QUEST_COPY[quest.type] ?? {
+                title: quest.type,
+                desc: (t: number) => `Reach ${t} today`,
+              };
+              const ratio = Math.min(1, quest.progress / Math.max(1, quest.target));
 
-          return (
-            <StaggeredEntrance key={quest.id} index={idx + 1}>
-              <Card style={styles.questCard}>
-                <View style={styles.questTop}>
-                  <View style={styles.questTitleCol}>
-                    <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                      {quest.title}
-                    </Text>
-                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                      {quest.description}
-                    </Text>
-                  </View>
-                  {quest.claimed ? (
-                    <Badge label="Claimed" tone="success" />
-                  ) : isReady ? (
-                    <Badge label="Ready!" tone="accent" dot />
-                  ) : (
-                    <View style={[styles.countPill, { backgroundColor: colors.surfaceMuted }]}>
-                      <Text style={[typography.caption, { color: colors.textPrimary }]}>
-                        {quest.progress}/{quest.target}
-                      </Text>
+              return (
+                <StaggeredEntrance key={`${quest.type}-${idx}`} index={idx + 1}>
+                  <Card style={styles.questCard}>
+                    <View style={styles.questTop}>
+                      <View style={{ flex: 1, gap: 2 }}>
+                        <Text style={[typography.headline, { color: colors.textPrimary }]}>
+                          {meta.title}
+                        </Text>
+                        <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                          {meta.desc(quest.target)}
+                        </Text>
+                      </View>
+                      {quest.done ? (
+                        <Badge label="Done!" tone="success" />
+                      ) : (
+                        <View style={[styles.countPill, { backgroundColor: colors.surfaceMuted }]}>
+                          <Text style={[typography.caption, { color: colors.textPrimary }]}>
+                            {quest.progress}/{quest.target}
+                          </Text>
+                        </View>
+                      )}
                     </View>
-                  )}
-                </View>
 
-                <ProgressBar
-                  progress={ratio}
-                  color={quest.claimed || isReady ? colors.success : colors.accent}
-                  height={11}
-                />
-
-                <View style={styles.questFooter}>
-                  <View style={styles.rewardPills}>
-                    <View style={[styles.miniReward, { backgroundColor: colors.xpMuted }]}>
-                      <XpBolt3D size={16} />
-                      <Text style={[styles.miniRewardText, { color: colors.xp }]}>
-                        +{quest.xpReward}
-                      </Text>
-                    </View>
-                    <View style={[styles.miniReward, { backgroundColor: colors.coinMuted }]}>
-                      <Coin3D size={16} />
-                      <Text style={[styles.miniRewardText, { color: colors.coin }]}>
-                        +{quest.coinReward}
-                      </Text>
-                    </View>
-                    <View style={[styles.miniReward, { backgroundColor: colors.gemMuted }]}>
-                      <Gem3D size={16} />
-                      <Text style={[styles.miniRewardText, { color: colors.gem }]}>
-                        +{quest.gemReward}
-                      </Text>
-                    </View>
-                  </View>
-
-                  {!quest.claimed && isReady ? (
-                    <GameButton
-                      label="Claim!"
-                      size="md"
-                      fullWidth={false}
-                      color={colors.success}
-                      depthColor="#047857"
-                      onPress={() => handleClaim(quest.id, quest.title)}
+                    <ProgressBar
+                      progress={ratio}
+                      color={quest.done ? '#58CC02' : '#1055F8'}
+                      height={12}
                     />
+                  </Card>
+                </StaggeredEntrance>
+              );
+            })}
+          </View>
+        ) : (
+          <Card style={styles.emptyCard}>
+            <LeoMascot pose="idle" size={88} />
+            <Text style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}>
+              No Daily Quests Right Now
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
+              Start a lesson from Courses and check back soon!
+            </Text>
+          </Card>
+        )}
+
+        {/* Impulse Kids Coin Shop (from /shop/products) */}
+        <SectionHeader
+          title="Impulse Coin Shop"
+          subtitle={`You have ${coins} Coins to spend`}
+          actionLabel={products.length > 0 ? 'See All' : undefined}
+          onActionPress={products.length > 0 ? () => router.push('/shop' as never) : undefined}
+        />
+
+        {products.length > 0 ? (
+          <View style={styles.shopGrid}>
+            {products.slice(0, 4).map((prod) => {
+              const canAfford = coins >= prod.priceCoins;
+              const imgUri = api.assetUrl(prod.imageUrl);
+              return (
+                <Card key={prod.id} style={styles.shopCard}>
+                  <View style={styles.shopIconWrap}>
+                    {imgUri ? (
+                      <Image source={{ uri: imgUri }} style={styles.prodImg} resizeMode="cover" />
+                    ) : (
+                      <Star3D size={36} filled />
+                    )}
+                  </View>
+                  <Text
+                    style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}
+                    numberOfLines={2}
+                  >
+                    {prod.name}
+                  </Text>
+                  {prod.description ? (
+                    <Text
+                      style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}
+                      numberOfLines={2}
+                    >
+                      {prod.description}
+                    </Text>
                   ) : null}
-                </View>
-              </Card>
-            </StaggeredEntrance>
-          );
-        })}
-      </View>
-
-      {/* Playful 2-Column Stickerbook Relic Vault */}
-      <SectionHeader
-        title="Relic Stickerbook"
-        subtitle={`${player.ownedRelicIds.length} of ${COLLECTIBLE_RELICS.length} collected`}
-      />
-
-      <View style={styles.stickerGrid}>
-        {COLLECTIBLE_RELICS.map((relic) => {
-          const owned = player.ownedRelicIds.includes(relic.id);
-          const palette = RegionPalette[relic.level];
-          const canAfford =
-            player.coins >= relic.costCoins && player.gems >= relic.costGems;
-
-          return (
-            <Card
-              key={relic.id}
-              style={[
-                styles.stickerCard,
-                owned && { borderColor: palette.primary, borderWidth: 1.75 },
-              ]}
-            >
-              <View style={styles.stickerTop}>
-                <Badge
-                  label={relic.rarity}
-                  tone={
-                    relic.rarity === 'Legendary'
-                      ? 'warning'
-                      : relic.rarity === 'Epic'
-                        ? 'accent'
-                        : 'neutral'
-                  }
-                />
-                <Text style={[typography.caption, { color: palette.primary }]}>
-                  {relic.level}
-                </Text>
-              </View>
-
-              <View
-                style={[
-                  styles.stickerMedallion,
-                  { backgroundColor: palette.soft, borderRadius: radii.lg },
-                ]}
-              >
-                <RelicIcon name={relic.iconName} color={palette.primary} />
-              </View>
-
-              <Text
-                style={[typography.callout, { color: colors.textPrimary, textAlign: 'center' }]}
-                numberOfLines={2}
-              >
-                {relic.name}
-              </Text>
-              <Text
-                style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}
-                numberOfLines={1}
-              >
-                {relic.cityName}
-              </Text>
-
-              {owned ? (
-                <View style={[styles.ownedPill, { backgroundColor: colors.successMuted }]}>
-                  <CheckCircle2 size={14} color={colors.success} />
-                  <Text style={[styles.ownedText, { color: colors.success }]}>Collected</Text>
-                </View>
-              ) : (
-                <GameButton
-                  label={
-                    relic.costGems > 0
-                      ? `${relic.costCoins}c · ${relic.costGems}g`
-                      : `${relic.costCoins} Coins`
-                  }
-                  size="md"
-                  disabled={!canAfford}
-                  color={palette.primary}
-                  depthColor={palette.deep}
-                  onPress={() => handleBuyRelic(relic.id)}
-                />
-              )}
-            </Card>
-          );
-        })}
-      </View>
+                  <View style={{ width: '100%', marginTop: 4 }}>
+                    <GameButton
+                      label={`${prod.priceCoins} Coins`}
+                      size="md"
+                      disabled={!canAfford}
+                      color="#1055F8"
+                      depthColor="#0A3BB3"
+                      icon={<Coin3D size={16} />}
+                      onPress={() => handleBuy(prod)}
+                    />
+                  </View>
+                </Card>
+              );
+            })}
+          </View>
+        ) : (
+          <Card style={styles.emptyCard}>
+            <Text style={[typography.callout, { color: colors.textSecondary, textAlign: 'center' }]}>
+              No shop prizes available yet from your center.
+            </Text>
+          </Card>
+        )}
       </Screen>
       <ConfettiBurst triggerKey={confettiKey} intensity="grand" />
     </View>
@@ -300,12 +266,13 @@ export default function QuestsScreen() {
 
 const styles = StyleSheet.create({
   chestHero: {
+    gap: 14,
     paddingVertical: 16,
   },
   chestRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 12,
   },
   chestStage: {
     width: 88,
@@ -337,20 +304,18 @@ const styles = StyleSheet.create({
   chestCount: {
     color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
+    fontWeight: '900',
   },
   noticeBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingVertical: 12,
   },
   listStack: {
     gap: 12,
   },
   questCard: {
-    gap: 12,
+    gap: 10,
   },
   questTop: {
     flexDirection: 'row',
@@ -358,75 +323,39 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 10,
   },
-  questTitleCol: {
-    flex: 1,
-    gap: 2,
-  },
   countPill: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
   },
-  questFooter: {
-    flexDirection: 'row',
+  emptyCard: {
     alignItems: 'center',
-    justifyContent: 'space-between',
     gap: 8,
+    paddingVertical: 20,
   },
-  rewardPills: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  miniReward: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  miniRewardText: {
-    fontSize: 12,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
-  },
-  stickerGrid: {
+  shopGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 10,
   },
-  stickerCard: {
-    width: '48%',
-    flexGrow: 1,
+  shopCard: {
+    width: '48.2%',
     alignItems: 'center',
     gap: 8,
-    padding: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
   },
-  stickerTop: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  stickerMedallion: {
-    width: 60,
-    height: 60,
+  shopIconWrap: {
+    width: 58,
+    height: 58,
+    borderRadius: 20,
+    backgroundColor: '#EFF6FF',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 2,
+    overflow: 'hidden',
   },
-  ownedPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-    width: '100%',
-    paddingVertical: 9,
-    borderRadius: 12,
-  },
-  ownedText: {
-    fontSize: 12.5,
-    fontWeight: '800',
+  prodImg: {
+    width: 58,
+    height: 58,
   },
 });

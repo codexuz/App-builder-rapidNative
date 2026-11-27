@@ -1,301 +1,411 @@
-import React, { useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   BookOpen,
-  CheckCircle2,
-  Coins,
-  Compass,
+  ChevronRight,
   Flame,
-  Gem,
-  Headphones,
-  Lock,
-  Mic,
+  Gift,
   Play,
-  Puzzle,
   Sparkles,
-  Zap,
+  Store,
 } from 'lucide-react-native';
-import { GameButton, GameHud, WorldCitySection } from '@/components/game';
+import { Coin3D, GameButton, GameHud, ProgressBar, XpBolt3D } from '@/components/game';
+import { LeoMascot, type LeoPose } from '@/components/mascot/LeoMascot';
 import {
+  AnimatedPressable,
   Badge,
-  BottomSheet,
   Card,
-  Chip,
   ProgressRing,
   Screen,
   SectionHeader,
   StaggeredEntrance,
 } from '@/components/ui';
-import { GeneratedAssets } from '@/constants/GeneratedAssets';
-import { RegionPalette, useAppTheme } from '@/constants/Theme';
-import { ALL_LESSONS, WORLD_CITIES, getCityById } from '@/data/worldData';
-import { useGame } from '@/store/GameContext';
-import type { CEFRLevel, LessonNode } from '@/types/game';
+import { useAppTheme } from '@/constants/Theme';
+import type { Course, CourseLesson } from '@/lib/api/types';
+import { useKidsApp } from '@/providers/KidsAppProvider';
 
-const LEVEL_FILTERS: Array<'All' | CEFRLevel> = ['All', 'A1', 'A2', 'B1', 'B2'];
+const COURSE_GRADIENTS: Array<[string, string]> = [
+  ['#1055F8', '#0EA5E9'],
+  ['#7C3AED', '#EC4899'],
+  ['#059669', '#10B981'],
+  ['#F59E0B', '#EA580C'],
+];
 
-const STAGE_PILLS = [
-  { label: 'Vocabulary', Icon: BookOpen },
-  { label: 'Grammar', Icon: Sparkles },
-  { label: 'Listening', Icon: Headphones },
-  { label: 'Reading', Icon: Compass },
-  { label: 'Speaking', Icon: Mic },
-  { label: 'Builder', Icon: Puzzle },
-] as const;
+function computeCourseStats(course: Course) {
+  const allLessons: CourseLesson[] = course.units.flatMap((u) => u.lessons);
+  const completed = allLessons.filter((l) => l.progress?.status === 'COMPLETED').length;
+  const total = allLessons.length;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const nextLesson =
+    allLessons.find((l) => l.progress?.status !== 'COMPLETED' && l.open !== false) ??
+    allLessons[0] ??
+    null;
+  return { completed, total, pct, nextLesson };
+}
 
-export default function WorldMapScreen() {
+function pickCourseGradient(course: Course, index: number): [string, string] {
+  const tag = `${course.level?.code ?? ''} ${course.level?.name ?? ''} ${course.title}`.toLowerCase();
+  if (/starter|kids 1|a1/.test(tag)) return ['#1055F8', '#0EA5E9'];
+  if (/mover|kids 2|a2/.test(tag)) return ['#7C3AED', '#A855F7'];
+  if (/flyer|kids 3|b1/.test(tag)) return ['#059669', '#10B981'];
+  return COURSE_GRADIENTS[index % COURSE_GRADIENTS.length];
+}
+
+export default function KidsHomeScreen() {
   const router = useRouter();
   const { colors, typography, radii } = useAppTheme();
-  const {
-    player,
-    isCityUnlocked,
-    isLessonUnlocked,
-    getNextRecommendedLesson,
-  } = useGame();
+  const { courses, gamification, today, dueWords, me, loading, error, refreshAll } = useKidsApp();
 
-  const [levelFilter, setLevelFilter] = useState<'All' | CEFRLevel>('All');
-  const [selectedLesson, setSelectedLesson] = useState<LessonNode | null>(null);
+  // Mirrors production apps/student: active enrolled courses vs earlier-level practice
+  const activeCourses = useMemo(
+    () => courses.filter((c) => !c.practice),
+    [courses]
+  );
+  const practiceCourses = useMemo(
+    () => courses.filter((c) => Boolean(c.practice)),
+    [courses]
+  );
 
-  const nextLesson = getNextRecommendedLesson();
-  const nextCity = getCityById(nextLesson.cityId);
-  const nextPalette = RegionPalette[nextLesson.level];
+  // Pick current course just like apps/student/lib/lms.ts currentCourse()
+  const currentCourse = useMemo(() => {
+    const withStats = activeCourses.map((c) => ({ course: c, stats: computeCourseStats(c) }));
+    return (
+      withStats.find((x) => x.stats.pct < 100 && x.stats.completed > 0) ??
+      withStats.find((x) => x.stats.pct < 100) ??
+      withStats[0] ??
+      null
+    );
+  }, [activeCourses]);
 
-  const visibleCities = useMemo(() => {
-    if (levelFilter === 'All') return WORLD_CITIES;
-    return WORLD_CITIES.filter((c) => c.level === levelFilter);
-  }, [levelFilter]);
+  // Dynamic Leo greeting pose matching production apps/student/components/home/leo-greeting.tsx
+  const leoGreeting = useMemo<{ pose: LeoPose; line: string }>(() => {
+    const quests = today?.quests ?? [];
+    const allDone = quests.length > 0 && quests.every((q) => q.done);
+    const streak = gamification?.streak?.currentStreak ?? 0;
+    const activeToday = gamification?.streak?.activeToday ?? false;
+    const hour = new Date().getHours();
 
-  const totalProgress = player.completedLessonIds.length / ALL_LESSONS.length;
-  const selectedUnlocked = selectedLesson ? isLessonUnlocked(selectedLesson.id) : false;
-  const selectedCompleted = selectedLesson
-    ? player.completedLessonIds.includes(selectedLesson.id)
-    : false;
-  const selectedCity = selectedLesson ? getCityById(selectedLesson.cityId) : undefined;
+    if (allDone) {
+      return { pose: 'cheer', line: 'All daily quests done! You are a superstar!' };
+    }
+    if (streak > 0 && !activeToday) {
+      return { pose: 'oops', line: `Play 1 quick lesson to protect your ${streak}-day streak!` };
+    }
+    if (hour >= 22 || hour < 6) {
+      return { pose: 'sleep', line: 'Cozy night learning! Ready for a tiny warm-up?' };
+    }
+    if (streak > 0 && activeToday) {
+      return { pose: 'idle', line: 'Your streak is glowing! Let’s unlock the next lesson.' };
+    }
+    return {
+      pose: 'wave',
+      line: `Hi ${me?.firstName ?? 'friend'}! Tap a lesson to play with Leo!`,
+    };
+  }, [gamification, me, today]);
 
-  const launchLesson = (lessonId: string) => {
-    setSelectedLesson(null);
-    router.push({ pathname: '/lesson/[id]', params: { id: lessonId } });
-  };
+  const streakDays = gamification?.streak?.currentStreak ?? 0;
+  const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
+  const xpToday = today?.xpToday ?? 0;
+  const dueCount = dueWords?.counts.due ?? 0;
 
   return (
     <Screen hasTabBar>
       <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
-      {/* Playful Pip Companion Hero Card */}
-      <StaggeredEntrance index={0}>
-        <Card variant="gradient" gradientColors={nextPalette.gradient} style={styles.heroCard}>
-          <View style={styles.heroTopRow}>
-            <View style={styles.mascotRow}>
-              <View style={styles.mascotStage}>
-                <Image
-                  source={GeneratedAssets.mascotPip}
-                  style={styles.mascotImg}
-                  resizeMode="contain"
-                />
-              </View>
-              <View style={styles.heroTitleCol}>
-                <View style={styles.nextLevelPill}>
-                  <Text style={styles.nextLevelText}>
-                    {nextLesson.level} · {nextCity?.name}
+      {error ? (
+        <Card variant="muted" style={styles.emptyCard}>
+          <LeoMascot pose="oops" size={84} />
+          <Text style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}>
+            Could Not Load Courses
+          </Text>
+          <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
+            {error}
+          </Text>
+          <View style={{ width: '100%', maxWidth: 220 }}>
+            <GameButton
+              label="Retry"
+              size="md"
+              color="#1055F8"
+              depthColor="#0A3BB3"
+              onPress={() => void refreshAll()}
+            />
+          </View>
+        </Card>
+      ) : null}
+
+      {/* Hero Active Course + Dynamic Leo Greeting Card */}
+      {currentCourse ? (
+        <StaggeredEntrance index={0}>
+          <Card
+            variant="gradient"
+            gradientColors={pickCourseGradient(currentCourse.course, 0)}
+            style={styles.heroCard}
+          >
+            <View style={styles.heroTopRow}>
+              <View style={styles.mascotRow}>
+                <LeoMascot pose={leoGreeting.pose} size={86} style={styles.leoHero} />
+                <View style={styles.heroTitleCol}>
+                  <View style={styles.levelPill}>
+                    <Text style={styles.levelPillText}>
+                      {currentCourse.course.level?.name ?? 'Enrolled Course'}
+                    </Text>
+                  </View>
+                  <Text style={[typography.title1, { color: '#FFFFFF' }]} numberOfLines={2}>
+                    {currentCourse.stats.nextLesson?.title ?? currentCourse.course.title}
                   </Text>
                 </View>
-                <Text style={[typography.title1, { color: '#FFFFFF' }]} numberOfLines={2}>
-                  {nextLesson.title}
-                </Text>
               </View>
+
+              <ProgressRing
+                progress={currentCourse.stats.pct / 100}
+                size={64}
+                strokeWidth={7}
+                color="#FDE047"
+                trackColor="rgba(255,255,255,0.26)"
+              >
+                <Text style={styles.ringText}>
+                  {currentCourse.stats.completed}/{currentCourse.stats.total}
+                </Text>
+              </ProgressRing>
             </View>
 
-            <ProgressRing
-              progress={totalProgress}
-              size={66}
-              strokeWidth={7}
-              color="#FDE047"
-              trackColor="rgba(255,255,255,0.25)"
-            >
-              <Text style={styles.ringText}>
-                {player.completedLessonIds.length}/{ALL_LESSONS.length}
-              </Text>
-            </ProgressRing>
-          </View>
+            <Text style={styles.heroSub} numberOfLines={2}>
+              Leo says: "{leoGreeting.line}"
+            </Text>
 
-          <Text style={styles.heroSub} numberOfLines={2}>
-            Pip says: "{nextLesson.subtitle}"
+            <GameButton
+              label={
+                currentCourse.stats.nextLesson
+                  ? currentCourse.course.lessonRewardCoins > 0
+                    ? `Play Next Lesson (+${currentCourse.course.lessonRewardCoins} Coins)`
+                    : 'Play Next Lesson'
+                  : 'Open Course Roadmap'
+              }
+              color="#FFFFFF"
+              depthColor="rgba(15, 23, 42, 0.35)"
+              textColor="#0A3BB3"
+              icon={<Play size={17} color="#0A3BB3" fill="#0A3BB3" />}
+              onPress={() => {
+                if (currentCourse.stats.nextLesson) {
+                  router.push(`/lesson/${currentCourse.stats.nextLesson.id}` as never);
+                } else {
+                  router.push(`/course/${currentCourse.course.id}` as never);
+                }
+              }}
+            />
+          </Card>
+        </StaggeredEntrance>
+      ) : loading ? (
+        <Card style={styles.emptyCard}>
+          <LeoMascot pose="think" size={92} />
+          <Text style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}>
+            Loading Your Impulse Courses...
           </Text>
-
-          <GameButton
-            label={`Start Adventure (+${nextLesson.xpReward} XP)`}
-            color="#FFFFFF"
-            depthColor="rgba(15, 23, 42, 0.35)"
-            textColor={nextPalette.deep}
-            icon={<Play size={17} color={nextPalette.deep} fill={nextPalette.deep} />}
-            onPress={() => launchLesson(nextLesson.id)}
-          />
         </Card>
-      </StaggeredEntrance>
+      ) : (
+        <Card style={styles.emptyCard}>
+          <LeoMascot pose="wave" size={96} />
+          <Text style={[typography.title2, { color: colors.textPrimary, textAlign: 'center' }]}>
+            No Enrolled Courses Yet
+          </Text>
+          <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center' }]}>
+            Once your teacher enrolls you in an Impulse Kids group, your courses will appear right here!
+          </Text>
+        </Card>
+      )}
 
-      {/* Joyful 3-Column Pastel Stat Bubbles */}
+      {/* 3-Column Glossy Pastel Stat Bubbles */}
       <StaggeredEntrance index={1}>
         <View style={styles.pastelStatsRow}>
           <View style={[styles.pastelBubble, { backgroundColor: colors.xpMuted, borderRadius: radii.lg }]}>
-            <View style={[styles.bubbleIcon, { backgroundColor: colors.xp }]}>
-              <CheckCircle2 size={16} color="#FFFFFF" />
-            </View>
-            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>
-              {player.completedLessonIds.length}
-            </Text>
-            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Cleared</Text>
+            <XpBolt3D size={28} />
+            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>+{xpToday}</Text>
+            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>XP Today</Text>
           </View>
 
           <View style={[styles.pastelBubble, { backgroundColor: colors.streakMuted, borderRadius: radii.lg }]}>
             <View style={[styles.bubbleIcon, { backgroundColor: colors.streak }]}>
               <Flame size={16} color="#FFFFFF" fill="#FFFFFF" />
             </View>
-            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>
-              {player.streakDays}d
-            </Text>
+            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>{streakDays}d</Text>
             <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Streak</Text>
           </View>
 
-          <View style={[styles.pastelBubble, { backgroundColor: colors.accentMuted, borderRadius: radii.lg }]}>
-            <View style={[styles.bubbleIcon, { backgroundColor: colors.accent }]}>
-              <Zap size={16} color="#FFFFFF" fill="#FFFFFF" />
-            </View>
-            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>
-              {player.xp}
-            </Text>
-            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Total XP</Text>
+          <View style={[styles.pastelBubble, { backgroundColor: colors.coinMuted, borderRadius: radii.lg }]}>
+            <Coin3D size={28} />
+            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>{coins}</Text>
+            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Coins</Text>
           </View>
         </View>
       </StaggeredEntrance>
 
-      {/* World Map Section & CEFR Filter Chips */}
+      {/* Quick Kids Practice Shortcuts (Words & Coin Shop — no extra speaking course) */}
+      <StaggeredEntrance index={2}>
+        <View style={styles.shortcutsRow}>
+          <AnimatedPressable
+            onPress={() => router.push('/words' as never)}
+            containerStyle={{ flex: 1, minWidth: 0 }}
+            style={[
+              styles.shortcutCard,
+              {
+                backgroundColor: colors.surface,
+                borderColor: '#BFDBFE',
+                borderBottomColor: '#60A5FA',
+              },
+            ]}
+          >
+            <View style={[styles.shortcutIcon, { backgroundColor: '#DBEAFE' }]}>
+              <BookOpen size={20} color="#1055F8" />
+            </View>
+            <View style={styles.shortcutText}>
+              <Text style={[typography.headline, { color: colors.textPrimary }]}>Word Cards</Text>
+              <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                {dueCount > 0 ? `${dueCount} words to review` : 'All caught up!'}
+              </Text>
+            </View>
+          </AnimatedPressable>
+
+          <AnimatedPressable
+            onPress={() => router.push('/shop' as never)}
+            containerStyle={{ flex: 1, minWidth: 0 }}
+            style={[
+              styles.shortcutCard,
+              {
+                backgroundColor: colors.surface,
+                borderColor: '#FDE68A',
+                borderBottomColor: '#F59E0B',
+              },
+            ]}
+          >
+            <View style={[styles.shortcutIcon, { backgroundColor: '#FEF3C7' }]}>
+              <Store size={20} color="#D97706" />
+            </View>
+            <View style={styles.shortcutText}>
+              <Text style={[typography.headline, { color: colors.textPrimary }]}>Coin Shop</Text>
+              <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                Spend {coins} Coins
+              </Text>
+            </View>
+          </AnimatedPressable>
+        </View>
+      </StaggeredEntrance>
+
+      {/* Enrolled Courses List (fetched from student's enrollments via /lms/courses) */}
       <SectionHeader
-        title="World Adventure Map"
-        subtitle="Explore cities & unlock A1 to B2 badges"
+        title="My Courses"
+        subtitle="Tap a course to explore units & lessons"
       />
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterRow}
-      >
-        {LEVEL_FILTERS.map((level) => (
-          <Chip
-            key={level}
-            label={level === 'All' ? 'All Worlds' : `Level ${level}`}
-            selected={levelFilter === level}
-            onPress={() => setLevelFilter(level)}
-          />
-        ))}
-      </ScrollView>
+      <View style={styles.courseList}>
+        {activeCourses.map((course, idx) => {
+          const stats = computeCourseStats(course);
+          const grad = pickCourseGradient(course, idx);
+          return (
+            <StaggeredEntrance key={course.id} index={idx + 3}>
+              <AnimatedPressable
+                onPress={() => router.push(`/course/${course.id}` as never)}
+                style={[
+                  styles.courseCard,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: colors.border,
+                    borderRadius: radii.xl,
+                  },
+                ]}
+              >
+                <View style={styles.courseTop}>
+                  <View style={[styles.courseBadge, { backgroundColor: grad[0] }]}>
+                    <Sparkles size={15} color="#FFFFFF" />
+                    <Text style={styles.courseBadgeText}>
+                      {course.level?.name ?? course.subject ?? 'Course'}
+                    </Text>
+                  </View>
 
-      {/* Illustrated Journey Map Cities */}
-      <View style={styles.citiesStack}>
-        {visibleCities.map((city) => (
-          <WorldCitySection
-            key={city.id}
-            city={city}
-            cityUnlocked={isCityUnlocked(city.id)}
-            completedLessonIds={player.completedLessonIds}
-            lessonScores={player.lessonScores}
-            isLessonUnlocked={isLessonUnlocked}
-            onSelectLesson={(lesson) => setSelectedLesson(lesson)}
-          />
-        ))}
+                  {course.lessonRewardCoins > 0 ? (
+                    <View style={[styles.coinTag, { backgroundColor: colors.coinMuted }]}>
+                      <Coin3D size={15} />
+                      <Text style={styles.coinTagText}>+{course.lessonRewardCoins}/lesson</Text>
+                    </View>
+                  ) : null}
+                </View>
+
+                <View style={styles.courseMid}>
+                  <View style={{ flex: 1, gap: 3 }}>
+                    <Text style={[typography.title2, { color: colors.textPrimary }]}>
+                      {course.title}
+                    </Text>
+                    {course.description ? (
+                      <Text
+                        style={[typography.caption, { color: colors.textSecondary }]}
+                        numberOfLines={2}
+                      >
+                        {course.description}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <ChevronRight size={20} color={colors.textTertiary} />
+                </View>
+
+                <View style={styles.courseProgressRow}>
+                  <ProgressBar
+                    progress={stats.pct / 100}
+                    color={grad[0]}
+                    secondaryColor={grad[1]}
+                    height={11}
+                    style={{ flex: 1 }}
+                  />
+                  <Text style={[styles.pctText, { color: grad[0] }]}>
+                    {stats.completed}/{stats.total}
+                  </Text>
+                </View>
+              </AnimatedPressable>
+            </StaggeredEntrance>
+          );
+        })}
       </View>
 
-      {/* Lesson Briefing Bottom Sheet */}
-      <BottomSheet
-        visible={selectedLesson !== null}
-        onClose={() => setSelectedLesson(null)}
-        title={selectedLesson?.title}
-        subtitle={
-          selectedLesson && selectedCity
-            ? `${selectedLesson.level} · ${selectedCity.name} · ${selectedLesson.durationMin} min`
-            : undefined
-        }
-      >
-        {selectedLesson ? (
-          <View style={styles.sheetBody}>
-            <Text style={[typography.body, { color: colors.textSecondary }]}>
-              {selectedLesson.subtitle}
-            </Text>
-
-            <View style={styles.stageGrid}>
-              {STAGE_PILLS.map(({ label, Icon }) => (
-                <View
-                  key={label}
+      {/* Practice Earlier Levels (course.practice === true — matches production apps/student) */}
+      {practiceCourses.length > 0 ? (
+        <>
+          <SectionHeader
+            title="Practice Earlier Levels"
+            subtitle="Open anytime for extra review"
+          />
+          <View style={styles.courseList}>
+            {practiceCourses.map((course) => {
+              const stats = computeCourseStats(course);
+              return (
+                <AnimatedPressable
+                  key={course.id}
+                  onPress={() => router.push(`/course/${course.id}` as never)}
                   style={[
-                    styles.stageTag,
+                    styles.practiceCard,
                     {
-                      backgroundColor: colors.surfaceMuted,
-                      borderRadius: radii.sm,
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                      borderRadius: radii.lg,
                     },
                   ]}
                 >
-                  <Icon size={14} color={colors.accent} />
-                  <Text style={[typography.caption, { color: colors.textPrimary }]}>
-                    {label}
-                  </Text>
-                </View>
-              ))}
-            </View>
-
-            <View
-              style={[
-                styles.rewardRow,
-                {
-                  backgroundColor: colors.surface,
-                  borderColor: colors.border,
-                  borderRadius: radii.md,
-                },
-              ]}
-            >
-              <View style={styles.rewardItem}>
-                <Zap size={16} color={colors.xp} />
-                <Text style={[typography.callout, { color: colors.textPrimary }]}>
-                  +{selectedLesson.xpReward} XP
-                </Text>
-              </View>
-              <View style={styles.rewardItem}>
-                <Coins size={16} color={colors.coin} />
-                <Text style={[typography.callout, { color: colors.textPrimary }]}>
-                  +{selectedLesson.coinReward}
-                </Text>
-              </View>
-              <View style={styles.rewardItem}>
-                <Gem size={16} color={colors.gem} />
-                <Text style={[typography.callout, { color: colors.textPrimary }]}>
-                  +{selectedLesson.gemReward}
-                </Text>
-              </View>
-            </View>
-
-            {selectedUnlocked ? (
-              <GameButton
-                label={selectedCompleted ? 'Play Again!' : 'Start Adventure!'}
-                color={RegionPalette[selectedLesson.level].primary}
-                depthColor={RegionPalette[selectedLesson.level].deep}
-                icon={<Play size={17} color="#FFFFFF" fill="#FFFFFF" />}
-                onPress={() => launchLesson(selectedLesson.id)}
-              />
-            ) : (
-              <View style={styles.lockedNotice}>
-                <Badge label="Locked Stop" tone="warning" dot />
-                <Text style={[typography.callout, { color: colors.textSecondary }]}>
-                  Finish the stop before this one to unlock this adventure.
-                </Text>
-                <GameButton
-                  label="Locked"
-                  disabled
-                  icon={<Lock size={16} color="#FFFFFF" />}
-                />
-              </View>
-            )}
+                  <View style={[styles.practiceIcon, { backgroundColor: '#EDE9FE' }]}>
+                    <Gift size={18} color="#7C3AED" />
+                  </View>
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <Text style={[typography.headline, { color: colors.textPrimary }]}>
+                      {course.title}
+                    </Text>
+                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                      {stats.completed}/{stats.total} lessons · Free practice
+                    </Text>
+                  </View>
+                  <Badge label="Open" tone="accent" />
+                </AnimatedPressable>
+              );
+            })}
           </View>
-        ) : null}
-      </BottomSheet>
+        </>
+      ) : null}
     </Screen>
   );
 }
@@ -308,52 +418,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 10,
+    gap: 8,
   },
   mascotRow: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
-  mascotStage: {
-    width: 82,
-    height: 82,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: -4,
-  },
-  mascotImg: {
-    width: 84,
-    height: 84,
+  leoHero: {
+    marginLeft: -6,
   },
   heroTitleCol: {
     flex: 1,
     gap: 5,
   },
-  nextLevelPill: {
+  levelPill: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(15, 23, 42, 0.25)',
     paddingHorizontal: 9,
-    paddingVertical: 4,
+    paddingVertical: 3,
     borderRadius: 999,
   },
-  nextLevelText: {
+  levelPillText: {
     color: '#FFFFFF',
     fontSize: 11,
     fontWeight: '800',
   },
   ringText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '800',
     fontVariant: ['tabular-nums'],
   },
   heroSub: {
-    color: 'rgba(255,255,255,0.92)',
-    fontSize: 13.5,
-    lineHeight: 19,
+    color: 'rgba(255,255,255,0.94)',
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '600',
+  },
+  emptyCard: {
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 24,
   },
   pastelStatsRow: {
     flexDirection: 'row',
@@ -361,64 +468,120 @@ const styles = StyleSheet.create({
   },
   pastelBubble: {
     flex: 1,
-    alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 13,
     paddingHorizontal: 8,
+    alignItems: 'center',
     gap: 5,
   },
   bubbleIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 2,
   },
   bubbleValue: {
     fontSize: 19,
-    fontWeight: '800',
+    fontWeight: '900',
     fontVariant: ['tabular-nums'],
   },
   bubbleLabel: {
     fontSize: 11.5,
     fontWeight: '700',
   },
-  filterRow: {
+  shortcutsRow: {
     flexDirection: 'row',
-    gap: 8,
-    paddingVertical: 2,
-  },
-  citiesStack: {
-    gap: 28,
-  },
-  sheetBody: {
-    gap: 16,
-  },
-  stageGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  stageTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    gap: 6,
-  },
-  rewardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingVertical: 12,
-    borderWidth: 1,
-  },
-  rewardItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  lockedNotice: {
     gap: 10,
+  },
+  shortcutCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 12,
+    borderRadius: 18,
+    borderWidth: 1.75,
+    borderBottomWidth: 4,
+  },
+  shortcutIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shortcutText: {
+    flex: 1,
+    minWidth: 0,
+    gap: 2,
+  },
+  courseList: {
+    gap: 12,
+  },
+  courseCard: {
+    padding: 16,
+    borderWidth: 1.5,
+    borderBottomWidth: 4,
+    gap: 12,
+  },
+  courseTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  courseBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+  courseBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11.5,
+    fontWeight: '800',
+  },
+  coinTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+  coinTagText: {
+    color: '#B45309',
+    fontSize: 11.5,
+    fontWeight: '800',
+  },
+  courseMid: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  courseProgressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  pctText: {
+    fontSize: 12.5,
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
+  },
+  practiceCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 13,
+    borderWidth: 1.5,
+  },
+  practiceIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

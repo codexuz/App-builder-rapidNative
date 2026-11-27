@@ -1,120 +1,210 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import {
-  BookOpen,
-  Check,
-  Coins,
-  Database,
   Flame,
-  Gem,
-  Headphones,
-  Mic,
-  RotateCcw,
+  Globe,
+  GraduationCap,
+  LogOut,
+  RefreshCw,
+  Shield,
+  Snowflake,
   Sparkles,
-  Zap,
+  Volume2,
+  VolumeX,
 } from 'lucide-react-native';
-import { ProgressBar } from '@/components/game';
+import { Coin3D, GameButton, ProgressBar, Star3D, XpBolt3D } from '@/components/game';
+import { LEO_ART } from '@/components/mascot/LeoMascot';
 import {
   AnimatedCounter,
-  AnimatedPressable,
   Badge,
-  BarChart,
-  Button,
   Card,
+  Chip,
   Screen,
   SectionHeader,
-  SegmentedControl,
-  SkillBentoTile,
 } from '@/components/ui';
 import { GeneratedAssets } from '@/constants/GeneratedAssets';
-import { RegionPalette, useAppTheme } from '@/constants/Theme';
-import { COLLECTIBLE_RELICS, EXPLORER_AVATARS } from '@/data/mockState';
-import { WORLD_CITIES } from '@/data/worldData';
-import { useGame } from '@/store/GameContext';
-import type { CEFRLevel } from '@/types/game';
+import { useAppTheme } from '@/constants/Theme';
+import { api } from '@/lib/api';
+import type { AppLocale } from '@/lib/api/types';
+import { AppConfig } from '@/lib/config';
+import { useKidsApp } from '@/providers/KidsAppProvider';
 
 const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const CEFR_LEVELS: CEFRLevel[] = ['A1', 'A2', 'B1', 'B2'];
 
-const WEEKLY_XP_DATA = [
-  { label: 'Mon', value: 110 },
-  { label: 'Tue', value: 145 },
-  { label: 'Wed', value: 95 },
-  { label: 'Thu', value: 190 },
-  { label: 'Fri', value: 165 },
-  { label: 'Sat', value: 155 },
-  { label: 'Sun', value: 90 },
-];
-
-const MONTHLY_XP_DATA = [
-  { label: 'Wk 1', value: 420 },
-  { label: 'Wk 2', value: 680 },
-  { label: 'Wk 3', value: 540 },
-  { label: 'Wk 4', value: 860 },
-];
-
-export default function ProfileScreen() {
+export default function KidsProfileScreen() {
+  const router = useRouter();
   const { colors, typography, radii } = useAppTheme();
-  const { player, backendMode, selectOrBuyAvatar, resetDemoProgress } = useGame();
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const [timeframe, setTimeframe] = useState<'week' | 'month'>('week');
+  const {
+    center,
+    me,
+    studentId,
+    studentIds,
+    enrollments,
+    locale,
+    soundEnabled,
+    gamification,
+    today,
+    loading,
+    setLocale,
+    setSoundEnabled,
+    switchStudent,
+    buyStreakFreeze,
+    refreshAll,
+    signOut,
+  } = useKidsApp();
 
-  const activeAvatar =
-    EXPLORER_AVATARS.find((a) => a.id === player.activeAvatarId) ?? EXPLORER_AVATARS[0];
+  const [notice, setNotice] = useState<string | null>(null);
 
-  const handleAvatarPress = (avatarId: string) => {
-    const res = selectOrBuyAvatar(avatarId);
-    setFeedback(res.message);
+  const fullName = me ? `${me.firstName} ${me.lastName ?? ''}`.trim() : 'Student';
+  const avatarUri = api.assetUrl(me?.avatarUrl);
+  const xp = gamification?.wallet?.cachedXp ?? today?.level.xp ?? 0;
+  const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
+  const streak = gamification?.streak?.currentStreak ?? 0;
+  const longestStreak = gamification?.streak?.longestStreak ?? 0;
+  const freezes = gamification?.streak?.freezes ?? today?.freeze.held ?? 0;
+  const levelNum = today?.level.level ?? 1;
+  const levelInto = today?.level.into ?? 0;
+  const levelSpan = Math.max(1, today?.level.span ?? 100);
+  const achievements = gamification?.achievements ?? [];
+  const transactions = (gamification?.transactions ?? []).slice(0, 6);
+
+  const handleBuyFreeze = async () => {
+    const res = await buyStreakFreeze();
+    setNotice(res.message);
   };
 
   return (
     <Screen hasTabBar>
-      {/* Joyful Explorer Hero Card */}
+      {/* Kid Explorer Hero Card */}
       <Card style={styles.heroCard}>
         <View style={styles.heroRow}>
-          <View style={[styles.avatarFrame, { borderColor: colors.accent }]}>
+          <View style={[styles.avatarFrame, { borderColor: '#1055F8' }]}>
             <Image
-              source={GeneratedAssets[activeAvatar.imageKey]}
+              source={avatarUri ? { uri: avatarUri } : LEO_ART.wave}
               style={styles.heroAvatar}
             />
           </View>
           <View style={styles.heroText}>
-            <Text style={[typography.title1, { color: colors.textPrimary }]}>
-              {player.displayName}
-            </Text>
+            <Text style={[typography.title1, { color: colors.textPrimary }]}>{fullName}</Text>
             <Text style={[typography.callout, { color: colors.textSecondary }]}>
-              {player.explorerTitle}
+              {me?.phone ?? center?.name ?? AppConfig.appName}
             </Text>
             <View style={styles.heroBadges}>
-              <Badge label={`Level ${player.currentLevel}`} tone="accent" dot />
-              <Badge
-                label={`${player.ownedRelicIds.length} ${player.ownedRelicIds.length === 1 ? 'Relic' : 'Relics'}`}
-                tone="warning"
-              />
+              <Badge label={`Level ${levelNum}`} tone="accent" dot />
+              {gamification?.verified ? <Badge label="Verified" tone="success" /> : null}
             </View>
           </View>
         </View>
 
+        <View style={styles.levelTrack}>
+          <View style={styles.levelMetaRow}>
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>
+              Level {levelNum} Progress
+            </Text>
+            <Text style={[typography.caption, { color: '#1055F8', fontWeight: '800' }]}>
+              {levelInto} / {levelSpan} XP
+            </Text>
+          </View>
+          <ProgressBar progress={Math.min(1, levelInto / levelSpan)} color="#1055F8" height={10} />
+        </View>
+
         <View style={styles.counterRow}>
           <View style={[styles.counterBox, { backgroundColor: colors.xpMuted, borderRadius: radii.md }]}>
-            <Zap size={16} color={colors.xp} />
-            <AnimatedCounter value={player.xp} style={[styles.counterVal, { color: colors.textPrimary }]} />
+            <XpBolt3D size={22} />
+            <AnimatedCounter value={xp} style={[styles.counterVal, { color: colors.textPrimary }]} />
             <Text style={[typography.caption, { color: colors.textSecondary }]}>Total XP</Text>
           </View>
-          <View style={[styles.counterBox, { backgroundColor: colors.streakMuted, borderRadius: radii.md }]}>
-            <Flame size={16} color={colors.streak} fill={colors.streak} />
-            <AnimatedCounter value={player.streakDays} suffix="d" style={[styles.counterVal, { color: colors.textPrimary }]} />
-            <Text style={[typography.caption, { color: colors.textSecondary }]}>Day Streak</Text>
-          </View>
           <View style={[styles.counterBox, { backgroundColor: colors.coinMuted, borderRadius: radii.md }]}>
-            <Coins size={16} color={colors.coin} />
-            <AnimatedCounter value={player.coins} style={[styles.counterVal, { color: colors.textPrimary }]} />
+            <Coin3D size={22} />
+            <AnimatedCounter value={coins} style={[styles.counterVal, { color: colors.textPrimary }]} />
             <Text style={[typography.caption, { color: colors.textSecondary }]}>Coins</Text>
+          </View>
+          <View style={[styles.counterBox, { backgroundColor: '#E0F2FE', borderRadius: radii.md }]}>
+            <Snowflake size={20} color="#0284C7" />
+            <AnimatedCounter value={freezes} style={[styles.counterVal, { color: colors.textPrimary }]} />
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>Freezes</Text>
           </View>
         </View>
       </Card>
 
-      {/* Weekly Expedition Flame */}
+      {notice ? (
+        <Card variant="muted" style={styles.noticeRow}>
+          <Sparkles size={16} color="#1055F8" />
+          <Text style={[typography.callout, { color: colors.textPrimary, flex: 1 }]}>{notice}</Text>
+        </Card>
+      ) : null}
+
+      {/* Active Center Enrollments from /academic/enrollments */}
+      {enrollments.length > 0 ? (
+        <Card style={styles.accountCard}>
+          <SectionHeader
+            title="My Impulse Classes"
+            subtitle="Active enrollments synced from Impulse"
+          />
+          {enrollments.map((enr) => (
+            <View key={enr.id} style={[styles.enrollRow, { borderColor: colors.border, borderRadius: radii.md }]}>
+              <View style={[styles.enrollIcon, { backgroundColor: '#DBEAFE' }]}>
+                <GraduationCap size={18} color="#1055F8" />
+              </View>
+              <View style={{ flex: 1, gap: 2 }}>
+                <Text style={[typography.headline, { color: colors.textPrimary }]}>
+                  {enr.course?.name ?? enr.level?.name ?? 'Impulse Class'}
+                </Text>
+                <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                  {[enr.level?.name, enr.group?.name].filter(Boolean).join(' · ') || enr.status}
+                </Text>
+              </View>
+              <Badge label={enr.status} tone={enr.status === 'ACTIVE' ? 'success' : 'neutral'} />
+            </View>
+          ))}
+        </Card>
+      ) : null}
+
+      {/* Multi-Child Parent Switcher & Account Sync */}
+      <Card style={styles.accountCard}>
+        <SectionHeader
+          title="Impulse Kids Account"
+          subtitle={`Signed in to ${center?.name ?? AppConfig.centerSlug}`}
+          actionLabel={loading ? 'Syncing...' : 'Sync'}
+          onActionPress={() => void refreshAll()}
+        />
+
+        {studentIds.length > 1 ? (
+          <View style={styles.childRow}>
+            {studentIds.map((sid, i) => (
+              <Chip
+                key={sid}
+                label={`Child ${i + 1}`}
+                selected={sid === studentId}
+                onPress={() => void switchStudent(sid)}
+              />
+            ))}
+          </View>
+        ) : null}
+
+        <View style={styles.accountBtns}>
+          <Pressable
+            onPress={() => void refreshAll()}
+            style={[styles.syncBtn, { backgroundColor: '#EFF6FF', borderRadius: radii.md }]}
+          >
+            <RefreshCw size={15} color="#1055F8" />
+            <Text style={[typography.callout, { color: '#1055F8' }]}>Refresh Live Data</Text>
+          </Pressable>
+          <GameButton
+            label="Sign Out"
+            color="#FF4B4B"
+            depthColor="#EA2B2B"
+            icon={<LogOut size={16} color="#FFFFFF" />}
+            onPress={async () => {
+              await signOut();
+              router.replace('/auth');
+            }}
+          />
+        </View>
+      </Card>
+
+      {/* Streak Flame + Freeze (100% live from gamification.streak & today.freeze) */}
       <Card style={styles.streakCard}>
         <View style={styles.streakHeaderRow}>
           <Image
@@ -124,22 +214,25 @@ export default function ProfileScreen() {
           />
           <View style={{ flex: 1 }}>
             <SectionHeader
-              title="Weekly Streak Flame"
-              subtitle="Play daily to keep your streak alive!"
+              title={`${streak}-Day Streak Flame`}
+              subtitle={
+                longestStreak > 0
+                  ? `Best streak: ${longestStreak} days`
+                  : 'Complete a lesson today to start your streak!'
+              }
             />
           </View>
         </View>
+
         <View style={styles.weekRow}>
           {WEEKDAYS.map((day, idx) => {
-            const done = player.weekActivity[idx];
+            const done = idx < Math.min(7, streak);
             return (
               <View key={`${day}-${idx}`} style={styles.dayCol}>
                 <View
                   style={[
                     styles.dayBubble,
-                    {
-                      backgroundColor: done ? colors.streak : colors.surfaceMuted,
-                    },
+                    { backgroundColor: done ? colors.streak : colors.surfaceMuted },
                   ]}
                 >
                   {done ? (
@@ -153,200 +246,117 @@ export default function ProfileScreen() {
             );
           })}
         </View>
+
+        {today?.freeze.enabled !== false ? (
+          <Pressable
+            onPress={handleBuyFreeze}
+            style={[styles.freezeBtn, { backgroundColor: '#EFF6FF', borderRadius: radii.md }]}
+          >
+            <Snowflake size={16} color="#0284C7" />
+            <Text style={[typography.callout, { color: '#0369A1', flex: 1 }]}>
+              Buy Streak Freeze ({today?.freeze.price ?? 0} Coins)
+            </Text>
+            <Badge label={`${freezes} held`} tone="accent" />
+          </Pressable>
+        ) : null}
       </Card>
 
-      {/* Activity Bar Chart with SegmentedControl (inspired by LanguageLeaningApps/Dashboard.png) */}
-      <Card style={styles.chartCard}>
-        <SectionHeader
-          title="Learning Activity"
-          subtitle="Tap any bar to inspect XP earned"
-        />
-        <SegmentedControl
-          value={timeframe}
-          onChange={setTimeframe}
-          options={[
-            { label: 'This Week', value: 'week' },
-            { label: 'Monthly', value: 'month' },
-          ]}
-        />
-        <BarChart
-          data={timeframe === 'week' ? WEEKLY_XP_DATA : MONTHLY_XP_DATA}
-          unit="XP"
-          barColor="#FDBA74"
-          activeColor="#F97316"
-        />
-      </Card>
-
-      {/* 2x2 English Skill Bento Grid (inspired by modern language app references) */}
-      <SectionHeader
-        title="English Skill Powers"
-        subtitle="Level up every skill across city adventures"
-      />
-      <View style={styles.bentoRow}>
-        <SkillBentoTile
-          title="Vocabulary"
-          percent={player.skillMastery.vocabulary}
-          accentColor="#0EA5E9"
-          icon={<BookOpen size={18} color="#0EA5E9" />}
-        />
-        <SkillBentoTile
-          title="Grammar"
-          percent={player.skillMastery.grammar}
-          accentColor="#7C3AED"
-          icon={<Sparkles size={18} color="#7C3AED" />}
-        />
-      </View>
-      <View style={styles.bentoRow}>
-        <SkillBentoTile
-          title="Listening"
-          percent={player.skillMastery.listening}
-          accentColor="#EC4899"
-          icon={<Headphones size={18} color="#EC4899" />}
-        />
-        <SkillBentoTile
-          title="Speaking"
-          percent={player.skillMastery.speaking}
-          accentColor="#10B981"
-          icon={<Mic size={18} color="#10B981" />}
-        />
-      </View>
-
-      {/* Explorer Avatar Wardrobe */}
-      <SectionHeader
-        title="Explorer Avatars"
-        subtitle={`Wallet: ${player.coins} Coins · ${player.gems} Gems`}
-      />
-
-      {feedback ? (
-        <Card variant="muted" style={styles.feedbackCard}>
-          <Text style={[typography.callout, { color: colors.textPrimary }]}>{feedback}</Text>
+      {/* Recent Coin Activity from gamification.transactions */}
+      {transactions.length > 0 ? (
+        <Card style={styles.achCard}>
+          <SectionHeader
+            title="Recent Coin Activity"
+            subtitle="Live wallet history"
+          />
+          {transactions.map((tx) => (
+            <View key={tx.id} style={styles.txRow}>
+              <Coin3D size={20} />
+              <View style={{ flex: 1 }}>
+                <Text style={[typography.callout, { color: colors.textPrimary }]} numberOfLines={1}>
+                  {tx.description || tx.type}
+                </Text>
+                <Text style={[typography.caption, { color: colors.textTertiary }]}>
+                  {new Date(tx.createdAt).toLocaleDateString()}
+                </Text>
+              </View>
+              <Text
+                style={[
+                  typography.headline,
+                  { color: tx.amount >= 0 ? '#3B8700' : '#DC2626' },
+                ]}
+              >
+                {tx.amount >= 0 ? `+${tx.amount}` : tx.amount}
+              </Text>
+            </View>
+          ))}
         </Card>
       ) : null}
 
-      <View style={styles.avatarGrid}>
-        {EXPLORER_AVATARS.map((avatar) => {
-          const unlocked = player.unlockedAvatarIds.includes(avatar.id);
-          const isActive = player.activeAvatarId === avatar.id;
-
-          return (
-            <AnimatedPressable
-              key={avatar.id}
-              onPress={() => handleAvatarPress(avatar.id)}
-              haptic="selection"
-              containerStyle={{ flex: 1, minWidth: 0 }}
-              style={[
-                styles.avatarOption,
-                {
-                  backgroundColor: colors.surface,
-                  borderColor: isActive ? avatar.accentColor : colors.border,
-                  borderWidth: isActive ? 2 : 1.25,
-                  borderRadius: radii.lg,
-                },
-              ]}
-            >
-              <Image
-                source={GeneratedAssets[avatar.imageKey]}
-                style={styles.optionImage}
-              />
-              <Text
-                style={[typography.callout, { color: colors.textPrimary }]}
-                numberOfLines={1}
-              >
-                {avatar.name.split(' ')[0]}
-              </Text>
-              <Text
-                style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}
-                numberOfLines={1}
-              >
-                {avatar.title}
-              </Text>
-              {isActive ? (
-                <View style={[styles.equippedTag, { backgroundColor: avatar.accentColor }]}>
-                  <Check size={12} color="#FFFFFF" strokeWidth={3} />
-                  <Text style={styles.equippedText}>Active</Text>
-                </View>
-              ) : unlocked ? (
-                <Badge label="Equip" tone="neutral" />
-              ) : avatar.costCoins > 0 ? (
-                <View style={[styles.costChip, { backgroundColor: colors.coinMuted }]}>
-                  <Coins size={12} color={colors.coin} />
-                  <Text style={[styles.costText, { color: colors.coin }]}>
-                    {avatar.costCoins}
-                  </Text>
-                </View>
-              ) : (
-                <View style={[styles.costChip, { backgroundColor: colors.gemMuted }]}>
-                  <Gem size={12} color={colors.gem} />
-                  <Text style={[styles.costText, { color: colors.gem }]}>
-                    {avatar.costGems}
-                  </Text>
-                </View>
-              )}
-            </AnimatedPressable>
-          );
-        })}
-      </View>
-
-      {/* CEFR Level Progress */}
-      <SectionHeader
-        title="CEFR World Roadmap"
-        subtitle="Master each destination from A1 through B2"
-      />
-      <Card style={styles.cefrCard}>
-        {CEFR_LEVELS.map((level) => {
-          const city = WORLD_CITIES.find((c) => c.level === level)!;
-          const done = city.lessons.filter((l) =>
-            player.completedLessonIds.includes(l.id)
-          ).length;
-          const total = city.lessons.length;
-          const palette = RegionPalette[level];
-
-          return (
-            <View key={level} style={styles.cefrRow}>
-              <View style={styles.cefrTop}>
-                <View style={styles.cefrLeft}>
-                  <View style={[styles.cefrTag, { backgroundColor: palette.primary }]}>
-                    <Text style={styles.cefrTagText}>{level}</Text>
-                  </View>
-                  <Text style={[typography.callout, { color: colors.textPrimary }]}>
-                    {city.name}
-                  </Text>
-                </View>
-                <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                  {done}/{total} stops
+      {/* Earned Achievements */}
+      {achievements.length > 0 ? (
+        <Card style={styles.achCard}>
+          <SectionHeader
+            title="Leo Trophy Badges"
+            subtitle={`${achievements.length} earned`}
+          />
+          {achievements.map((item) => (
+            <View key={item.id} style={styles.achRow}>
+              <Star3D size={28} filled />
+              <View style={{ flex: 1 }}>
+                <Text style={[typography.headline, { color: colors.textPrimary }]}>
+                  {item.achievement.name}
                 </Text>
+                {item.achievement.description ? (
+                  <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                    {item.achievement.description}
+                  </Text>
+                ) : null}
               </View>
-              <ProgressBar progress={done / total} color={palette.primary} height={8} />
             </View>
-          );
-        })}
-      </Card>
+          ))}
+        </Card>
+      ) : null}
 
-      {/* Cloud Sync Architecture Card */}
-      <Card variant="outlined" style={styles.syncCard}>
-        <View style={styles.syncTop}>
-          <Database size={18} color={colors.accent} />
-          <View style={styles.syncText}>
-            <Text style={[typography.headline, { color: colors.textPrimary }]}>
-              Cloud Sync Ready
-            </Text>
-            <Text style={[typography.caption, { color: colors.textSecondary }]}>
-              {backendMode === 'supabase'
-                ? 'Connected to live Supabase Postgres'
-                : `Local demo mode · ${player.ownedRelicIds.length}/${COLLECTIBLE_RELICS.length} relics saved locally.`}
-            </Text>
-          </View>
+      {/* Kid Preferences: Language (EN/UZ/RU) & Sound */}
+      <Card style={styles.prefsCard}>
+        <View style={styles.prefRow}>
+          <Globe size={18} color="#1055F8" />
+          <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]}>
+            App Language
+          </Text>
         </View>
-        <Button
-          label="Reset Demo Progress"
-          variant="outline"
-          size="sm"
-          icon={<RotateCcw size={14} color={colors.textPrimary} />}
-          onPress={() => {
-            resetDemoProgress();
-            setFeedback('Progress reset to starter adventure state.');
-          }}
-        />
+        <View style={styles.langRow}>
+          {(['en', 'uz', 'ru'] as AppLocale[]).map((code) => (
+            <Chip
+              key={code}
+              label={code === 'en' ? 'English' : code === 'uz' ? 'O‘zbekcha' : 'Русский'}
+              selected={locale === code}
+              onPress={() => void setLocale(code)}
+            />
+          ))}
+        </View>
+
+        <Pressable
+          onPress={() => setSoundEnabled(!soundEnabled)}
+          style={[styles.soundRow, { borderTopColor: colors.border }]}
+        >
+          {soundEnabled ? (
+            <Volume2 size={18} color="#1055F8" />
+          ) : (
+            <VolumeX size={18} color={colors.textTertiary} />
+          )}
+          <Text style={[typography.callout, { color: colors.textPrimary, flex: 1 }]}>
+            Leo Voice & Sound Effects
+          </Text>
+          <Badge label={soundEnabled ? 'On' : 'Muted'} tone={soundEnabled ? 'success' : 'neutral'} />
+        </Pressable>
+
+        <View style={[styles.footerNote, { borderTopColor: colors.border }]}>
+          <Shield size={14} color={colors.textTertiary} />
+          <Text style={[typography.caption, { color: colors.textTertiary }]}>
+            {AppConfig.appName} · {AppConfig.applicationId} · Ages {AppConfig.ageRange}
+          </Text>
+        </View>
       </Card>
     </Screen>
   );
@@ -354,7 +364,7 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   heroCard: {
-    gap: 16,
+    gap: 14,
     paddingVertical: 18,
   },
   heroRow: {
@@ -366,6 +376,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 42,
     padding: 3,
+    backgroundColor: '#DBEAFE',
   },
   heroAvatar: {
     width: 68,
@@ -378,8 +389,17 @@ const styles = StyleSheet.create({
   },
   heroBadges: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 6,
     marginTop: 4,
+  },
+  levelTrack: {
+    gap: 6,
+  },
+  levelMetaRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   counterRow: {
     flexDirection: 'row',
@@ -393,8 +413,45 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   counterVal: {
-    fontSize: 19,
-    fontWeight: '800',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  noticeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  accountCard: {
+    gap: 12,
+  },
+  enrollRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 10,
+    borderWidth: 1,
+  },
+  enrollIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  childRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  accountBtns: {
+    gap: 10,
+  },
+  syncBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 10,
   },
   streakCard: {
     gap: 14,
@@ -430,93 +487,50 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
   },
-  chartCard: {
-    gap: 14,
-  },
-  bentoRow: {
+  freezeBtn: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 11,
+  },
+  achCard: {
+    gap: 12,
+  },
+  txRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
-  feedbackCard: {
-    paddingVertical: 10,
-  },
-  avatarGrid: {
+  achRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
-  avatarOption: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 10,
-    gap: 5,
+  prefsCard: {
+    gap: 12,
   },
-  optionImage: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    marginBottom: 2,
-  },
-  equippedTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  equippedText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  costChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  costText: {
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  cefrCard: {
-    gap: 14,
-  },
-  cefrRow: {
-    gap: 6,
-  },
-  cefrTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  cefrLeft: {
+  prefRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  cefrTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  cefrTagText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  syncCard: {
-    gap: 12,
-  },
-  syncTop: {
+  langRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  syncText: {
-    flex: 1,
-    gap: 3,
+  soundRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  footerNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingTop: 10,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 });

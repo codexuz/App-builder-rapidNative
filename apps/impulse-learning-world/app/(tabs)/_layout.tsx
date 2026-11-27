@@ -1,42 +1,46 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Compass, Gift, Trophy, UserRound } from 'lucide-react-native';
+import { BookOpen, Gift, Trophy, User } from 'lucide-react-native';
 import { CapsuleTabBar } from '@/components/ui';
+import { useAppTheme } from '@/constants/Theme';
 
-export default function TabLayout() {
+export default function KidsTabsLayout() {
+  const { colors } = useAppTheme();
+
   return (
     <Tabs
       tabBar={(props) => <CapsuleTabBar {...props} />}
       screenOptions={{
         headerShown: false,
+        sceneStyle: { backgroundColor: colors.background },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'World',
-          tabBarIcon: ({ color, size }) => <Compass size={size} color={color} />,
+          title: 'Courses',
+          tabBarIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="quests"
         options={{
           title: 'Quests',
-          tabBarIcon: ({ color, size }) => <Gift size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Gift color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="leaderboard"
         options={{
-          title: 'Ranks',
-          tabBarIcon: ({ color, size }) => <Trophy size={size} color={color} />,
+          title: 'League',
+          tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => <UserRound size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
     </Tabs>
