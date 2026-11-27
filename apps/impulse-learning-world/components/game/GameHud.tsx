@@ -1,26 +1,24 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { Flame } from 'lucide-react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Coins, Flame, Zap } from 'lucide-react-native';
 import { LEO_ART } from '@/components/mascot/LeoMascot';
-import { AnimatedPressable } from '@/components/ui';
-import { useAppTheme } from '@/constants/Theme';
+import { DS } from '@/constants/DesignSystem';
 import { api } from '@/lib/api';
 import { useKidsApp } from '@/providers/KidsAppProvider';
-import { Coin3D, XpBolt3D } from './GameIcons3D';
 
 export interface GameHudProps {
   onAvatarPress?: () => void;
 }
 
 /**
- * Impulse Kids top HUD bar matching production erp-lms currencies:
- * Leo / student avatar greeting + Streak Flame + Coins (3D SVG) + XP (3D SVG).
+ * Clean, balanced top app header matching Impulse production discipline:
+ * - Left: 40x40 circular avatar + Name & Level subtitle (zero pill-inside-pill clutter)
+ * - Right: Unified equal-height Streak, Coins & XP counters with consistent Lucide iconography
  */
 export function GameHud({ onAvatarPress }: GameHudProps) {
-  const { colors, radii } = useAppTheme();
   const { me, gamification, today } = useKidsApp();
 
-  const firstName = me?.firstName || 'Explorer';
+  const firstName = me?.firstName || 'Student';
   const levelNum = today?.level.level ?? 1;
   const streak = gamification?.streak?.currentStreak ?? 0;
   const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
@@ -28,50 +26,44 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
   const avatarUri = api.assetUrl(me?.avatarUrl);
 
   return (
-    <View style={styles.row}>
-      <AnimatedPressable
+    <View style={styles.bar}>
+      <Pressable
         onPress={onAvatarPress}
-        accessibilityLabel="Open Impulse Kids profile"
-        style={[
-          styles.avatarPill,
-          {
-            backgroundColor: colors.surface,
-            borderColor: colors.border,
-            borderRadius: radii.pill,
-          },
-        ]}
+        accessibilityRole="button"
+        accessibilityLabel="Open profile"
+        style={styles.identity}
       >
-        <View style={[styles.avatarCircle, { backgroundColor: '#DBEAFE' }]}>
+        <View style={styles.avatarRing}>
           <Image
             source={avatarUri ? { uri: avatarUri } : LEO_ART.wave}
             style={styles.avatar}
             resizeMode="cover"
           />
         </View>
-        <View style={styles.nameBlock}>
-          <Text style={[styles.name, { color: colors.textPrimary }]} numberOfLines={1}>
-            Hi, {firstName}
+        <View style={styles.nameCol}>
+          <Text style={styles.name} numberOfLines={1}>
+            {firstName}
           </Text>
-          <View style={styles.levelBadge}>
-            <Text style={styles.levelBadgeText}>Level {levelNum}</Text>
-          </View>
+          <Text style={styles.sub} numberOfLines={1}>
+            Level {levelNum}
+          </Text>
         </View>
-      </AnimatedPressable>
+      </Pressable>
 
-      <View style={styles.pills}>
-        <View style={[styles.statPill, { backgroundColor: colors.streakMuted }]}>
-          <Flame size={15} color={colors.streak} fill={colors.streak} />
-          <Text style={[styles.statText, { color: '#C2410C' }]}>{streak}</Text>
-        </View>
-
-        <View style={[styles.statPill, { backgroundColor: colors.coinMuted }]}>
-          <Coin3D size={17} />
-          <Text style={[styles.statText, { color: '#B45309' }]}>{coins}</Text>
+      <View style={styles.metrics}>
+        <View style={styles.metricChip}>
+          <Flame size={15} color={DS.colors.orange} fill={DS.colors.orange} />
+          <Text style={[styles.metricText, { color: DS.colors.orangeInk }]}>{streak}</Text>
         </View>
 
-        <View style={[styles.statPill, { backgroundColor: colors.xpMuted }]}>
-          <XpBolt3D size={16} />
-          <Text style={[styles.statText, { color: '#15803D' }]}>{xp}</Text>
+        <View style={styles.metricChip}>
+          <Coins size={15} color={DS.colors.amberDeep} />
+          <Text style={[styles.metricText, { color: DS.colors.amberInk }]}>{coins}</Text>
+        </View>
+
+        <View style={styles.metricChip}>
+          <Zap size={15} color={DS.colors.brand} fill={DS.colors.brand} />
+          <Text style={[styles.metricText, { color: DS.colors.brand }]}>{xp}</Text>
         </View>
       </View>
     </View>
@@ -79,74 +71,69 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
 }
 
 const styles = StyleSheet.create({
-  row: {
+  bar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 8,
+    gap: 10,
+    paddingVertical: 4,
   },
-  avatarPill: {
+  identity: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 4,
-    paddingLeft: 4,
-    paddingRight: 11,
-    gap: 7,
-    borderWidth: 1.5,
+    gap: 10,
     flexShrink: 1,
-    shadowColor: '#1055F8',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
+    minWidth: 0,
   },
-  avatarCircle: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+  avatarRing: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: DS.colors.brandSoft,
+    borderWidth: 1.5,
+    borderColor: DS.colors.brandBorder,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatar: {
-    width: 34,
-    height: 34,
+    width: 38,
+    height: 38,
   },
-  nameBlock: {
-    gap: 2,
+  nameCol: {
     flexShrink: 1,
+    minWidth: 0,
   },
   name: {
-    fontSize: 13.5,
+    fontSize: 16,
+    lineHeight: 20,
     fontWeight: '800',
-    letterSpacing: -0.2,
+    color: DS.colors.ink,
+    letterSpacing: -0.3,
   },
-  levelBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#1055F8',
-    paddingHorizontal: 7,
-    paddingVertical: 1.5,
-    borderRadius: 999,
+  sub: {
+    fontSize: 12,
+    lineHeight: 15,
+    fontWeight: '600',
+    color: DS.colors.inkMuted,
   },
-  levelBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: '800',
-  },
-  pills: {
+  metrics: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 6,
   },
-  statPill: {
+  metricChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3.5,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    gap: 4,
+    height: 32,
+    paddingHorizontal: 9,
     borderRadius: 999,
+    backgroundColor: DS.colors.surface,
+    borderWidth: 1,
+    borderColor: DS.colors.border,
   },
-  statText: {
+  metricText: {
     fontSize: 12.5,
     fontWeight: '800',
     fontVariant: ['tabular-nums'],

@@ -6,15 +6,15 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Eye, EyeOff, IdCard, KeyRound, Phone, ShieldCheck } from 'lucide-react-native';
+import { Eye, EyeOff, IdCard, Phone } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GameButton } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { Badge, Card, Input } from '@/components/ui';
-import { useAppTheme } from '@/constants/Theme';
+import { DS } from '@/constants/DesignSystem';
 import { AppConfig } from '@/lib/config';
 import {
   UZ_COUNTRY_CODE,
@@ -25,16 +25,8 @@ import {
 } from '@/lib/phone';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
-/**
- * Production Impulse Kids Sign-In screen (100% live backend API — no mock/demo mode):
- * - Connects directly to https://api.neezam.uz/api/v1 with x-erp-tenant: impulse
- * - Mirrors erp-lms/apps/student: toggle between Student ID (STU-000123 for kids without phones)
- *   and Uzbekistan mobile Phone (+998 XX XXX XX XX)
- * - Supports 6-digit OTP verification when required by backend
- */
 export default function ImpulseKidsAuthScreen() {
   const router = useRouter();
-  const { colors, typography, radii } = useAppTheme();
   const { center, signIn, verifyOtp, pendingChallenge } = useKidsApp();
 
   const [loginMethod, setLoginMethod] = useState<'id' | 'phone'>('id');
@@ -102,57 +94,49 @@ export default function ImpulseKidsAuthScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
+        style={styles.flex}
       >
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <View style={styles.brandRow}>
-            <Badge
-              label={`${center?.name ?? AppConfig.appName} · Ages ${AppConfig.ageRange}`}
-              tone="accent"
-              dot
-            />
-          </View>
-
-          <View style={styles.heroCenter}>
-            <LeoMascot pose={error ? 'oops' : step === 'otp' ? 'think' : 'wave'} size={142} />
-            <Text style={[typography.display, { color: colors.textPrimary, textAlign: 'center' }]}>
-              {step === 'otp' ? 'Check Your Code!' : 'Impulse Kids'}
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.hero}>
+            <View style={styles.leoHalo}>
+              <LeoMascot pose={error ? 'oops' : step === 'otp' ? 'think' : 'wave'} size={126} />
+            </View>
+            <Text style={styles.title}>
+              {step === 'otp' ? 'Enter Verification Code' : 'Impulse Kids'}
             </Text>
-            <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center' }]}>
+            <Text style={styles.subtitle}>
               {step === 'otp'
-                ? `Enter the verification code sent to ${pendingChallenge?.destination ?? 'your phone'}.`
-                : 'Sign in with your Impulse Student ID or parent phone number to open your enrolled courses.'}
+                ? `We sent a 6-digit code to ${pendingChallenge?.destination ?? 'your phone'}.`
+                : `Sign in to ${center?.name ?? 'Impulse'} with your Student ID or phone number.`}
             </Text>
           </View>
 
-          <Card style={styles.formCard}>
+          <View style={[DS.card, styles.formCard]}>
             {step === 'credentials' ? (
               <>
-                {/* Toggle: Student ID (kids without phones) vs Phone (+998) */}
-                <View style={[styles.methodTabs, { backgroundColor: colors.surfaceMuted }]}>
+                <View style={styles.segmentTrack}>
                   <Pressable
                     onPress={() => {
                       setLoginMethod('id');
                       setError(null);
                     }}
-                    style={[
-                      styles.methodTab,
-                      loginMethod === 'id'
-                        ? [styles.methodTabActive, { backgroundColor: colors.surface, borderColor: colors.border }]
-                        : null,
-                    ]}
+                    style={[styles.segmentBtn, loginMethod === 'id' ? styles.segmentActive : null]}
                   >
                     <IdCard
                       size={16}
-                      color={loginMethod === 'id' ? '#1055F8' : colors.textSecondary}
+                      color={loginMethod === 'id' ? DS.colors.brand : DS.colors.inkMuted}
                     />
                     <Text
                       style={[
-                        styles.methodTabText,
-                        { color: loginMethod === 'id' ? '#1055F8' : colors.textSecondary },
+                        styles.segmentLabel,
+                        loginMethod === 'id' ? styles.segmentLabelActive : null,
                       ]}
                     >
                       Student ID
@@ -164,21 +148,16 @@ export default function ImpulseKidsAuthScreen() {
                       setLoginMethod('phone');
                       setError(null);
                     }}
-                    style={[
-                      styles.methodTab,
-                      loginMethod === 'phone'
-                        ? [styles.methodTabActive, { backgroundColor: colors.surface, borderColor: colors.border }]
-                        : null,
-                    ]}
+                    style={[styles.segmentBtn, loginMethod === 'phone' ? styles.segmentActive : null]}
                   >
                     <Phone
                       size={16}
-                      color={loginMethod === 'phone' ? '#1055F8' : colors.textSecondary}
+                      color={loginMethod === 'phone' ? DS.colors.brand : DS.colors.inkMuted}
                     />
                     <Text
                       style={[
-                        styles.methodTabText,
-                        { color: loginMethod === 'phone' ? '#1055F8' : colors.textSecondary },
+                        styles.segmentLabel,
+                        loginMethod === 'phone' ? styles.segmentLabelActive : null,
                       ]}
                     >
                       Phone
@@ -186,85 +165,98 @@ export default function ImpulseKidsAuthScreen() {
                   </Pressable>
                 </View>
 
-                {loginMethod === 'id' ? (
-                  <Input
-                    label="Student ID"
-                    placeholder="STU-000123"
-                    value={studentCode}
-                    onChangeText={setStudentCode}
-                    autoCapitalize="characters"
-                    autoCorrect={false}
-                  />
-                ) : (
-                  <Input
-                    label={`Phone Number (${UZ_COUNTRY_CODE})`}
-                    placeholder="90 123 45 67"
-                    value={formatNationalNumber(phoneDigits)}
-                    onChangeText={(txt) => setPhoneDigits(digitsOnly(txt))}
-                    keyboardType="phone-pad"
-                    maxLength={12}
-                  />
-                )}
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>
+                    {loginMethod === 'id' ? 'Student ID' : `Phone Number (${UZ_COUNTRY_CODE})`}
+                  </Text>
+                  {loginMethod === 'id' ? (
+                    <TextInput
+                      placeholder="STU-000123"
+                      placeholderTextColor={DS.colors.inkSubtle}
+                      value={studentCode}
+                      onChangeText={setStudentCode}
+                      autoCapitalize="characters"
+                      autoCorrect={false}
+                      style={styles.input}
+                    />
+                  ) : (
+                    <View style={styles.phoneWrap}>
+                      <Text style={styles.phonePrefix}>{UZ_COUNTRY_CODE}</Text>
+                      <TextInput
+                        placeholder="90 123 45 67"
+                        placeholderTextColor={DS.colors.inkSubtle}
+                        value={formatNationalNumber(phoneDigits)}
+                        onChangeText={(txt) => setPhoneDigits(digitsOnly(txt))}
+                        keyboardType="phone-pad"
+                        maxLength={12}
+                        style={styles.phoneInput}
+                      />
+                    </View>
+                  )}
+                </View>
 
-                <View style={styles.passwordWrap}>
-                  <Input
-                    label="Password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
-                    autoCapitalize="none"
-                  />
-                  <Pressable
-                    onPress={() => setShowPassword((v) => !v)}
-                    hitSlop={10}
-                    style={styles.eyeBtn}
-                  >
-                    {showPassword ? (
-                      <EyeOff size={18} color={colors.textSecondary} />
-                    ) : (
-                      <Eye size={18} color={colors.textSecondary} />
-                    )}
-                  </Pressable>
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>Password</Text>
+                  <View style={styles.passwordRow}>
+                    <TextInput
+                      placeholder="Enter your password"
+                      placeholderTextColor={DS.colors.inkSubtle}
+                      value={password}
+                      onChangeText={setPassword}
+                      secureTextEntry={!showPassword}
+                      autoCapitalize="none"
+                      style={styles.passwordInput}
+                    />
+                    <Pressable
+                      onPress={() => setShowPassword((v) => !v)}
+                      hitSlop={10}
+                      style={styles.eyeBtn}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={18} color={DS.colors.inkMuted} />
+                      ) : (
+                        <Eye size={18} color={DS.colors.inkMuted} />
+                      )}
+                    </Pressable>
+                  </View>
                 </View>
               </>
             ) : (
-              <Input
-                label="6-Digit Verification Code"
-                placeholder="123456"
-                value={otpCode}
-                onChangeText={setOtpCode}
-                keyboardType="number-pad"
-                maxLength={6}
-              />
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>6-Digit Code</Text>
+                <TextInput
+                  placeholder="123456"
+                  placeholderTextColor={DS.colors.inkSubtle}
+                  value={otpCode}
+                  onChangeText={setOtpCode}
+                  keyboardType="number-pad"
+                  maxLength={6}
+                  style={[styles.input, styles.otpInput]}
+                />
+              </View>
             )}
 
             {error ? (
-              <View style={[styles.errorBox, { backgroundColor: '#FFDFE0', borderRadius: radii.md }]}>
+              <View style={styles.errorBox}>
                 <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
 
-            <GameButton
-              label={
-                busy
-                  ? 'Connecting to Impulse...'
-                  : step === 'otp'
-                    ? 'Verify & Enter'
-                    : 'Sign In to Impulse Kids'
-              }
-              disabled={busy}
-              color="#1055F8"
-              depthColor="#0A3BB3"
-              icon={
-                step === 'otp' ? (
-                  <ShieldCheck size={18} color="#FFFFFF" />
-                ) : (
-                  <KeyRound size={18} color="#FFFFFF" />
-                )
-              }
-              onPress={step === 'otp' ? handleVerifyOtp : handleSignIn}
-            />
+            <View style={{ marginTop: 4 }}>
+              <GameButton
+                label={
+                  busy
+                    ? 'Signing in...'
+                    : step === 'otp'
+                      ? 'Verify Code'
+                      : 'Sign In'
+                }
+                disabled={busy}
+                color={DS.colors.brand}
+                depthColor={DS.colors.brandDeep}
+                onPress={step === 'otp' ? handleVerifyOtp : handleSignIn}
+              />
+            </View>
 
             {step === 'otp' ? (
               <Pressable
@@ -273,18 +265,14 @@ export default function ImpulseKidsAuthScreen() {
                   setOtpCode('');
                   setError(null);
                 }}
-                style={styles.linkBtn}
+                style={styles.switchLink}
               >
-                <Text style={[typography.callout, { color: '#1055F8' }]}>
-                  Use a different account
-                </Text>
+                <Text style={styles.switchLinkText}>Use a different account</Text>
               </Pressable>
             ) : null}
-          </Card>
+          </View>
 
-          <Text style={[typography.caption, { color: colors.textTertiary, textAlign: 'center' }]}>
-            {AppConfig.applicationId} · Live Impulse Learning Center API
-          </Text>
+          <Text style={styles.footerText}>{AppConfig.applicationId}</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -294,67 +282,172 @@ export default function ImpulseKidsAuthScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
+    backgroundColor: DS.colors.canvas,
+  },
+  flex: {
+    flex: 1,
   },
   scroll: {
-    padding: 18,
-    gap: 18,
-    justifyContent: 'center',
     flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 28,
+    gap: 24,
   },
-  brandRow: {
-    alignItems: 'center',
-  },
-  heroCenter: {
+  hero: {
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 4,
+  },
+  leoHalo: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: DS.colors.brandSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  title: {
+    ...DS.type.pageTitle,
+    fontSize: 28,
+    lineHeight: 34,
+    textAlign: 'center',
+  },
+  subtitle: {
+    ...DS.type.body,
+    color: DS.colors.inkSecondary,
+    textAlign: 'center',
+    maxWidth: 300,
   },
   formCard: {
-    gap: 14,
+    padding: 20,
+    gap: 16,
   },
-  methodTabs: {
+  segmentTrack: {
     flexDirection: 'row',
+    backgroundColor: DS.colors.surfaceSubtle,
     padding: 4,
-    borderRadius: 14,
+    borderRadius: 12,
     gap: 4,
   },
-  methodTab: {
+  segmentBtn: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    paddingVertical: 9,
-    borderRadius: 10,
+    height: 38,
+    borderRadius: 9,
   },
-  methodTabActive: {
+  segmentActive: {
+    backgroundColor: DS.colors.surface,
     borderWidth: 1,
+    borderColor: DS.colors.border,
   },
-  methodTabText: {
-    fontSize: 13.5,
-    fontWeight: '800',
-  },
-  passwordWrap: {
-    position: 'relative',
-  },
-  eyeBtn: {
-    position: 'absolute',
-    right: 12,
-    bottom: 13,
-    padding: 4,
-  },
-  errorBox: {
-    padding: 11,
-    borderWidth: 1.5,
-    borderColor: '#FF4B4B',
-  },
-  errorText: {
-    color: '#CC1D1D',
+  segmentLabel: {
     fontSize: 13.5,
     fontWeight: '700',
+    color: DS.colors.inkMuted,
   },
-  linkBtn: {
+  segmentLabelActive: {
+    color: DS.colors.brand,
+  },
+  fieldGroup: {
+    gap: 6,
+  },
+  fieldLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DS.colors.ink,
+  },
+  input: {
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: DS.colors.border,
+    backgroundColor: DS.colors.canvas,
+    paddingHorizontal: 14,
+    fontSize: 15,
+    fontWeight: '600',
+    color: DS.colors.ink,
+  },
+  phoneWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: DS.colors.border,
+    backgroundColor: DS.colors.canvas,
+    paddingHorizontal: 14,
+    gap: 8,
+  },
+  phonePrefix: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: DS.colors.inkSecondary,
+  },
+  phoneInput: {
+    flex: 1,
+    height: 46,
+    fontSize: 15,
+    fontWeight: '600',
+    color: DS.colors.ink,
+  },
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: DS.colors.border,
+    backgroundColor: DS.colors.canvas,
+    paddingLeft: 14,
+    paddingRight: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    height: 46,
+    fontSize: 15,
+    fontWeight: '600',
+    color: DS.colors.ink,
+  },
+  eyeBtn: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  otpInput: {
+    textAlign: 'center',
+    fontSize: 22,
+    letterSpacing: 6,
+    fontWeight: '800',
+  },
+  errorBox: {
+    backgroundColor: DS.colors.redSoft,
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  errorText: {
+    color: DS.colors.redInk,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  switchLink: {
     alignItems: 'center',
     paddingVertical: 4,
+  },
+  switchLinkText: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: DS.colors.brand,
+  },
+  footerText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: DS.colors.inkSubtle,
+    textAlign: 'center',
   },
 });

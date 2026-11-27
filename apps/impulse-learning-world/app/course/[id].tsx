@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ArrowLeft, Check, Clock, Lock, Play } from 'lucide-react-native';
+import { ArrowLeft, Check, Coins, Lock, Play, Star } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Coin3D, ProgressBar, Star3D } from '@/components/game';
+import Svg, { Path } from 'react-native-svg';
+import { AnimatedPressable } from '@/components/ui';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { AnimatedPressable, Badge, Card } from '@/components/ui';
-import { useAppTheme } from '@/constants/Theme';
+import { DS } from '@/constants/DesignSystem';
 import type { Course, CourseLesson } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
 const UNIT_GRADIENTS: Array<[string, string]> = [
-  ['#1055F8', '#0EA5E9'],
-  ['#7C3AED', '#A855F7'],
+  ['#2563EB', '#1055F8'],
+  ['#6D28D9', '#7C3AED'],
   ['#059669', '#10B981'],
-  ['#F59E0B', '#EA580C'],
+  ['#D97706', '#F59E0B'],
 ];
 
-function lockText(lesson: CourseLesson): string {
+const NODE_OFFSETS = [0, -56, 0, 56];
+
+function lockCaption(lesson: CourseLesson): string {
   if (!lesson.lock) return 'Locked';
   if (lesson.lock.reason === 'PREVIOUS_NOT_DONE') {
-    return `Finish "${lesson.lock.previousTitle}" first`;
+    return `Complete "${lesson.lock.previousTitle}" first`;
   }
   if (lesson.lock.reason === 'NOT_IN_CLASS_YET') {
     return 'Opens after class';
@@ -28,14 +31,36 @@ function lockText(lesson: CourseLesson): string {
   return 'Opens soon';
 }
 
+function PathConnector({ fromX, toX }: { fromX: number; toX: number }) {
+  const width = 220;
+  const height = 38;
+  const x1 = width / 2 + fromX;
+  const x2 = width / 2 + toX;
+  const d = `M ${x1} 2 C ${x1} ${height * 0.55}, ${x2} ${height * 0.45}, ${x2} ${height - 2}`;
+
+  return (
+    <View style={styles.connectorWrap} pointerEvents="none">
+      <Svg width={width} height={height}>
+        <Path
+          d={d}
+          stroke="#CBD5E1"
+          strokeWidth={3}
+          strokeDasharray="6 6"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </Svg>
+    </View>
+  );
+}
+
 /**
- * Production-matched Zigzag Unit & Lesson Roadmap (mirrors apps/student/app/(course)/roadmap.tsx)
- * reimagined for kids 5–13 with Leo cheering beside each unit and chunky 3D lesson nodes.
+ * Tactile Duolingo-style Stepping-Stone Learning Path:
+ * Clean Unit Banners + centered S-curve 3D lesson nodes connected by smooth dotted SVG trails.
  */
 export default function CourseRoadmapScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
-  const { colors, typography, radii } = useAppTheme();
   const { courses, loadCourseDetail } = useKidsApp();
 
   const courseId = typeof params.id === 'string' ? params.id : '';
@@ -70,147 +95,159 @@ export default function CourseRoadmapScreen() {
 
   const allLessons = course?.units.flatMap((u) => u.lessons) ?? [];
   const completedCount = allLessons.filter((l) => l.progress?.status === 'COMPLETED').length;
-  const pct = allLessons.length > 0 ? completedCount / allLessons.length : 0;
+  const pct = allLessons.length > 0 ? Math.round((completedCount / allLessons.length) * 100) : 0;
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={styles.safe}>
       <View style={styles.topBar}>
-        <Pressable
-          onPress={() => router.back()}
-          hitSlop={10}
-          style={[styles.backBtn, { backgroundColor: colors.surfaceMuted }]}
-        >
-          <ArrowLeft size={20} color={colors.textPrimary} />
+        <Pressable onPress={() => router.back()} hitSlop={10} style={styles.backBtn}>
+          <ArrowLeft size={20} color={DS.colors.ink} />
         </Pressable>
-        <View style={{ flex: 1 }}>
-          <Text style={[typography.headline, { color: colors.textPrimary }]} numberOfLines={1}>
-            {course?.title ?? 'Course Roadmap'}
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={DS.type.cardTitle} numberOfLines={1}>
+            {course?.title ?? 'Course Path'}
           </Text>
-          <Text style={[typography.caption, { color: colors.textSecondary }]}>
-            {completedCount}/{allLessons.length} lessons completed
+          <Text style={DS.type.caption}>
+            {completedCount} of {allLessons.length} lessons · {pct}%
           </Text>
         </View>
         {course?.lessonRewardCoins ? (
-          <View style={[styles.coinPill, { backgroundColor: colors.coinMuted }]}>
-            <Coin3D size={16} />
-            <Text style={styles.coinText}>+{course.lessonRewardCoins}</Text>
+          <View style={styles.rewardChip}>
+            <Coins size={14} color={DS.colors.amberDeep} />
+            <Text style={styles.rewardChipText}>+{course.lessonRewardCoins}</Text>
           </View>
         ) : null}
       </View>
 
-      <View style={styles.progressBarWrap}>
-        <ProgressBar progress={pct} color="#1055F8" height={12} />
+      <View style={styles.topTrack}>
+        <View style={[styles.topFill, { width: `${pct}%` }]} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {loading ? (
-          <Card style={{ alignItems: 'center', gap: 10, paddingVertical: 28 }}>
-            <LeoMascot pose="think" size={88} />
-            <Text style={[typography.callout, { color: colors.textSecondary }]}>
-              Loading lessons from Impulse...
-            </Text>
-          </Card>
+          <View style={[DS.card, styles.stateCard]}>
+            <LeoMascot pose="think" size={80} />
+            <Text style={DS.type.cardTitle}>Loading lessons...</Text>
+          </View>
         ) : error ? (
-          <Card style={{ alignItems: 'center', gap: 10, paddingVertical: 24 }}>
-            <LeoMascot pose="oops" size={88} />
-            <Text style={[typography.headline, { color: colors.textPrimary }]}>
-              Could Not Load Course
-            </Text>
-            <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
-              {error}
-            </Text>
-          </Card>
+          <View style={[DS.card, styles.stateCard]}>
+            <LeoMascot pose="oops" size={80} />
+            <Text style={DS.type.cardTitle}>Could not load course</Text>
+            <Text style={[DS.type.caption, { textAlign: 'center' }]}>{error}</Text>
+          </View>
         ) : null}
 
         {course?.units.map((unit, uIdx) => {
           const grad = UNIT_GRADIENTS[uIdx % UNIT_GRADIENTS.length];
-          return (
-            <View key={unit.id} style={styles.unitSection}>
-              <Card variant="gradient" gradientColors={grad} style={styles.unitHeader}>
-                <View style={styles.unitHeaderRow}>
-                  <View style={{ flex: 1, gap: 4 }}>
-                    <Text style={styles.unitKicker}>UNIT {unit.position}</Text>
-                    <Text style={[typography.title2, { color: '#FFFFFF' }]}>{unit.title}</Text>
-                  </View>
-                  <LeoMascot pose={uIdx % 2 === 0 ? 'wave' : 'cheer'} size={66} />
-                </View>
-              </Card>
+          const unitDone = unit.lessons.filter((l) => l.progress?.status === 'COMPLETED').length;
 
-              <View style={styles.nodesStack}>
+          return (
+            <View key={unit.id} style={styles.unitBlock}>
+              <LinearGradient
+                colors={grad}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.unitBanner}
+              >
+                <View style={styles.unitTextCol}>
+                  <Text style={styles.unitMeta}>
+                    Unit {unit.position} · {unitDone}/{unit.lessons.length} done
+                  </Text>
+                  <Text style={styles.unitTitle}>{unit.title}</Text>
+                </View>
+                <LeoMascot pose={uIdx % 2 === 0 ? 'wave' : 'cheer'} size={62} />
+              </LinearGradient>
+
+              <View style={styles.pathCol}>
                 {unit.lessons.map((lesson, lIdx) => {
                   const done = lesson.progress?.status === 'COMPLETED';
                   const locked = lesson.open === false || Boolean(lesson.lock);
-                  const offset = lIdx % 2 === 0 ? 0 : 14;
-                  const nodeBg = done ? '#58CC02' : locked ? '#E2E8F0' : grad[0];
-                  const nodeLip = done ? '#46A302' : locked ? '#CBD5E1' : '#0A3BB3';
+                  const isCurrent = !done && !locked;
+                  const xOffset = NODE_OFFSETS[lIdx % NODE_OFFSETS.length];
+                  const nextOffset =
+                    lIdx + 1 < unit.lessons.length
+                      ? NODE_OFFSETS[(lIdx + 1) % NODE_OFFSETS.length]
+                      : null;
+
+                  const bg = done
+                    ? DS.colors.green
+                    : locked
+                      ? '#E2E8F0'
+                      : DS.colors.brand;
+                  const lip = done
+                    ? DS.colors.greenDeep
+                    : locked
+                      ? '#CBD5E1'
+                      : DS.colors.brandDeep;
 
                   return (
-                    <View
-                      key={lesson.id}
-                      style={[
-                        styles.lessonRow,
-                        { paddingLeft: offset, paddingRight: offset === 0 ? 14 : 0 },
-                      ]}
-                    >
-                      <AnimatedPressable
-                        disabled={locked}
-                        onPress={() => router.push(`/lesson/${lesson.id}` as never)}
-                        style={[
-                          styles.lessonNodeCard,
-                          {
-                            backgroundColor: colors.surface,
-                            borderColor: done ? '#58CC02' : locked ? colors.border : grad[0],
-                            borderBottomColor: done ? '#46A302' : locked ? '#CBD5E1' : '#0A3BB3',
-                            borderRadius: radii.xl,
-                            opacity: locked ? 0.72 : 1,
-                          },
-                        ]}
-                      >
-                        <View
-                          style={[
-                            styles.nodeCircle,
-                            { backgroundColor: nodeBg, borderBottomColor: nodeLip },
-                          ]}
-                        >
-                          {done ? (
-                            <Check size={24} color="#FFFFFF" strokeWidth={3} />
-                          ) : locked ? (
-                            <Lock size={20} color="#64748B" />
-                          ) : (
-                            <Play size={22} color="#FFFFFF" fill="#FFFFFF" />
-                          )}
-                        </View>
-
-                        <View style={{ flex: 1, gap: 3 }}>
-                          <View style={styles.lessonTopMeta}>
-                            <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]}>
-                              {lesson.title}
-                            </Text>
-                            {done ? <Star3D size={22} filled /> : null}
+                    <View key={lesson.id} style={styles.nodeWrapper}>
+                      <View style={[styles.nodeAnchor, { transform: [{ translateX: xOffset }] }]}>
+                        {isCurrent ? (
+                          <View style={styles.startTooltip}>
+                            <Text style={styles.startTooltipText}>START</Text>
                           </View>
-                          {locked ? (
-                            <Text style={[typography.caption, { color: '#64748B' }]}>
-                              {lockText(lesson)}
-                            </Text>
-                          ) : (
-                            <View style={styles.metaLine}>
-                              {lesson.estimatedMinutes ? (
-                                <View style={styles.metaChip}>
-                                  <Clock size={12} color={colors.textSecondary} />
-                                  <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                                    {lesson.estimatedMinutes} min
-                                  </Text>
-                                </View>
-                              ) : null}
+                        ) : null}
+
+                        <AnimatedPressable
+                          disabled={locked}
+                          onPress={() => router.push(`/lesson/${lesson.id}` as never)}
+                          style={styles.nodeTapTarget}
+                        >
+                          <View
+                            style={[
+                              styles.nodeOuter,
+                              isCurrent ? styles.nodeOuterActive : null,
+                            ]}
+                          >
+                            <View
+                              style={[
+                                styles.node3D,
+                                { backgroundColor: bg, borderBottomColor: lip },
+                              ]}
+                            >
+                              <View style={styles.nodeHighlight} />
                               {done ? (
-                                <Badge label="Completed" tone="success" />
+                                <Check size={28} color="#FFFFFF" strokeWidth={3.2} />
+                              ) : locked ? (
+                                <Lock size={22} color="#64748B" strokeWidth={2.4} />
                               ) : (
-                                <Badge label="Play Now" tone="accent" dot />
+                                <Play size={26} color="#FFFFFF" fill="#FFFFFF" />
                               )}
                             </View>
-                          )}
-                        </View>
-                      </AnimatedPressable>
+                            {done ? (
+                              <View style={styles.starBadge}>
+                                <Star size={12} color="#FFFFFF" fill="#FFFFFF" />
+                              </View>
+                            ) : null}
+                          </View>
+
+                          <View style={styles.nodeCaptionBox}>
+                            <Text
+                              style={[
+                                styles.nodeTitle,
+                                locked ? { color: DS.colors.inkMuted } : null,
+                              ]}
+                              numberOfLines={2}
+                            >
+                              {lesson.title}
+                            </Text>
+                            <Text style={styles.nodeMeta} numberOfLines={2}>
+                              {locked
+                                ? lockCaption(lesson)
+                                : lesson.estimatedMinutes
+                                  ? `${lesson.estimatedMinutes} min`
+                                  : done
+                                    ? 'Completed'
+                                    : 'Tap to play'}
+                            </Text>
+                          </View>
+                        </AnimatedPressable>
+                      </View>
+
+                      {nextOffset !== null ? (
+                        <PathConnector fromX={xOffset} toX={nextOffset} />
+                      ) : null}
                     </View>
                   );
                 })}
@@ -224,96 +261,179 @@ export default function CourseRoadmapScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: {
+    flex: 1,
+    backgroundColor: DS.colors.canvas,
+  },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 8,
+    paddingVertical: 10,
     gap: 12,
+    backgroundColor: DS.colors.surface,
   },
   backBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
+    backgroundColor: DS.colors.surfaceSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  coinPill: {
+  rewardChip: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 6,
     borderRadius: 999,
+    backgroundColor: DS.colors.amberSoft,
   },
-  coinText: {
-    color: '#B45309',
+  rewardChipText: {
+    color: DS.colors.amberInk,
     fontSize: 12.5,
-    fontWeight: '900',
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
   },
-  progressBarWrap: {
-    paddingHorizontal: 16,
-    paddingBottom: 10,
+  topTrack: {
+    height: 3,
+    backgroundColor: DS.colors.border,
+  },
+  topFill: {
+    height: 3,
+    backgroundColor: DS.colors.brand,
   },
   scroll: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
-    gap: 20,
+    padding: 16,
+    paddingBottom: 40,
+    gap: 24,
   },
-  unitSection: {
-    gap: 14,
-  },
-  unitHeader: {
-    paddingVertical: 14,
-  },
-  unitHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  unitKicker: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 11,
-    fontWeight: '900',
-    letterSpacing: 0.6,
-  },
-  nodesStack: {
-    gap: 12,
-  },
-  lessonRow: {
-    width: '100%',
-  },
-  lessonNodeCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 13,
-    padding: 13,
-    borderWidth: 2,
-    borderBottomWidth: 5,
-  },
-  nodeCircle: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    borderBottomWidth: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lessonTopMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  metaLine: {
-    flexDirection: 'row',
+  stateCard: {
+    padding: 24,
     alignItems: 'center',
     gap: 8,
   },
-  metaChip: {
+  unitBlock: {
+    gap: 22,
+  },
+  unitBanner: {
+    borderRadius: 20,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
+  },
+  unitTextCol: {
+    flex: 1,
+    gap: 3,
+  },
+  unitMeta: {
+    color: 'rgba(255,255,255,0.84)',
+    fontSize: 12.5,
+    fontWeight: '700',
+  },
+  unitTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    lineHeight: 25,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+  },
+  pathCol: {
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  nodeWrapper: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  nodeAnchor: {
+    alignItems: 'center',
     gap: 4,
+  },
+  nodeTapTarget: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  startTooltip: {
+    backgroundColor: DS.colors.surface,
+    borderWidth: 1.5,
+    borderColor: DS.colors.brandBorder,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+    marginBottom: 2,
+  },
+  startTooltipText: {
+    color: DS.colors.brand,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.7,
+  },
+  nodeOuter: {
+    padding: 5,
+    borderRadius: 44,
+  },
+  nodeOuterActive: {
+    borderWidth: 3,
+    borderColor: DS.colors.brandBorder,
+    backgroundColor: '#FFFFFF',
+  },
+  node3D: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    borderBottomWidth: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  nodeHighlight: {
+    position: 'absolute',
+    top: 7,
+    left: 16,
+    right: 16,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'rgba(255,255,255,0.24)',
+  },
+  starBadge: {
+    position: 'absolute',
+    right: 2,
+    bottom: 2,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: DS.colors.amber,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nodeCaptionBox: {
+    alignItems: 'center',
+    maxWidth: 190,
+    gap: 2,
+  },
+  nodeTitle: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: '700',
+    color: DS.colors.ink,
+    textAlign: 'center',
+  },
+  nodeMeta: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: DS.colors.inkMuted,
+    textAlign: 'center',
+  },
+  connectorWrap: {
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 2,
   },
 });

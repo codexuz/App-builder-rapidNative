@@ -31,6 +31,7 @@ import {
 } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
 import { AnimatedPressable, Badge, Card } from '@/components/ui';
+import { DS } from '@/constants/DesignSystem';
 import { useAppTheme } from '@/constants/Theme';
 import { api } from '@/lib/api';
 import type {
@@ -401,35 +402,33 @@ export default function KidsLessonScreen() {
       .flatMap((b) => b.content.items ?? []);
 
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <View style={styles.topBar}>
+      <SafeAreaView style={[styles.safe, { backgroundColor: DS.colors.canvas }]}>
+        <View style={[styles.topBar, { backgroundColor: DS.colors.surface, borderBottomWidth: 1, borderBottomColor: DS.colors.border }]}>
           <Pressable
             onPress={() => router.back()}
-            style={[styles.closeBtn, { backgroundColor: colors.surfaceMuted }]}
+            style={[styles.closeBtn, { backgroundColor: DS.colors.surfaceSubtle }]}
           >
-            <X size={20} color={colors.textPrimary} />
+            <X size={20} color={DS.colors.ink} />
           </Pressable>
-          <View style={{ flex: 1 }}>
-            <Text style={[typography.headline, { color: colors.textPrimary }]} numberOfLines={1}>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={DS.type.cardTitle} numberOfLines={1}>
               {lesson.title}
             </Text>
-            <Text style={[typography.caption, { color: colors.textSecondary }]}>
+            <Text style={DS.type.caption} numberOfLines={1}>
               {lesson.unit?.course?.title ?? 'Impulse Kids'}
             </Text>
           </View>
-          <Badge label={`${lesson.exercises.length} Ex`} tone="accent" />
         </View>
 
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <MascotChatBubble
-            eyebrow={lesson.unit?.title ?? 'Lesson Guide'}
             message={
               lesson.description ??
               'Read the lesson and listen to the new words, then start the quiz!'
             }
             pose="wave"
-            accentColor="#1055F8"
-            softAccentColor="#DBEAFE"
+            accentColor={DS.colors.brand}
+            softAccentColor={DS.colors.brandSoft}
             isSpeaking={isLeoSpeaking}
             onSpeakPress={() =>
               speakAsLeo(`${lesson.title}. ${lesson.description ?? ''}`)
@@ -443,57 +442,57 @@ export default function KidsLessonScreen() {
           ) : null}
 
           {textBlocks.map((block) => (
-            <Card key={block.id} style={styles.theoryCard}>
+            <View key={block.id} style={[DS.card, styles.theoryCard, { padding: 16 }]}>
               <View style={styles.theoryHead}>
-                <BookOpen size={17} color="#1055F8" />
-                <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                  Lesson Notes
-                </Text>
+                <BookOpen size={17} color={DS.colors.brand} />
+                <Text style={DS.type.cardTitle}>Lesson Notes</Text>
               </View>
-              <Text style={[typography.body, { color: colors.textPrimary, lineHeight: 24 }]}>
+              <Text style={[DS.type.body, { lineHeight: 22 }]}>
                 {(block.content.markdown ?? '').replace(/\*\*/g, '').replace(/\*/g, '')}
               </Text>
-            </Card>
+            </View>
           ))}
 
           {vocabItems.length > 0 ? (
             <View style={styles.vocabStack}>
-              <Text style={[typography.title2, { color: colors.textPrimary }]}>
-                Magic Words
-              </Text>
-              {vocabItems.map((w) => (
-                <Card key={w.term} style={styles.vocabCard}>
-                  <View style={styles.vocabTop}>
-                    <View style={{ flex: 1, gap: 2 }}>
-                      <Text style={[typography.title2, { color: colors.textPrimary }]}>
-                        {w.term}
-                      </Text>
-                      {w.pronunciation ? (
-                        <Text style={[typography.caption, { color: colors.textTertiary }]}>
-                          {w.pronunciation} {w.partOfSpeech ? `· ${w.partOfSpeech}` : ''}
-                        </Text>
-                      ) : null}
+              <Text style={DS.type.sectionTitle}>Vocabulary</Text>
+              <View style={[DS.card, { overflow: 'hidden' }]}>
+                {vocabItems.map((w, idx) => (
+                  <View
+                    key={w.term}
+                    style={[
+                      styles.vocabCard,
+                      { padding: 14 },
+                      idx > 0 ? { borderTopWidth: 1, borderTopColor: DS.colors.border } : null,
+                    ]}
+                  >
+                    <View style={styles.vocabTop}>
+                      <View style={{ flex: 1, gap: 2 }}>
+                        <Text style={DS.type.cardTitle}>{w.term}</Text>
+                        {w.pronunciation ? (
+                          <Text style={DS.type.caption}>
+                            {w.pronunciation} {w.partOfSpeech ? `· ${w.partOfSpeech}` : ''}
+                          </Text>
+                        ) : null}
+                      </View>
+                      <AnimatedPressable
+                        onPress={() => speakAsLeo(`${w.term}. ${w.example ?? ''}`)}
+                        style={[styles.audioBtn, { backgroundColor: DS.colors.brandSoft }]}
+                      >
+                        <Volume2 size={18} color={DS.colors.brand} />
+                      </AnimatedPressable>
                     </View>
-                    <AnimatedPressable
-                      onPress={() => speakAsLeo(`${w.term}. ${w.example ?? ''}`)}
-                      style={[styles.audioBtn, { backgroundColor: '#DBEAFE' }]}
-                    >
-                      <Volume2 size={18} color="#1055F8" />
-                    </AnimatedPressable>
-                  </View>
-                  <Text style={[typography.callout, { color: '#3B8700' }]}>{w.meaning}</Text>
-                  {w.example ? (
-                    <Text
-                      style={[
-                        typography.caption,
-                        { color: colors.textSecondary, fontStyle: 'italic' },
-                      ]}
-                    >
-                      "{w.example}"
+                    <Text style={[DS.type.body, { color: DS.colors.greenInk, fontWeight: '700' }]}>
+                      {w.meaning}
                     </Text>
-                  ) : null}
-                </Card>
-              ))}
+                    {w.example ? (
+                      <Text style={[DS.type.caption, { fontStyle: 'italic' }]}>
+                        "{w.example}"
+                      </Text>
+                    ) : null}
+                  </View>
+                ))}
+              </View>
             </View>
           ) : null}
 

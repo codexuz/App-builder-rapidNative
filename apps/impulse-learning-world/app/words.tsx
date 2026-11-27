@@ -5,17 +5,12 @@ import { ArrowLeft, RotateCw, Volume2 } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ConfettiBurst, GameButton, speakEnglishText } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { AnimatedPressable, Badge, Card } from '@/components/ui';
-import { useAppTheme } from '@/constants/Theme';
+import { DS } from '@/constants/DesignSystem';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 import { playCorrectFeedback, playTileTapSound } from '@/utils/soundFeedback';
 
-/**
- * Kids Flashcards Review wired to production /lms/review/words & POST /lms/review/words/:id.
- */
 export default function WordsReviewScreen() {
   const router = useRouter();
-  const { colors, typography, radii } = useAppTheme();
   const { dueWords, soundEnabled, gradeVocabWord } = useKidsApp();
 
   const [flipped, setFlipped] = useState(false);
@@ -23,6 +18,8 @@ export default function WordsReviewScreen() {
 
   const cards = dueWords?.cards ?? [];
   const current = cards[0] ?? null;
+  const totalCount = Math.max(1, (dueWords?.counts.due ?? cards.length) + (dueWords?.counts.learned ?? 0));
+  const doneRatio = Math.min(100, Math.round(((dueWords?.counts.learned ?? 0) / totalCount) * 100));
 
   const handleGrade = async (grade: 'AGAIN' | 'GOOD') => {
     if (!current) return;
@@ -37,199 +34,269 @@ export default function WordsReviewScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={styles.safe}>
       <ConfettiBurst triggerKey={confettiKey} intensity="small" />
 
       <View style={styles.topBar}>
-        <Pressable
-          onPress={() => router.back()}
-          style={[styles.backBtn, { backgroundColor: colors.surfaceMuted }]}
-        >
-          <ArrowLeft size={20} color={colors.textPrimary} />
+        <Pressable onPress={() => router.back()} hitSlop={10} style={styles.backBtn}>
+          <ArrowLeft size={20} color={DS.colors.ink} />
         </Pressable>
-        <Text style={[typography.title2, { color: colors.textPrimary, flex: 1 }]}>
-          Word Cards
-        </Text>
-        <Badge label={`${cards.length} left`} tone="accent" />
+        <View style={{ flex: 1 }}>
+          <Text style={DS.type.cardTitle}>Word Cards</Text>
+          <Text style={DS.type.caption}>
+            {cards.length > 0 ? `${cards.length} left to review` : 'All caught up'}
+          </Text>
+        </View>
       </View>
 
-      <View style={styles.body}>
+      <View style={styles.topTrack}>
+        <View style={[styles.topFill, { width: `${doneRatio}%` }]} />
+      </View>
+
+      <View style={styles.stage}>
         {current ? (
           <>
-            <LeoMascot pose={flipped ? 'cheer' : 'think'} size={108} />
+            <View style={styles.mascotHeader}>
+              <LeoMascot pose={flipped ? 'cheer' : 'think'} size={108} />
+            </View>
 
-            <AnimatedPressable
+            <Pressable
               onPress={() => {
                 playTileTapSound(current.term, soundEnabled);
                 setFlipped((f) => !f);
               }}
               style={[
                 styles.flashcard,
-                {
-                  backgroundColor: colors.surface,
-                  borderColor: flipped ? '#58CC02' : '#1055F8',
-                  borderBottomColor: flipped ? '#46A302' : '#0A3BB3',
-                  borderRadius: radii.xl,
-                },
+                flipped ? styles.flashcardFlipped : null,
               ]}
             >
-              <View style={styles.cardHeader}>
-                <Badge label={current.partOfSpeech ?? 'word'} tone="accent" />
+              <View style={styles.cardTopRow}>
+                <View style={styles.posPill}>
+                  <Text style={styles.posText}>{current.partOfSpeech ?? 'word'}</Text>
+                </View>
                 <Pressable
                   onPress={() => speakEnglishText(current.term)}
-                  style={[styles.audioBtn, { backgroundColor: '#DBEAFE' }]}
+                  hitSlop={8}
+                  style={styles.audioBtn}
                 >
-                  <Volume2 size={18} color="#1055F8" />
+                  <Volume2 size={18} color={DS.colors.brand} />
                 </Pressable>
               </View>
 
-              <Text style={[typography.display, { color: colors.textPrimary, textAlign: 'center' }]}>
-                {current.term}
-              </Text>
-              {current.pronunciation ? (
-                <Text style={[typography.callout, { color: colors.textTertiary }]}>
-                  {current.pronunciation}
-                </Text>
-              ) : null}
+              <View style={styles.cardCenter}>
+                <Text style={styles.term}>{current.term}</Text>
+                {current.pronunciation ? (
+                  <Text style={styles.pronunciation}>{current.pronunciation}</Text>
+                ) : null}
 
-              {flipped ? (
-                <View style={styles.meaningBox}>
-                  <Text style={[typography.title2, { color: '#3B8700', textAlign: 'center' }]}>
-                    {current.meaning}
-                  </Text>
-                  {current.example ? (
-                    <Text
-                      style={[
-                        typography.body,
-                        { color: colors.textSecondary, textAlign: 'center', fontStyle: 'italic' },
-                      ]}
-                    >
-                      "{current.example}"
-                    </Text>
-                  ) : null}
-                </View>
-              ) : (
-                <View style={styles.flipHint}>
-                  <RotateCw size={15} color={colors.textTertiary} />
-                  <Text style={[typography.caption, { color: colors.textTertiary }]}>
-                    Tap card to reveal meaning
-                  </Text>
-                </View>
-              )}
-            </AnimatedPressable>
-
-            <View style={styles.actionsRow}>
-              <View style={{ flex: 1 }}>
-                <GameButton
-                  label="Practice Again"
-                  color="#FF4B4B"
-                  depthColor="#EA2B2B"
-                  onPress={() => handleGrade('AGAIN')}
-                />
+                {flipped ? (
+                  <View style={styles.meaningBlock}>
+                    <View style={styles.meaningDivider} />
+                    <Text style={styles.meaning}>{current.meaning}</Text>
+                    {current.example ? (
+                      <Text style={styles.example}>"{current.example}"</Text>
+                    ) : null}
+                  </View>
+                ) : (
+                  <View style={styles.flipHint}>
+                    <RotateCw size={14} color={DS.colors.inkMuted} />
+                    <Text style={styles.flipHintText}>Tap card to flip</Text>
+                  </View>
+                )}
               </View>
-              <View style={{ flex: 1 }}>
-                <GameButton
-                  label="I Know It!"
-                  color="#58CC02"
-                  depthColor="#46A302"
-                  onPress={() => handleGrade('GOOD')}
-                />
-              </View>
-            </View>
+            </Pressable>
           </>
         ) : (
-          <Card style={styles.doneCard}>
-            <LeoMascot pose="roar" size={128} />
-            <Text style={[typography.display, { color: colors.textPrimary, textAlign: 'center' }]}>
-              All Words Mastered!
+          <View style={[DS.card, styles.doneCard]}>
+            <LeoMascot pose="cheer" size={116} />
+            <Text style={DS.type.pageTitle}>All words reviewed!</Text>
+            <Text style={[DS.type.body, { textAlign: 'center', color: DS.colors.inkSecondary }]}>
+              Complete more lessons to unlock fresh vocabulary cards.
             </Text>
-            <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center' }]}>
-              Leo is super proud! Complete more lessons to collect new flashcards.
-            </Text>
-            <View style={{ width: '100%' }}>
+            <View style={{ width: '100%', marginTop: 8 }}>
               <GameButton
-                label="Back to Home"
-                color="#1055F8"
-                depthColor="#0A3BB3"
+                label="Back to Learn"
+                color={DS.colors.brand}
+                depthColor={DS.colors.brandDeep}
                 onPress={() => router.back()}
               />
             </View>
-          </Card>
+          </View>
         )}
       </View>
+
+      {current ? (
+        <View style={styles.footer}>
+          <View style={{ flex: 1 }}>
+            <GameButton
+              label="Practice Again"
+              color={DS.colors.red}
+              depthColor={DS.colors.redDeep}
+              onPress={() => void handleGrade('AGAIN')}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <GameButton
+              label="I Know It"
+              color={DS.colors.green}
+              depthColor={DS.colors.greenDeep}
+              onPress={() => void handleGrade('GOOD')}
+            />
+          </View>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: {
+    flex: 1,
+    backgroundColor: DS.colors.canvas,
+  },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     gap: 12,
+    backgroundColor: DS.colors.surface,
   },
   backBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
+    backgroundColor: DS.colors.surfaceSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  body: {
+  topTrack: {
+    height: 3,
+    backgroundColor: DS.colors.border,
+  },
+  topFill: {
+    height: 3,
+    backgroundColor: DS.colors.brand,
+  },
+  stage: {
     flex: 1,
-    padding: 18,
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
     justifyContent: 'center',
-    gap: 18,
+  },
+  mascotHeader: {
+    alignItems: 'center',
+    marginBottom: -12,
+    zIndex: 2,
   },
   flashcard: {
-    width: '100%',
-    minHeight: 240,
-    padding: 20,
+    backgroundColor: DS.colors.surface,
+    borderRadius: 24,
     borderWidth: 2,
+    borderColor: DS.colors.brandBorder,
     borderBottomWidth: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
+    borderBottomColor: '#93C5FD',
+    padding: 20,
+    minHeight: 310,
   },
-  cardHeader: {
-    position: 'absolute',
-    top: 14,
-    left: 14,
-    right: 14,
+  flashcardFlipped: {
+    borderColor: '#BBF7D0',
+    borderBottomColor: '#4ADE80',
+  },
+  cardTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  posPill: {
+    backgroundColor: DS.colors.brandSoft,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+  posText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: DS.colors.brand,
+  },
   audioBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: DS.colors.brandSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  meaningBox: {
-    marginTop: 8,
-    gap: 6,
+  cardCenter: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 16,
+  },
+  term: {
+    fontSize: 32,
+    lineHeight: 38,
+    fontWeight: '800',
+    letterSpacing: -0.7,
+    color: DS.colors.ink,
+    textAlign: 'center',
+  },
+  pronunciation: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: DS.colors.inkMuted,
+  },
+  meaningBlock: {
+    width: '100%',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 10,
+  },
+  meaningDivider: {
+    width: 48,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: DS.colors.border,
+    marginBottom: 4,
+  },
+  meaning: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '700',
+    color: DS.colors.greenInk,
+    textAlign: 'center',
+  },
+  example: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontStyle: 'italic',
+    color: DS.colors.inkSecondary,
+    textAlign: 'center',
   },
   flipHint: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginTop: 10,
+    marginTop: 18,
   },
-  actionsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    width: '100%',
+  flipHintText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: DS.colors.inkMuted,
   },
   doneCard: {
-    width: '100%',
+    padding: 24,
     alignItems: 'center',
-    gap: 14,
-    paddingVertical: 26,
+    gap: 10,
+  },
+  footer: {
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: DS.colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: DS.colors.border,
   },
 });

@@ -7,8 +7,7 @@ import { AnimatedPressable } from '@/components/ui';
 import { useAppTheme } from '@/constants/Theme';
 
 export interface MascotChatBubbleProps {
-  /** Small eyebrow tag (e.g., "KIDS 1 · SENTENCE BUILDER") */
-  eyebrow: string;
+  eyebrow?: string;
   /** Main instruction spoken by Leo */
   message: string;
   /** Optional subtle hint underneath */
@@ -82,7 +81,9 @@ export function MascotChatBubble({
           </View>
 
           <View style={styles.textCol}>
-            <Text style={[styles.eyebrow, { color: accentColor }]}>{eyebrow}</Text>
+            {eyebrow ? (
+              <Text style={[styles.eyebrow, { color: accentColor }]}>{eyebrow}</Text>
+            ) : null}
             <Text style={[typography.callout, styles.messageText, { color: colors.textPrimary }]}>
               {message}
             </Text>

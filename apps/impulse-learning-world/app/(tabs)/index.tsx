@@ -1,36 +1,21 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import {
   BookOpen,
   ChevronRight,
-  Flame,
-  Gift,
+  GraduationCap,
   Play,
-  Sparkles,
+  RotateCcw,
   Store,
 } from 'lucide-react-native';
-import { Coin3D, GameButton, GameHud, ProgressBar, XpBolt3D } from '@/components/game';
+import { GameButton, GameHud } from '@/components/game';
 import { LeoMascot, type LeoPose } from '@/components/mascot/LeoMascot';
-import {
-  AnimatedPressable,
-  Badge,
-  Card,
-  ProgressRing,
-  Screen,
-  SectionHeader,
-  StaggeredEntrance,
-} from '@/components/ui';
-import { useAppTheme } from '@/constants/Theme';
+import { Screen } from '@/components/ui';
+import { DS } from '@/constants/DesignSystem';
 import type { Course, CourseLesson } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
-
-const COURSE_GRADIENTS: Array<[string, string]> = [
-  ['#1055F8', '#0EA5E9'],
-  ['#7C3AED', '#EC4899'],
-  ['#059669', '#10B981'],
-  ['#F59E0B', '#EA580C'],
-];
 
 function computeCourseStats(course: Course) {
   const allLessons: CourseLesson[] = course.units.flatMap((u) => u.lessons);
@@ -44,30 +29,13 @@ function computeCourseStats(course: Course) {
   return { completed, total, pct, nextLesson };
 }
 
-function pickCourseGradient(course: Course, index: number): [string, string] {
-  const tag = `${course.level?.code ?? ''} ${course.level?.name ?? ''} ${course.title}`.toLowerCase();
-  if (/starter|kids 1|a1/.test(tag)) return ['#1055F8', '#0EA5E9'];
-  if (/mover|kids 2|a2/.test(tag)) return ['#7C3AED', '#A855F7'];
-  if (/flyer|kids 3|b1/.test(tag)) return ['#059669', '#10B981'];
-  return COURSE_GRADIENTS[index % COURSE_GRADIENTS.length];
-}
-
 export default function KidsHomeScreen() {
   const router = useRouter();
-  const { colors, typography, radii } = useAppTheme();
   const { courses, gamification, today, dueWords, me, loading, error, refreshAll } = useKidsApp();
 
-  // Mirrors production apps/student: active enrolled courses vs earlier-level practice
-  const activeCourses = useMemo(
-    () => courses.filter((c) => !c.practice),
-    [courses]
-  );
-  const practiceCourses = useMemo(
-    () => courses.filter((c) => Boolean(c.practice)),
-    [courses]
-  );
+  const activeCourses = useMemo(() => courses.filter((c) => !c.practice), [courses]);
+  const practiceCourses = useMemo(() => courses.filter((c) => Boolean(c.practice)), [courses]);
 
-  // Pick current course just like apps/student/lib/lms.ts currentCourse()
   const currentCourse = useMemo(() => {
     const withStats = activeCourses.map((c) => ({ course: c, stats: computeCourseStats(c) }));
     return (
@@ -78,8 +46,8 @@ export default function KidsHomeScreen() {
     );
   }, [activeCourses]);
 
-  // Dynamic Leo greeting pose matching production apps/student/components/home/leo-greeting.tsx
-  const leoGreeting = useMemo<{ pose: LeoPose; line: string }>(() => {
+  // Dynamic Leo greeting matching production erp-lms LeoGreeting
+  const leoNote = useMemo<{ pose: LeoPose; title: string; body: string }>(() => {
     const quests = today?.quests ?? [];
     const allDone = quests.length > 0 && quests.every((q) => q.done);
     const streak = gamification?.streak?.currentStreak ?? 0;
@@ -87,501 +55,432 @@ export default function KidsHomeScreen() {
     const hour = new Date().getHours();
 
     if (allDone) {
-      return { pose: 'cheer', line: 'All daily quests done! You are a superstar!' };
+      return {
+        pose: 'cheer',
+        title: 'All daily quests complete!',
+        body: 'Open your treasure chest in Quests to claim your coins.',
+      };
     }
     if (streak > 0 && !activeToday) {
-      return { pose: 'oops', line: `Play 1 quick lesson to protect your ${streak}-day streak!` };
+      return {
+        pose: 'oops',
+        title: `Protect your ${streak}-day streak`,
+        body: 'Finish one quick lesson today to keep your flame alive.',
+      };
     }
     if (hour >= 22 || hour < 6) {
-      return { pose: 'sleep', line: 'Cozy night learning! Ready for a tiny warm-up?' };
+      return {
+        pose: 'sleep',
+        title: 'Late-night study session',
+        body: 'Do a short review and get plenty of rest.',
+      };
     }
     if (streak > 0 && activeToday) {
-      return { pose: 'idle', line: 'Your streak is glowing! Let’s unlock the next lesson.' };
+      return {
+        pose: 'idle',
+        title: `Great job today, ${me?.firstName ?? 'Explorer'}!`,
+        body: `Your ${streak}-day streak is safe. Ready for the next lesson?`,
+      };
     }
     return {
       pose: 'wave',
-      line: `Hi ${me?.firstName ?? 'friend'}! Tap a lesson to play with Leo!`,
+      title: `Ready to learn, ${me?.firstName ?? 'Explorer'}?`,
+      body: 'Pick up right where you left off with Leo.',
     };
   }, [gamification, me, today]);
 
-  const streakDays = gamification?.streak?.currentStreak ?? 0;
   const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
-  const xpToday = today?.xpToday ?? 0;
   const dueCount = dueWords?.counts.due ?? 0;
 
   return (
-    <Screen hasTabBar>
+    <Screen hasTabBar refreshing={loading} onRefresh={() => void refreshAll()}>
       <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
       {error ? (
-        <Card variant="muted" style={styles.emptyCard}>
-          <LeoMascot pose="oops" size={84} />
-          <Text style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}>
-            Could Not Load Courses
-          </Text>
-          <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
-            {error}
-          </Text>
-          <View style={{ width: '100%', maxWidth: 220 }}>
+        <View style={[DS.card, styles.stateCard]}>
+          <LeoMascot pose="oops" size={76} />
+          <Text style={DS.type.cardTitle}>Could not load courses</Text>
+          <Text style={[DS.type.caption, { textAlign: 'center' }]}>{error}</Text>
+          <View style={{ width: 180, marginTop: 4 }}>
             <GameButton
-              label="Retry"
+              label="Try Again"
               size="md"
-              color="#1055F8"
-              depthColor="#0A3BB3"
+              color={DS.colors.brand}
+              depthColor={DS.colors.brandDeep}
               onPress={() => void refreshAll()}
             />
           </View>
-        </Card>
+        </View>
       ) : null}
 
-      {/* Hero Active Course + Dynamic Leo Greeting Card */}
-      {currentCourse ? (
-        <StaggeredEntrance index={0}>
-          <Card
-            variant="gradient"
-            gradientColors={pickCourseGradient(currentCourse.course, 0)}
-            style={styles.heroCard}
-          >
-            <View style={styles.heroTopRow}>
-              <View style={styles.mascotRow}>
-                <LeoMascot pose={leoGreeting.pose} size={86} style={styles.leoHero} />
-                <View style={styles.heroTitleCol}>
-                  <View style={styles.levelPill}>
-                    <Text style={styles.levelPillText}>
-                      {currentCourse.course.level?.name ?? 'Enrolled Course'}
-                    </Text>
-                  </View>
-                  <Text style={[typography.title1, { color: '#FFFFFF' }]} numberOfLines={2}>
-                    {currentCourse.stats.nextLesson?.title ?? currentCourse.course.title}
-                  </Text>
-                </View>
-              </View>
-
-              <ProgressRing
-                progress={currentCourse.stats.pct / 100}
-                size={64}
-                strokeWidth={7}
-                color="#FDE047"
-                trackColor="rgba(255,255,255,0.26)"
-              >
-                <Text style={styles.ringText}>
-                  {currentCourse.stats.completed}/{currentCourse.stats.total}
-                </Text>
-              </ProgressRing>
-            </View>
-
-            <Text style={styles.heroSub} numberOfLines={2}>
-              Leo says: "{leoGreeting.line}"
-            </Text>
-
-            <GameButton
-              label={
-                currentCourse.stats.nextLesson
-                  ? currentCourse.course.lessonRewardCoins > 0
-                    ? `Play Next Lesson (+${currentCourse.course.lessonRewardCoins} Coins)`
-                    : 'Play Next Lesson'
-                  : 'Open Course Roadmap'
-              }
-              color="#FFFFFF"
-              depthColor="rgba(15, 23, 42, 0.35)"
-              textColor="#0A3BB3"
-              icon={<Play size={17} color="#0A3BB3" fill="#0A3BB3" />}
-              onPress={() => {
-                if (currentCourse.stats.nextLesson) {
-                  router.push(`/lesson/${currentCourse.stats.nextLesson.id}` as never);
-                } else {
-                  router.push(`/course/${currentCourse.course.id}` as never);
-                }
-              }}
-            />
-          </Card>
-        </StaggeredEntrance>
-      ) : loading ? (
-        <Card style={styles.emptyCard}>
-          <LeoMascot pose="think" size={92} />
-          <Text style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}>
-            Loading Your Impulse Courses...
-          </Text>
-        </Card>
-      ) : (
-        <Card style={styles.emptyCard}>
-          <LeoMascot pose="wave" size={96} />
-          <Text style={[typography.title2, { color: colors.textPrimary, textAlign: 'center' }]}>
-            No Enrolled Courses Yet
-          </Text>
-          <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center' }]}>
-            Once your teacher enrolls you in an Impulse Kids group, your courses will appear right here!
-          </Text>
-        </Card>
-      )}
-
-      {/* 3-Column Glossy Pastel Stat Bubbles */}
-      <StaggeredEntrance index={1}>
-        <View style={styles.pastelStatsRow}>
-          <View style={[styles.pastelBubble, { backgroundColor: colors.xpMuted, borderRadius: radii.lg }]}>
-            <XpBolt3D size={28} />
-            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>+{xpToday}</Text>
-            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>XP Today</Text>
-          </View>
-
-          <View style={[styles.pastelBubble, { backgroundColor: colors.streakMuted, borderRadius: radii.lg }]}>
-            <View style={[styles.bubbleIcon, { backgroundColor: colors.streak }]}>
-              <Flame size={16} color="#FFFFFF" fill="#FFFFFF" />
-            </View>
-            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>{streakDays}d</Text>
-            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Streak</Text>
-          </View>
-
-          <View style={[styles.pastelBubble, { backgroundColor: colors.coinMuted, borderRadius: radii.lg }]}>
-            <Coin3D size={28} />
-            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>{coins}</Text>
-            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Coins</Text>
-          </View>
+      {/* Clean Leo Daily Check-In Card (mirrors production LeoGreeting) */}
+      <View style={[DS.card, styles.leoCard]}>
+        <View style={styles.leoStage}>
+          <LeoMascot pose={leoNote.pose} size={64} />
         </View>
-      </StaggeredEntrance>
-
-      {/* Quick Kids Practice Shortcuts (Words & Coin Shop — no extra speaking course) */}
-      <StaggeredEntrance index={2}>
-        <View style={styles.shortcutsRow}>
-          <AnimatedPressable
-            onPress={() => router.push('/words' as never)}
-            containerStyle={{ flex: 1, minWidth: 0 }}
-            style={[
-              styles.shortcutCard,
-              {
-                backgroundColor: colors.surface,
-                borderColor: '#BFDBFE',
-                borderBottomColor: '#60A5FA',
-              },
-            ]}
-          >
-            <View style={[styles.shortcutIcon, { backgroundColor: '#DBEAFE' }]}>
-              <BookOpen size={20} color="#1055F8" />
-            </View>
-            <View style={styles.shortcutText}>
-              <Text style={[typography.headline, { color: colors.textPrimary }]}>Word Cards</Text>
-              <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                {dueCount > 0 ? `${dueCount} words to review` : 'All caught up!'}
-              </Text>
-            </View>
-          </AnimatedPressable>
-
-          <AnimatedPressable
-            onPress={() => router.push('/shop' as never)}
-            containerStyle={{ flex: 1, minWidth: 0 }}
-            style={[
-              styles.shortcutCard,
-              {
-                backgroundColor: colors.surface,
-                borderColor: '#FDE68A',
-                borderBottomColor: '#F59E0B',
-              },
-            ]}
-          >
-            <View style={[styles.shortcutIcon, { backgroundColor: '#FEF3C7' }]}>
-              <Store size={20} color="#D97706" />
-            </View>
-            <View style={styles.shortcutText}>
-              <Text style={[typography.headline, { color: colors.textPrimary }]}>Coin Shop</Text>
-              <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                Spend {coins} Coins
-              </Text>
-            </View>
-          </AnimatedPressable>
+        <View style={styles.leoCopy}>
+          <Text style={DS.type.cardTitle} numberOfLines={1}>
+            {leoNote.title}
+          </Text>
+          <Text style={DS.type.caption} numberOfLines={2}>
+            {leoNote.body}
+          </Text>
         </View>
-      </StaggeredEntrance>
-
-      {/* Enrolled Courses List (fetched from student's enrollments via /lms/courses) */}
-      <SectionHeader
-        title="My Courses"
-        subtitle="Tap a course to explore units & lessons"
-      />
-
-      <View style={styles.courseList}>
-        {activeCourses.map((course, idx) => {
-          const stats = computeCourseStats(course);
-          const grad = pickCourseGradient(course, idx);
-          return (
-            <StaggeredEntrance key={course.id} index={idx + 3}>
-              <AnimatedPressable
-                onPress={() => router.push(`/course/${course.id}` as never)}
-                style={[
-                  styles.courseCard,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                    borderRadius: radii.xl,
-                  },
-                ]}
-              >
-                <View style={styles.courseTop}>
-                  <View style={[styles.courseBadge, { backgroundColor: grad[0] }]}>
-                    <Sparkles size={15} color="#FFFFFF" />
-                    <Text style={styles.courseBadgeText}>
-                      {course.level?.name ?? course.subject ?? 'Course'}
-                    </Text>
-                  </View>
-
-                  {course.lessonRewardCoins > 0 ? (
-                    <View style={[styles.coinTag, { backgroundColor: colors.coinMuted }]}>
-                      <Coin3D size={15} />
-                      <Text style={styles.coinTagText}>+{course.lessonRewardCoins}/lesson</Text>
-                    </View>
-                  ) : null}
-                </View>
-
-                <View style={styles.courseMid}>
-                  <View style={{ flex: 1, gap: 3 }}>
-                    <Text style={[typography.title2, { color: colors.textPrimary }]}>
-                      {course.title}
-                    </Text>
-                    {course.description ? (
-                      <Text
-                        style={[typography.caption, { color: colors.textSecondary }]}
-                        numberOfLines={2}
-                      >
-                        {course.description}
-                      </Text>
-                    ) : null}
-                  </View>
-                  <ChevronRight size={20} color={colors.textTertiary} />
-                </View>
-
-                <View style={styles.courseProgressRow}>
-                  <ProgressBar
-                    progress={stats.pct / 100}
-                    color={grad[0]}
-                    secondaryColor={grad[1]}
-                    height={11}
-                    style={{ flex: 1 }}
-                  />
-                  <Text style={[styles.pctText, { color: grad[0] }]}>
-                    {stats.completed}/{stats.total}
-                  </Text>
-                </View>
-              </AnimatedPressable>
-            </StaggeredEntrance>
-          );
-        })}
       </View>
 
-      {/* Practice Earlier Levels (course.practice === true — matches production apps/student) */}
-      {practiceCourses.length > 0 ? (
-        <>
-          <SectionHeader
-            title="Practice Earlier Levels"
-            subtitle="Open anytime for extra review"
+      {/* Primary Focus Card: Current Enrolled Course + Tactile 3D CTA */}
+      {currentCourse ? (
+        <LinearGradient
+          colors={['#2563EB', '#1055F8']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.heroCard}
+        >
+          <View style={styles.heroHeader}>
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={styles.heroMeta} numberOfLines={1}>
+                {currentCourse.course.level?.name ?? currentCourse.course.title}
+              </Text>
+              <Text style={styles.heroTitle} numberOfLines={2}>
+                {currentCourse.stats.nextLesson?.title ?? currentCourse.course.title}
+              </Text>
+            </View>
+            <View style={styles.heroPctBadge}>
+              <Text style={styles.heroPctText}>{currentCourse.stats.pct}%</Text>
+            </View>
+          </View>
+
+          <View style={styles.heroProgressWrap}>
+            <View style={styles.heroTrack}>
+              <View style={[styles.heroFill, { width: `${currentCourse.stats.pct}%` }]} />
+            </View>
+            <Text style={styles.heroCount}>
+              {currentCourse.stats.completed}/{currentCourse.stats.total} lessons
+            </Text>
+          </View>
+
+          <GameButton
+            label={
+              currentCourse.stats.nextLesson
+                ? currentCourse.course.lessonRewardCoins > 0
+                  ? `Play Next Lesson  ·  +${currentCourse.course.lessonRewardCoins} Coins`
+                  : 'Play Next Lesson'
+                : 'Open Course Path'
+            }
+            color={DS.colors.green}
+            depthColor={DS.colors.greenDeep}
+            icon={<Play size={16} color="#FFFFFF" fill="#FFFFFF" />}
+            onPress={() => {
+              if (currentCourse.stats.nextLesson) {
+                router.push(`/lesson/${currentCourse.stats.nextLesson.id}` as never);
+              } else {
+                router.push(`/course/${currentCourse.course.id}` as never);
+              }
+            }}
           />
-          <View style={styles.courseList}>
-            {practiceCourses.map((course) => {
+        </LinearGradient>
+      ) : loading ? (
+        <View style={[DS.card, styles.stateCard]}>
+          <LeoMascot pose="think" size={80} />
+          <Text style={DS.type.cardTitle}>Loading your courses...</Text>
+        </View>
+      ) : (
+        <View style={[DS.card, styles.stateCard]}>
+          <LeoMascot pose="wave" size={80} />
+          <Text style={DS.type.cardTitle}>No enrolled courses yet</Text>
+          <Text style={[DS.type.caption, { textAlign: 'center', maxWidth: 260 }]}>
+            Once your teacher adds you to an Impulse group, your lessons will appear here.
+          </Text>
+        </View>
+      )}
+
+      {/* Uniform 2-Column Quick Actions (Word Cards & Coin Shop — no mismatched borders) */}
+      <View style={styles.quickRow}>
+        <Pressable
+          onPress={() => router.push('/words' as never)}
+          style={[DS.card, styles.quickTile]}
+        >
+          <View style={[styles.iconSquare, { backgroundColor: DS.colors.brandSoft }]}>
+            <BookOpen size={20} color={DS.colors.brand} />
+          </View>
+          <View style={styles.quickCopy}>
+            <Text style={DS.type.cardTitle} numberOfLines={1}>
+              Word Cards
+            </Text>
+            <Text style={DS.type.caption} numberOfLines={1}>
+              {dueCount > 0 ? `${dueCount} due today` : 'All reviewed'}
+            </Text>
+          </View>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push('/shop' as never)}
+          style={[DS.card, styles.quickTile]}
+        >
+          <View style={[styles.iconSquare, { backgroundColor: DS.colors.amberSoft }]}>
+            <Store size={20} color={DS.colors.amberDeep} />
+          </View>
+          <View style={styles.quickCopy}>
+            <Text style={DS.type.cardTitle} numberOfLines={1}>
+              Coin Shop
+            </Text>
+            <Text style={DS.type.caption} numberOfLines={1}>
+              {coins} coins
+            </Text>
+          </View>
+        </Pressable>
+      </View>
+
+      {/* Enrolled Courses Section */}
+      {activeCourses.length > 0 ? (
+        <View style={styles.section}>
+          <Text style={DS.type.sectionTitle}>My Courses</Text>
+          <View style={styles.courseStack}>
+            {activeCourses.map((course) => {
               const stats = computeCourseStats(course);
               return (
-                <AnimatedPressable
+                <Pressable
                   key={course.id}
                   onPress={() => router.push(`/course/${course.id}` as never)}
-                  style={[
-                    styles.practiceCard,
-                    {
-                      backgroundColor: colors.surface,
-                      borderColor: colors.border,
-                      borderRadius: radii.lg,
-                    },
-                  ]}
+                  style={[DS.card, styles.courseRow]}
                 >
-                  <View style={[styles.practiceIcon, { backgroundColor: '#EDE9FE' }]}>
-                    <Gift size={18} color="#7C3AED" />
+                  <View style={[styles.courseIcon, { backgroundColor: DS.colors.brandSoft }]}>
+                    <GraduationCap size={22} color={DS.colors.brand} />
                   </View>
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                      {course.title}
+                  <View style={styles.courseBody}>
+                    <View style={styles.courseTitleLine}>
+                      <Text style={[DS.type.cardTitle, { flex: 1 }]} numberOfLines={1}>
+                        {course.title}
+                      </Text>
+                      <ChevronRight size={18} color={DS.colors.inkSubtle} />
+                    </View>
+                    <Text style={DS.type.caption} numberOfLines={1}>
+                      {course.level?.name ? `${course.level.name} · ` : ''}
+                      {stats.completed} of {stats.total} lessons completed
                     </Text>
-                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                      {stats.completed}/{stats.total} lessons · Free practice
-                    </Text>
+                    <View style={styles.courseBarRow}>
+                      <View style={styles.courseTrack}>
+                        <View style={[styles.courseFill, { width: `${stats.pct}%` }]} />
+                      </View>
+                      <Text style={styles.coursePct}>{stats.pct}%</Text>
+                    </View>
                   </View>
-                  <Badge label="Open" tone="accent" />
-                </AnimatedPressable>
+                </Pressable>
               );
             })}
           </View>
-        </>
+        </View>
+      ) : null}
+
+      {/* Earlier-Level Practice (grouped inside one clean white card) */}
+      {practiceCourses.length > 0 ? (
+        <View style={styles.section}>
+          <Text style={DS.type.sectionTitle}>Earlier Levels</Text>
+          <View style={[DS.card, styles.groupedCard]}>
+            {practiceCourses.map((course, idx) => {
+              const stats = computeCourseStats(course);
+              return (
+                <Pressable
+                  key={course.id}
+                  onPress={() => router.push(`/course/${course.id}` as never)}
+                  style={[
+                    styles.practiceRow,
+                    idx > 0 ? styles.rowDivider : null,
+                  ]}
+                >
+                  <View style={[styles.iconSquare, { backgroundColor: DS.colors.surfaceSubtle }]}>
+                    <RotateCcw size={18} color={DS.colors.inkSecondary} />
+                  </View>
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <Text style={DS.type.cardTitle} numberOfLines={1}>
+                      {course.title}
+                    </Text>
+                    <Text style={DS.type.caption} numberOfLines={1}>
+                      {stats.completed}/{stats.total} lessons · Open practice
+                    </Text>
+                  </View>
+                  <ChevronRight size={18} color={DS.colors.inkSubtle} />
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
       ) : null}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  heroCard: {
-    gap: 14,
-  },
-  heroTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  mascotRow: {
-    flex: 1,
-    flexDirection: 'row',
+  stateCard: {
+    padding: 24,
     alignItems: 'center',
     gap: 8,
   },
-  leoHero: {
-    marginLeft: -6,
-  },
-  heroTitleCol: {
-    flex: 1,
-    gap: 5,
-  },
-  levelPill: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(15, 23, 42, 0.25)',
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-    borderRadius: 999,
-  },
-  levelPillText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  ringText: {
-    color: '#FFFFFF',
-    fontSize: 12.5,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
-  },
-  heroSub: {
-    color: 'rgba(255,255,255,0.94)',
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '600',
-  },
-  emptyCard: {
-    alignItems: 'center',
-    gap: 10,
-    paddingVertical: 24,
-  },
-  pastelStatsRow: {
+  leoCard: {
     flexDirection: 'row',
-    gap: 10,
-  },
-  pastelBubble: {
-    flex: 1,
-    paddingVertical: 13,
-    paddingHorizontal: 8,
     alignItems: 'center',
-    gap: 5,
+    padding: 12,
+    gap: 12,
   },
-  bubbleIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+  leoStage: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    backgroundColor: DS.colors.brandSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bubbleValue: {
-    fontSize: 19,
-    fontWeight: '900',
-    fontVariant: ['tabular-nums'],
+  leoCopy: {
+    flex: 1,
+    gap: 2,
+    minWidth: 0,
   },
-  bubbleLabel: {
-    fontSize: 11.5,
+  heroCard: {
+    borderRadius: 22,
+    padding: 18,
+    gap: 16,
+  },
+  heroHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  heroMeta: {
+    color: 'rgba(255,255,255,0.82)',
+    fontSize: 12.5,
     fontWeight: '700',
   },
-  shortcutsRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  shortcutCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    padding: 12,
-    borderRadius: 18,
-    borderWidth: 1.75,
-    borderBottomWidth: 4,
-  },
-  shortcutIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  shortcutText: {
-    flex: 1,
-    minWidth: 0,
-    gap: 2,
-  },
-  courseList: {
-    gap: 12,
-  },
-  courseCard: {
-    padding: 16,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    gap: 12,
-  },
-  courseTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  courseBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  courseBadgeText: {
+  heroTitle: {
     color: '#FFFFFF',
-    fontSize: 11.5,
+    fontSize: 22,
+    lineHeight: 27,
     fontWeight: '800',
+    letterSpacing: -0.4,
   },
-  coinTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+  heroPctBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 999,
   },
-  coinTagText: {
-    color: '#B45309',
-    fontSize: 11.5,
-    fontWeight: '800',
-  },
-  courseMid: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  courseProgressRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  pctText: {
+  heroPctText: {
+    color: '#FFFFFF',
     fontSize: 12.5,
     fontWeight: '800',
     fontVariant: ['tabular-nums'],
   },
-  practiceCard: {
+  heroProgressWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    padding: 13,
-    borderWidth: 1.5,
+    gap: 10,
   },
-  practiceIcon: {
-    width: 38,
-    height: 38,
+  heroTrack: {
+    flex: 1,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255,255,255,0.28)',
+    overflow: 'hidden',
+  },
+  heroFill: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FFFFFF',
+  },
+  heroCount: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 12,
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
+  },
+  quickRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  quickTile: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 13,
+    gap: 10,
+    minWidth: 0,
+  },
+  iconSquare: {
+    width: 40,
+    height: 40,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  quickCopy: {
+    flex: 1,
+    minWidth: 0,
+    gap: 1,
+  },
+  section: {
+    gap: 10,
+    marginTop: 4,
+  },
+  courseStack: {
+    gap: 10,
+  },
+  courseRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    gap: 12,
+  },
+  courseIcon: {
+    width: 46,
+    height: 46,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  courseBody: {
+    flex: 1,
+    gap: 5,
+    minWidth: 0,
+  },
+  courseTitleLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  courseBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 2,
+  },
+  courseTrack: {
+    flex: 1,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: DS.colors.surfaceSubtle,
+    overflow: 'hidden',
+  },
+  courseFill: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: DS.colors.brand,
+  },
+  coursePct: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: DS.colors.inkSecondary,
+    fontVariant: ['tabular-nums'],
+  },
+  groupedCard: {
+    overflow: 'hidden',
+  },
+  practiceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    gap: 12,
+  },
+  rowDivider: {
+    borderTopWidth: 1,
+    borderTopColor: DS.colors.border,
   },
 });

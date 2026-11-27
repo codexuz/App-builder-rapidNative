@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, ShoppingBag, Sparkles } from 'lucide-react-native';
+import { ArrowLeft, Coins, Gift, ShoppingBag, Sparkles } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Coin3D, ConfettiBurst, GameButton, Star3D } from '@/components/game';
+import { ConfettiBurst, GameButton } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { Badge, Card, SectionHeader } from '@/components/ui';
-import { useAppTheme } from '@/constants/Theme';
+import { DS } from '@/constants/DesignSystem';
 import { api } from '@/lib/api';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 import { playCorrectFeedback } from '@/utils/soundFeedback';
 
-/**
- * Impulse Kids Coin Shop wired 100% to live /shop/products & /shop/orders.
- */
 export default function KidsCoinShopScreen() {
   const router = useRouter();
-  const { colors, typography } = useAppTheme();
   const { products, orders, gamification, today, soundEnabled, orderShopProduct } = useKidsApp();
 
   const [notice, setNotice] = useState<string | null>(null);
@@ -25,47 +21,41 @@ export default function KidsCoinShopScreen() {
   const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={styles.safe}>
       <ConfettiBurst triggerKey={confettiKey} intensity="grand" />
 
       <View style={styles.topBar}>
-        <Pressable
-          onPress={() => router.back()}
-          style={[styles.backBtn, { backgroundColor: colors.surfaceMuted }]}
-        >
-          <ArrowLeft size={20} color={colors.textPrimary} />
+        <Pressable onPress={() => router.back()} hitSlop={10} style={styles.backBtn}>
+          <ArrowLeft size={20} color={DS.colors.ink} />
         </Pressable>
-        <Text style={[typography.title2, { color: colors.textPrimary, flex: 1 }]}>
-          Impulse Coin Shop
-        </Text>
-        <View style={[styles.coinPill, { backgroundColor: colors.coinMuted }]}>
-          <Coin3D size={18} />
-          <Text style={styles.coinText}>{coins}</Text>
+        <Text style={[DS.type.cardTitle, { flex: 1 }]}>Coin Shop</Text>
+        <View style={styles.balanceChip}>
+          <Coins size={15} color={DS.colors.amberDeep} />
+          <Text style={styles.balanceText}>{coins}</Text>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <Card variant="gradient" gradientColors={['#1055F8', '#38BDF8']} style={styles.banner}>
-          <View style={styles.bannerRow}>
-            <LeoMascot pose="cheer" size={76} />
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={[typography.title2, { color: '#FFFFFF' }]}>
-                Spend Your Hard-Earned Coins!
-              </Text>
-              <Text style={styles.bannerSub}>
-                Finish Impulse Kids lessons to collect Coins and claim real prizes at your center.
-              </Text>
-            </View>
+        <LinearGradient
+          colors={['#2563EB', '#1055F8']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.banner}
+        >
+          <LeoMascot pose="cheer" size={68} />
+          <View style={{ flex: 1, gap: 3 }}>
+            <Text style={styles.bannerTitle}>Spend Your Coins</Text>
+            <Text style={styles.bannerSub}>
+              Order real Impulse rewards and pick them up at your center.
+            </Text>
           </View>
-        </Card>
+        </LinearGradient>
 
         {notice ? (
-          <Card variant="muted" style={styles.noticeRow}>
-            <Sparkles size={16} color="#1055F8" />
-            <Text style={[typography.callout, { color: colors.textPrimary, flex: 1 }]}>
-              {notice}
-            </Text>
-          </Card>
+          <View style={[DS.card, styles.noticeRow]}>
+            <Sparkles size={16} color={DS.colors.brand} />
+            <Text style={[DS.type.body, { flex: 1 }]}>{notice}</Text>
+          </View>
         ) : null}
 
         {products.length > 0 ? (
@@ -74,33 +64,30 @@ export default function KidsCoinShopScreen() {
               const canAfford = coins >= prod.priceCoins;
               const imgUri = api.assetUrl(prod.imageUrl);
               return (
-                <Card key={prod.id} style={styles.card}>
-                  <View style={styles.iconBox}>
+                <View key={prod.id} style={[DS.card, styles.card]}>
+                  <View style={styles.thumb}>
                     {imgUri ? (
                       <Image source={{ uri: imgUri }} style={styles.prodImg} resizeMode="cover" />
                     ) : (
-                      <Star3D size={40} filled />
+                      <Gift size={28} color={DS.colors.brand} />
                     )}
                   </View>
-                  <Text style={[typography.headline, { color: colors.textPrimary, textAlign: 'center' }]}>
+                  <Text style={styles.prodName} numberOfLines={2}>
                     {prod.name}
                   </Text>
                   {prod.description ? (
-                    <Text
-                      style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}
-                      numberOfLines={2}
-                    >
+                    <Text style={styles.prodDesc} numberOfLines={2}>
                       {prod.description}
                     </Text>
                   ) : null}
-                  <View style={{ width: '100%', marginTop: 4 }}>
+                  <View style={{ width: '100%', marginTop: 'auto' }}>
                     <GameButton
-                      label={`${prod.priceCoins} Coins`}
+                      label={`${prod.priceCoins}`}
                       size="md"
                       disabled={!canAfford}
-                      color="#58CC02"
-                      depthColor="#46A302"
-                      icon={<Coin3D size={16} />}
+                      color={DS.colors.green}
+                      depthColor={DS.colors.greenDeep}
+                      icon={<Coins size={14} color="#FFFFFF" />}
                       onPress={async () => {
                         const res = await orderShopProduct(prod);
                         setNotice(res.message);
@@ -111,45 +98,42 @@ export default function KidsCoinShopScreen() {
                       }}
                     />
                   </View>
-                </Card>
+                </View>
               );
             })}
           </View>
         ) : (
-          <Card style={styles.emptyCard}>
-            <LeoMascot pose="idle" size={96} />
-            <Text style={[typography.headline, { color: colors.textPrimary }]}>
-              No Prizes Available Yet
+          <View style={[DS.card, styles.emptyCard]}>
+            <LeoMascot pose="idle" size={84} />
+            <Text style={DS.type.cardTitle}>No prizes available yet</Text>
+            <Text style={[DS.type.caption, { textAlign: 'center' }]}>
+              Check back soon when your center adds new items.
             </Text>
-            <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
-              Check back soon when your Impulse center adds new rewards!
-            </Text>
-          </Card>
+          </View>
         )}
 
         {orders.length > 0 ? (
-          <>
-            <SectionHeader title="My Orders" subtitle={`${orders.length} order(s)`} />
-            <View style={{ gap: 10 }}>
-              {orders.slice(0, 6).map((ord) => (
-                <Card key={ord.id} style={styles.orderRow}>
-                  <ShoppingBag size={18} color="#1055F8" />
+          <View style={styles.section}>
+            <Text style={DS.type.sectionTitle}>My Orders</Text>
+            <View style={[DS.card, styles.groupedCard]}>
+              {orders.slice(0, 6).map((ord, idx) => (
+                <View key={ord.id} style={[styles.orderRow, idx > 0 ? styles.rowDivider : null]}>
+                  <View style={styles.orderIcon}>
+                    <ShoppingBag size={17} color={DS.colors.brand} />
+                  </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                      {ord.totalCoins} Coins
-                    </Text>
-                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                    <Text style={DS.type.cardTitle}>{ord.totalCoins} Coins</Text>
+                    <Text style={DS.type.caption}>
                       {new Date(ord.createdAt).toLocaleDateString()}
                     </Text>
                   </View>
-                  <Badge
-                    label={ord.status}
-                    tone={ord.status === 'DELIVERED' ? 'success' : 'accent'}
-                  />
-                </Card>
+                  <View style={styles.statusPill}>
+                    <Text style={styles.statusText}>{ord.status}</Text>
+                  </View>
+                </View>
               ))}
             </View>
-          </>
+          </View>
         ) : null}
       </ScrollView>
     </SafeAreaView>
@@ -157,48 +141,63 @@ export default function KidsCoinShopScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: {
+    flex: 1,
+    backgroundColor: DS.colors.canvas,
+  },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     gap: 12,
+    backgroundColor: DS.colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: DS.colors.border,
   },
   backBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
+    backgroundColor: DS.colors.surfaceSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  coinPill: {
+  balanceChip: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
     paddingHorizontal: 11,
     paddingVertical: 6,
     borderRadius: 999,
+    backgroundColor: DS.colors.amberSoft,
   },
-  coinText: {
-    color: '#B45309',
+  balanceText: {
+    color: DS.colors.amberInk,
     fontSize: 13.5,
-    fontWeight: '900',
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
   },
   scroll: {
     padding: 16,
-    gap: 14,
+    paddingBottom: 32,
+    gap: 16,
   },
   banner: {
-    paddingVertical: 14,
-  },
-  bannerRow: {
+    borderRadius: 20,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
+  },
+  bannerTitle: {
+    color: '#FFFFFF',
+    fontSize: 19,
+    fontWeight: '800',
+    letterSpacing: -0.3,
   },
   bannerSub: {
-    color: 'rgba(255,255,255,0.92)',
+    color: 'rgba(255,255,255,0.88)',
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '600',
@@ -207,6 +206,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    padding: 12,
   },
   grid: {
     flexDirection: 'row',
@@ -214,33 +214,76 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   card: {
-    width: '48.2%',
+    width: '48.4%',
+    padding: 14,
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+    minHeight: 198,
   },
-  iconBox: {
-    width: 58,
-    height: 58,
-    borderRadius: 20,
-    backgroundColor: '#EFF6FF',
+  thumb: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: DS.colors.brandSoft,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   prodImg: {
-    width: 58,
-    height: 58,
+    width: 56,
+    height: 56,
+  },
+  prodName: {
+    fontSize: 14.5,
+    lineHeight: 19,
+    fontWeight: '700',
+    color: DS.colors.ink,
+    textAlign: 'center',
+  },
+  prodDesc: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: DS.colors.inkMuted,
+    textAlign: 'center',
   },
   emptyCard: {
+    padding: 24,
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 24,
+  },
+  section: {
+    gap: 10,
+  },
+  groupedCard: {
+    overflow: 'hidden',
   },
   orderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    padding: 14,
+    gap: 12,
+  },
+  rowDivider: {
+    borderTopWidth: 1,
+    borderTopColor: DS.colors.border,
+  },
+  orderIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 11,
+    backgroundColor: DS.colors.brandSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statusPill: {
+    backgroundColor: DS.colors.brandSoft,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+  statusText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: DS.colors.brand,
   },
 });

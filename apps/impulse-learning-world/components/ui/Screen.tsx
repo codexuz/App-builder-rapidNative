@@ -10,13 +10,12 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
-import { useAppTheme } from '@/constants/Theme';
+import { DS } from '@/constants/DesignSystem';
 
 export interface ScreenProps {
   children: React.ReactNode;
   scroll?: boolean;
   padded?: boolean;
-  /** Reserves extra bottom padding so content clears the FloatingTabBar. */
   hasTabBar?: boolean;
   edges?: Edge[];
   refreshing?: boolean;
@@ -36,9 +35,8 @@ export function Screen({
   style,
   contentContainerStyle,
 }: ScreenProps) {
-  const { colors, spacing } = useAppTheme();
-  const horizontalPad = padded ? spacing.lg : 0;
-  const bottomPad = hasTabBar ? 112 : spacing.xxl;
+  const horizontalPad = padded ? DS.space.lg : 0;
+  const bottomPad = hasTabBar ? 28 : 24;
 
   const content = scroll ? (
     <ScrollView
@@ -49,16 +47,16 @@ export function Screen({
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={colors.accent}
+            tintColor={DS.colors.brand}
           />
         ) : undefined
       }
       contentContainerStyle={[
         {
           paddingHorizontal: horizontalPad,
-          paddingTop: spacing.sm,
+          paddingTop: DS.space.md,
           paddingBottom: bottomPad,
-          gap: spacing.lg,
+          gap: DS.space.lg,
         },
         contentContainerStyle,
       ]}
@@ -71,8 +69,8 @@ export function Screen({
         styles.flex,
         {
           paddingHorizontal: horizontalPad,
-          paddingTop: spacing.sm,
-          paddingBottom: hasTabBar ? 96 : spacing.lg,
+          paddingTop: DS.space.md,
+          paddingBottom: bottomPad,
         },
         contentContainerStyle,
       ]}
@@ -84,7 +82,7 @@ export function Screen({
   return (
     <SafeAreaView
       edges={edges}
-      style={[styles.flex, { backgroundColor: colors.background }, style]}
+      style={[styles.flex, { backgroundColor: DS.colors.canvas }, style]}
     >
       <KeyboardAvoidingView
         style={styles.flex}
