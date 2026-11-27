@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import {
+  AlertCircle,
   BookOpen,
   ChevronRight,
   GraduationCap,
@@ -10,10 +10,23 @@ import {
   RotateCcw,
   Store,
 } from 'lucide-react-native';
-import { GameButton, GameHud } from '@/components/game';
+import { Alert, AlertIcon, AlertText } from '@/components/gluestack/alert';
+import { Badge, BadgeText } from '@/components/gluestack/badge';
+import { Box } from '@/components/gluestack/box';
+import { Button, ButtonIcon, ButtonText } from '@/components/gluestack/button';
+import { Card } from '@/components/gluestack/card';
+import { Center } from '@/components/gluestack/center';
+import { Divider } from '@/components/gluestack/divider';
+import { Heading } from '@/components/gluestack/heading';
+import { HStack } from '@/components/gluestack/hstack';
+import { Pressable } from '@/components/gluestack/pressable';
+import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
+import { Skeleton, SkeletonText } from '@/components/gluestack/skeleton';
+import { Text } from '@/components/gluestack/text';
+import { VStack } from '@/components/gluestack/vstack';
+import { GameHud } from '@/components/game';
 import { LeoMascot, type LeoPose } from '@/components/mascot/LeoMascot';
 import { Screen } from '@/components/ui';
-import { DS } from '@/constants/DesignSystem';
 import type { Course, CourseLesson } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
@@ -31,7 +44,8 @@ function computeCourseStats(course: Course) {
 
 export default function KidsHomeScreen() {
   const router = useRouter();
-  const { courses, gamification, today, dueWords, me, loading, error, refreshAll } = useKidsApp();
+  const { courses, gamification, today, dueWords, me, loading, error, refreshAll } =
+    useKidsApp();
 
   const activeCourses = useMemo(() => courses.filter((c) => !c.practice), [courses]);
   const practiceCourses = useMemo(() => courses.filter((c) => Boolean(c.practice)), [courses]);
@@ -46,7 +60,6 @@ export default function KidsHomeScreen() {
     );
   }, [activeCourses]);
 
-  // Dynamic Leo greeting matching production erp-lms LeoGreeting
   const leoNote = useMemo<{ pose: LeoPose; title: string; body: string }>(() => {
     const quests = today?.quests ?? [];
     const allDone = quests.length > 0 && quests.every((q) => q.done);
@@ -97,390 +110,278 @@ export default function KidsHomeScreen() {
       <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
       {error ? (
-        <View style={[DS.card, styles.stateCard]}>
-          <LeoMascot pose="oops" size={76} />
-          <Text style={DS.type.cardTitle}>Could not load courses</Text>
-          <Text style={[DS.type.caption, { textAlign: 'center' }]}>{error}</Text>
-          <View style={{ width: 180, marginTop: 4 }}>
-            <GameButton
-              label="Try Again"
-              size="md"
-              color={DS.colors.brand}
-              depthColor={DS.colors.brandDeep}
+        <Alert
+          variant="destructive"
+          className="rounded-2xl bg-red-50 border-red-200 p-3.5"
+        >
+          <AlertIcon as={AlertCircle} className="text-destructive" />
+          <VStack className="flex-1" space="xs">
+            <AlertText className="text-destructive font-semibold">
+              {error}
+            </AlertText>
+            <Button
+              size="sm"
+              variant="outline"
+              className="self-start bg-white rounded-lg border-red-200 mt-1"
               onPress={() => void refreshAll()}
-            />
-          </View>
-        </View>
+            >
+              <ButtonText className="text-destructive text-xs font-bold">
+                Try Again
+              </ButtonText>
+            </Button>
+          </VStack>
+        </Alert>
       ) : null}
 
-      {/* Clean Leo Daily Check-In Card (mirrors production LeoGreeting) */}
-      <View style={[DS.card, styles.leoCard]}>
-        <View style={styles.leoStage}>
-          <LeoMascot pose={leoNote.pose} size={64} />
-        </View>
-        <View style={styles.leoCopy}>
-          <Text style={DS.type.cardTitle} numberOfLines={1}>
-            {leoNote.title}
-          </Text>
-          <Text style={DS.type.caption} numberOfLines={2}>
-            {leoNote.body}
-          </Text>
-        </View>
-      </View>
-
-      {/* Primary Focus Card: Current Enrolled Course + Tactile 3D CTA */}
-      {currentCourse ? (
-        <LinearGradient
-          colors={['#2563EB', '#1055F8']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.heroCard}
-        >
-          <View style={styles.heroHeader}>
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={styles.heroMeta} numberOfLines={1}>
-                {currentCourse.course.level?.name ?? currentCourse.course.title}
-              </Text>
-              <Text style={styles.heroTitle} numberOfLines={2}>
-                {currentCourse.stats.nextLesson?.title ?? currentCourse.course.title}
-              </Text>
-            </View>
-            <View style={styles.heroPctBadge}>
-              <Text style={styles.heroPctText}>{currentCourse.stats.pct}%</Text>
-            </View>
-          </View>
-
-          <View style={styles.heroProgressWrap}>
-            <View style={styles.heroTrack}>
-              <View style={[styles.heroFill, { width: `${currentCourse.stats.pct}%` }]} />
-            </View>
-            <Text style={styles.heroCount}>
-              {currentCourse.stats.completed}/{currentCourse.stats.total} lessons
+      {/* Leo Daily Check-In Card */}
+      <Card className="bg-card border border-border rounded-2xl p-3.5">
+        <HStack className="items-center" space="md">
+          <Center className="w-16 h-16 rounded-2xl bg-accent">
+            <LeoMascot pose={leoNote.pose} size={58} />
+          </Center>
+          <VStack className="flex-1 min-w-0" space="xs">
+            <Heading size="sm" className="text-foreground" numberOfLines={1}>
+              {leoNote.title}
+            </Heading>
+            <Text size="xs" className="text-muted-foreground leading-4" numberOfLines={2}>
+              {leoNote.body}
             </Text>
-          </View>
+          </VStack>
+        </HStack>
+      </Card>
 
-          <GameButton
-            label={
-              currentCourse.stats.nextLesson
-                ? currentCourse.course.lessonRewardCoins > 0
-                  ? `Play Next Lesson  ·  +${currentCourse.course.lessonRewardCoins} Coins`
-                  : 'Play Next Lesson'
-                : 'Open Course Path'
-            }
-            color={DS.colors.green}
-            depthColor={DS.colors.greenDeep}
-            icon={<Play size={16} color="#FFFFFF" fill="#FFFFFF" />}
-            onPress={() => {
-              if (currentCourse.stats.nextLesson) {
-                router.push(`/lesson/${currentCourse.stats.nextLesson.id}` as never);
-              } else {
-                router.push(`/course/${currentCourse.course.id}` as never);
-              }
-            }}
-          />
-        </LinearGradient>
+      {/* Primary Focus Card */}
+      {currentCourse ? (
+        <Box className="rounded-3xl overflow-hidden shadow-xs">
+          <LinearGradient
+            colors={['#2563EB', '#1055F8']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ padding: 18, gap: 14 }}
+          >
+            <HStack className="items-start justify-between" space="md">
+              <VStack className="flex-1 min-w-0" space="xs">
+                <Text size="xs" bold className="text-white/80" numberOfLines={1}>
+                  {currentCourse.course.level?.name ?? currentCourse.course.title}
+                </Text>
+                <Heading size="lg" className="text-white leading-6" numberOfLines={2}>
+                  {currentCourse.stats.nextLesson?.title ?? currentCourse.course.title}
+                </Heading>
+              </VStack>
+              <Badge className="rounded-full bg-white/20 px-2.5 py-1 border-0">
+                <BadgeText className="text-white font-extrabold normal-case">
+                  {currentCourse.stats.pct}%
+                </BadgeText>
+              </Badge>
+            </HStack>
+
+            <HStack className="items-center" space="sm">
+              <Box className="flex-1">
+                <Progress
+                  value={currentCourse.stats.pct}
+                  className="h-2 bg-white/25 rounded-full"
+                >
+                  <ProgressFilledTrack className="bg-white rounded-full" />
+                </Progress>
+              </Box>
+              <Text size="xs" bold className="text-white/90">
+                {currentCourse.stats.completed}/{currentCourse.stats.total} lessons
+              </Text>
+            </HStack>
+
+            <Button
+              size="lg"
+              variant="secondary"
+              className="h-12 rounded-xl bg-white active:bg-slate-100 w-full"
+              onPress={() => {
+                if (currentCourse.stats.nextLesson) {
+                  router.push(`/lesson/${currentCourse.stats.nextLesson.id}` as never);
+                } else {
+                  router.push(`/course/${currentCourse.course.id}` as never);
+                }
+              }}
+            >
+              <ButtonIcon as={Play} className="text-primary" />
+              <ButtonText className="text-primary font-extrabold text-sm">
+                {currentCourse.stats.nextLesson
+                  ? currentCourse.course.lessonRewardCoins > 0
+                    ? `Continue Lesson  ·  +${currentCourse.course.lessonRewardCoins} Coins`
+                    : 'Continue Lesson'
+                  : 'Open Course Path'}
+              </ButtonText>
+            </Button>
+          </LinearGradient>
+        </Box>
       ) : loading ? (
-        <View style={[DS.card, styles.stateCard]}>
-          <LeoMascot pose="think" size={80} />
-          <Text style={DS.type.cardTitle}>Loading your courses...</Text>
-        </View>
+        <Card className="bg-card border border-border rounded-2xl p-5">
+          <VStack space="md">
+            <Skeleton variant="rounded" className="h-5 w-1/3" />
+            <SkeletonText _lines={2} className="h-3" />
+            <Skeleton variant="rounded" className="h-11 w-full" />
+          </VStack>
+        </Card>
       ) : (
-        <View style={[DS.card, styles.stateCard]}>
-          <LeoMascot pose="wave" size={80} />
-          <Text style={DS.type.cardTitle}>No enrolled courses yet</Text>
-          <Text style={[DS.type.caption, { textAlign: 'center', maxWidth: 260 }]}>
-            Once your teacher adds you to an Impulse group, your lessons will appear here.
-          </Text>
-        </View>
+        <Card className="bg-card border border-border rounded-2xl p-6">
+          <VStack space="sm" className="items-center">
+            <LeoMascot pose="wave" size={80} />
+            <Heading size="md" className="text-foreground">
+              No enrolled courses yet
+            </Heading>
+            <Text size="xs" className="text-muted-foreground text-center max-w-[260px]">
+              Once your teacher adds you to an Impulse group, your lessons will appear here.
+            </Text>
+          </VStack>
+        </Card>
       )}
 
-      {/* Uniform 2-Column Quick Actions (Word Cards & Coin Shop — no mismatched borders) */}
-      <View style={styles.quickRow}>
+      {/* 2-Column Quick Actions */}
+      <HStack space="md">
         <Pressable
           onPress={() => router.push('/words' as never)}
-          style={[DS.card, styles.quickTile]}
+          className="flex-1 min-w-0"
         >
-          <View style={[styles.iconSquare, { backgroundColor: DS.colors.brandSoft }]}>
-            <BookOpen size={20} color={DS.colors.brand} />
-          </View>
-          <View style={styles.quickCopy}>
-            <Text style={DS.type.cardTitle} numberOfLines={1}>
-              Word Cards
-            </Text>
-            <Text style={DS.type.caption} numberOfLines={1}>
-              {dueCount > 0 ? `${dueCount} due today` : 'All reviewed'}
-            </Text>
-          </View>
+          <Card className="bg-card border border-border rounded-2xl p-3.5">
+            <HStack className="items-center" space="sm">
+              <Center className="w-10 h-10 rounded-xl bg-accent">
+                <BookOpen size={19} color="#1055F8" />
+              </Center>
+              <VStack className="flex-1 min-w-0">
+                <Text size="sm" bold className="text-foreground" numberOfLines={1}>
+                  Word Cards
+                </Text>
+                <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
+                  {dueCount > 0 ? `${dueCount} due today` : 'All reviewed'}
+                </Text>
+              </VStack>
+            </HStack>
+          </Card>
         </Pressable>
 
         <Pressable
           onPress={() => router.push('/shop' as never)}
-          style={[DS.card, styles.quickTile]}
+          className="flex-1 min-w-0"
         >
-          <View style={[styles.iconSquare, { backgroundColor: DS.colors.amberSoft }]}>
-            <Store size={20} color={DS.colors.amberDeep} />
-          </View>
-          <View style={styles.quickCopy}>
-            <Text style={DS.type.cardTitle} numberOfLines={1}>
-              Coin Shop
-            </Text>
-            <Text style={DS.type.caption} numberOfLines={1}>
-              {coins} coins
-            </Text>
-          </View>
+          <Card className="bg-card border border-border rounded-2xl p-3.5">
+            <HStack className="items-center" space="sm">
+              <Center className="w-10 h-10 rounded-xl bg-amber-50">
+                <Store size={19} color="#D97706" />
+              </Center>
+              <VStack className="flex-1 min-w-0">
+                <Text size="sm" bold className="text-foreground" numberOfLines={1}>
+                  Coin Shop
+                </Text>
+                <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
+                  {coins} coins
+                </Text>
+              </VStack>
+            </HStack>
+          </Card>
         </Pressable>
-      </View>
+      </HStack>
 
-      {/* Enrolled Courses Section */}
+      {/* My Courses */}
       {activeCourses.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={DS.type.sectionTitle}>My Courses</Text>
-          <View style={styles.courseStack}>
+        <VStack space="sm">
+          <HStack className="items-center justify-between">
+            <Heading size="md" className="text-foreground">
+              My Courses
+            </Heading>
+            <Badge variant="secondary" className="rounded-full px-2.5">
+              <BadgeText className="text-muted-foreground normal-case font-semibold">
+                {activeCourses.length} active
+              </BadgeText>
+            </Badge>
+          </HStack>
+
+          <VStack space="sm">
             {activeCourses.map((course) => {
               const stats = computeCourseStats(course);
               return (
                 <Pressable
                   key={course.id}
                   onPress={() => router.push(`/course/${course.id}` as never)}
-                  style={[DS.card, styles.courseRow]}
                 >
-                  <View style={[styles.courseIcon, { backgroundColor: DS.colors.brandSoft }]}>
-                    <GraduationCap size={22} color={DS.colors.brand} />
-                  </View>
-                  <View style={styles.courseBody}>
-                    <View style={styles.courseTitleLine}>
-                      <Text style={[DS.type.cardTitle, { flex: 1 }]} numberOfLines={1}>
-                        {course.title}
-                      </Text>
-                      <ChevronRight size={18} color={DS.colors.inkSubtle} />
-                    </View>
-                    <Text style={DS.type.caption} numberOfLines={1}>
-                      {course.level?.name ? `${course.level.name} · ` : ''}
-                      {stats.completed} of {stats.total} lessons completed
-                    </Text>
-                    <View style={styles.courseBarRow}>
-                      <View style={styles.courseTrack}>
-                        <View style={[styles.courseFill, { width: `${stats.pct}%` }]} />
-                      </View>
-                      <Text style={styles.coursePct}>{stats.pct}%</Text>
-                    </View>
-                  </View>
+                  <Card className="bg-card border border-border rounded-2xl p-4">
+                    <HStack className="items-center" space="md">
+                      <Center className="w-12 h-12 rounded-xl bg-accent">
+                        <GraduationCap size={22} color="#1055F8" />
+                      </Center>
+                      <VStack className="flex-1 min-w-0" space="xs">
+                        <HStack className="items-center justify-between" space="xs">
+                          <Text
+                            size="sm"
+                            bold
+                            className="text-foreground flex-1"
+                            numberOfLines={1}
+                          >
+                            {course.title}
+                          </Text>
+                          <ChevronRight size={17} color="#94A3B8" />
+                        </HStack>
+                        <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
+                          {course.level?.name ? `${course.level.name} · ` : ''}
+                          {stats.completed} of {stats.total} lessons completed
+                        </Text>
+                        <HStack className="items-center mt-0.5" space="sm">
+                          <Box className="flex-1">
+                            <Progress
+                              value={stats.pct}
+                              className="h-1.5 bg-secondary rounded-full"
+                            >
+                              <ProgressFilledTrack className="bg-primary rounded-full" />
+                            </Progress>
+                          </Box>
+                          <Text size="xs" bold className="text-muted-foreground">
+                            {stats.pct}%
+                          </Text>
+                        </HStack>
+                      </VStack>
+                    </HStack>
+                  </Card>
                 </Pressable>
               );
             })}
-          </View>
-        </View>
+          </VStack>
+        </VStack>
       ) : null}
 
-      {/* Earlier-Level Practice (grouped inside one clean white card) */}
+      {/* Earlier Levels */}
       {practiceCourses.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={DS.type.sectionTitle}>Earlier Levels</Text>
-          <View style={[DS.card, styles.groupedCard]}>
+        <VStack space="sm">
+          <Heading size="md" className="text-foreground">
+            Earlier Levels
+          </Heading>
+          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
             {practiceCourses.map((course, idx) => {
               const stats = computeCourseStats(course);
               return (
-                <Pressable
-                  key={course.id}
-                  onPress={() => router.push(`/course/${course.id}` as never)}
-                  style={[
-                    styles.practiceRow,
-                    idx > 0 ? styles.rowDivider : null,
-                  ]}
-                >
-                  <View style={[styles.iconSquare, { backgroundColor: DS.colors.surfaceSubtle }]}>
-                    <RotateCcw size={18} color={DS.colors.inkSecondary} />
-                  </View>
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={DS.type.cardTitle} numberOfLines={1}>
-                      {course.title}
-                    </Text>
-                    <Text style={DS.type.caption} numberOfLines={1}>
-                      {stats.completed}/{stats.total} lessons · Open practice
-                    </Text>
-                  </View>
-                  <ChevronRight size={18} color={DS.colors.inkSubtle} />
-                </Pressable>
+                <Box key={course.id}>
+                  {idx > 0 ? <Divider className="bg-border" /> : null}
+                  <Pressable
+                    onPress={() => router.push(`/course/${course.id}` as never)}
+                    className="p-3.5 active:bg-accent/50"
+                  >
+                    <HStack className="items-center" space="md">
+                      <Center className="w-10 h-10 rounded-xl bg-secondary">
+                        <RotateCcw size={17} color="#475569" />
+                      </Center>
+                      <VStack className="flex-1 min-w-0">
+                        <Text size="sm" bold className="text-foreground" numberOfLines={1}>
+                          {course.title}
+                        </Text>
+                        <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
+                          {stats.completed}/{stats.total} lessons · Open practice
+                        </Text>
+                      </VStack>
+                      <ChevronRight size={17} color="#94A3B8" />
+                    </HStack>
+                  </Pressable>
+                </Box>
               );
             })}
-          </View>
-        </View>
+          </Card>
+        </VStack>
       ) : null}
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  stateCard: {
-    padding: 24,
-    alignItems: 'center',
-    gap: 8,
-  },
-  leoCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    gap: 12,
-  },
-  leoStage: {
-    width: 64,
-    height: 64,
-    borderRadius: 16,
-    backgroundColor: DS.colors.brandSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  leoCopy: {
-    flex: 1,
-    gap: 2,
-    minWidth: 0,
-  },
-  heroCard: {
-    borderRadius: 22,
-    padding: 18,
-    gap: 16,
-  },
-  heroHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  heroMeta: {
-    color: 'rgba(255,255,255,0.82)',
-    fontSize: 12.5,
-    fontWeight: '700',
-  },
-  heroTitle: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    lineHeight: 27,
-    fontWeight: '800',
-    letterSpacing: -0.4,
-  },
-  heroPctBadge: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  heroPctText: {
-    color: '#FFFFFF',
-    fontSize: 12.5,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
-  },
-  heroProgressWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  heroTrack: {
-    flex: 1,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255,255,255,0.28)',
-    overflow: 'hidden',
-  },
-  heroFill: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#FFFFFF',
-  },
-  heroCount: {
-    color: 'rgba(255,255,255,0.9)',
-    fontSize: 12,
-    fontWeight: '700',
-    fontVariant: ['tabular-nums'],
-  },
-  quickRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  quickTile: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 13,
-    gap: 10,
-    minWidth: 0,
-  },
-  iconSquare: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  quickCopy: {
-    flex: 1,
-    minWidth: 0,
-    gap: 1,
-  },
-  section: {
-    gap: 10,
-    marginTop: 4,
-  },
-  courseStack: {
-    gap: 10,
-  },
-  courseRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
-    gap: 12,
-  },
-  courseIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  courseBody: {
-    flex: 1,
-    gap: 5,
-    minWidth: 0,
-  },
-  courseTitleLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  courseBarRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 2,
-  },
-  courseTrack: {
-    flex: 1,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: DS.colors.surfaceSubtle,
-    overflow: 'hidden',
-  },
-  courseFill: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: DS.colors.brand,
-  },
-  coursePct: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: DS.colors.inkSecondary,
-    fontVariant: ['tabular-nums'],
-  },
-  groupedCard: {
-    overflow: 'hidden',
-  },
-  practiceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
-    gap: 12,
-  },
-  rowDivider: {
-    borderTopWidth: 1,
-    borderTopColor: DS.colors.border,
-  },
-});

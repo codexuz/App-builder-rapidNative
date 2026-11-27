@@ -28,7 +28,7 @@ type ImageProps = VariantProps<typeof imageStyle> &
 const Image = React.forwardRef<
   React.ComponentRef<typeof UIImage>,
   ImageProps & { className?: string }
->(function Image({ size = 'md', className, ...props }, ref) {
+>(function Image({ size = 'md', className, style, ...props }, ref) {
   return (
     <UIImage
       className={imageStyle({ size, class: className })}
@@ -36,8 +36,8 @@ const Image = React.forwardRef<
       ref={ref}
       style={
         Platform.OS === 'web'
-          ? ({ height: 'revert-layer', width: 'revert-layer' } as never)
-          : undefined
+          ? ([{ height: 'revert-layer', width: 'revert-layer' }, style] as never)
+          : style
       }
     />
   );

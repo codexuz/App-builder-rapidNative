@@ -15,16 +15,16 @@ Never jump straight from a prompt into unguided React Native coding. Separate th
 ## Default Component System (`gluestack-ui v5` + UniWind + MCP)
 - **Preinstalled by default** in `templates/expo-base/components/gluestack/` (copied into every new app created with `pnpm app:new <slug>`):
   - `GluestackUIProvider` (wrapped in `app/_layout.tsx` with `Uniwind` + Tailwind CSS v4 `global.css`).
-  - **34 ready components**: `accordion`, `actionsheet`, `alert`, `alert-dialog`, `avatar`, `badge`, `box`, `button`, `card`, `center`, `checkbox`, `divider`, `drawer`, `fab`, `form-control`, `heading`, `hstack`, `icon`, `image`, `input`, `link`, `modal`, `pressable`, `progress`, `radio`, `select`, `skeleton`, `slider`, `spinner`, `switch`, `text`, `textarea`, `toast`, `vstack`.
+  - **All 57 ready components**: `accordion`, `actionsheet`, `alert`, `alert-dialog`, `avatar`, `badge`, `bottomsheet`, `box`, `button`, `calendar`, `card`, `center`, `checkbox`, `date-time-picker`, `divider`, `drawer`, `fab`, `flat-list`, `form-control`, `grid`, `heading`, `hstack`, `icon`, `image`, `image-background`, `image-viewer`, `input`, `input-accessory-view`, `keyboard-avoiding-view`, `link`, `liquid-glass`, `menu`, `modal`, `popover`, `portal`, `pressable`, `progress`, `radio`, `refresh-control`, `safe-area-view`, `scroll-view`, `section-list`, `select`, `skeleton`, `slider`, `spinner`, `status-bar`, `switch`, `table`, `tabs`, `text`, `textarea`, `toast`, `tooltip`, `view`, `virtualized-list`, `vstack`.
 - **gluestack-ui MCP Server** (`.mcp.json`, `.vscode/mcp.json`, `.cursor/mcp.json` → `pnpm --silent mcp:gluestack`):
   - Always query `list_components`, `get_component`, `get_component_docs`, and `get_component_examples` for exact props & imports before building UI screens.
-  - Install any additional component (e.g., `tabs`, `table`, `calendar`, `date-time-picker`, `bottomsheet`, `menu`, `popover`, `tooltip`, `grid`) via `add_component_to_app` MCP tool or `pnpm ui:add <slug> <component...>`.
+  - Refresh or add any component via `add_component_to_app` MCP tool or `pnpm ui:add <slug> <component...>`.
 - Combine `components/gluestack/*` (standard UI controls, forms, overlays, feedback) with `components/ui/*` (motion/chart/navigation widgets like `CapsuleTabBar`, `ProgressRing`, `BarChart`, `StaggeredEntrance`, `Screen`).
 
 ## Pipeline Workflow (For Any App)
 
 ### Stage 1 — Scaffold & Discovery
-1. Run `pnpm app:new <slug> --name "<Display Name>"` to create `apps/<slug>` pre-equipped with **gluestack-ui v5** (34 components + UniWind), factory motion/chart primitives, and `.factory/STATE.json`.
+1. Run `pnpm app:new <slug> --name "<Display Name>"` to create `apps/<slug>` pre-equipped with **gluestack-ui v5** (all 57 components + UniWind), factory motion/chart primitives, and `.factory/STATE.json`.
 2. Check `knowledge/design-directions/*.md`, `knowledge/design-references/PATTERNS.md`, and `knowledge/design-memory/{approved,rejected}.json` so each new app earns a **distinct** visual identity and avoids past defects.
 3. Author `apps/<slug>/.factory/PRD.md`, `DESIGN.md`, `TOKENS.json`, `SCREENS.json`, `MOTION.json`, and `ASSETS.json` following the contracts in `agents/*/AGENT.md`.
 

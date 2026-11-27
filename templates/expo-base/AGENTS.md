@@ -36,9 +36,9 @@ Docs: https://docs.expo.dev/eas/index.md
 
 ## Default UI Components (`gluestack-ui v5` + UniWind)
 
-- This template ships with **gluestack-ui v5** (`GluestackUIProvider` in `app/_layout.tsx`, `global.css`, UniWind + Tailwind CSS v4) and **34 preinstalled components** under `@/components/gluestack/*`.
-- Prefer `@/components/gluestack/*` (`button`, `card`, `input`, `select`, `modal`, `actionsheet`, `drawer`, `alert-dialog`, `toast`, `badge`, `avatar`, `checkbox`, `radio`, `switch`, `slider`, `progress`, `spinner`, `skeleton`, `accordion`, `vstack`, `hstack`, `box`, `text`, `heading`, etc.) by default before hand-rolling standard UI controls.
-- Use the repo's `gluestack-ui` MCP server (`list_components`, `get_component`, `get_component_docs`, `get_component_examples`, `add_component_to_app`) or run `pnpm ui:add <app-slug> <component>` from the factory root to add more components (e.g. `tabs`, `table`, `calendar`, `menu`, `popover`, `tooltip`, `bottomsheet`, `date-time-picker`).
+- This template ships with **gluestack-ui v5** (`GluestackUIProvider` in `app/_layout.tsx`, `global.css`, UniWind + Tailwind CSS v4) and **all 57 gluestack-ui v5 components** preinstalled under `@/components/gluestack/*` (including `button`, `card`, `input`, `menu`, `bottomsheet`, `actionsheet`, `drawer`, `modal`, `alert-dialog`, `popover`, `tooltip`, `tabs`, `table`, `calendar`, `date-time-picker`, `image`, `image-viewer`, `avatar`, `badge`, `progress`, `switch`, `checkbox`, `radio`, `slider`, `select`, `accordion`, `toast`, `skeleton`, `spinner`, `liquid-glass`, `grid`, `vstack`, `hstack`, `box`, `text`, `heading`, etc.).
+- Prefer `@/components/gluestack/*` by default before hand-rolling standard UI controls.
+- Use the repo's `gluestack-ui` MCP server (`list_components`, `get_component`, `get_component_docs`, `get_component_examples`, `add_component_to_app`) or `pnpm ui:add <app-slug> <component>` from the factory root whenever you want to inspect docs/examples or refresh components.
 
 ## Rules
 

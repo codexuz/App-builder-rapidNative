@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Eye, EyeOff, IdCard, Phone } from 'lucide-react-native';
+import {
+  AlertCircle,
+  Eye,
+  EyeOff,
+  IdCard,
+  KeyRound,
+  Phone,
+  ShieldCheck,
+} from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { GameButton } from '@/components/game';
+import { Alert, AlertIcon, AlertText } from '@/components/gluestack/alert';
+import { Box } from '@/components/gluestack/box';
+import { Button, ButtonSpinner, ButtonText } from '@/components/gluestack/button';
+import { Card } from '@/components/gluestack/card';
+import { Center } from '@/components/gluestack/center';
+import {
+  FormControl,
+  FormControlHelper,
+  FormControlHelperText,
+  FormControlLabel,
+  FormControlLabelText,
+} from '@/components/gluestack/form-control';
+import { Heading } from '@/components/gluestack/heading';
+import { Input, InputField, InputIcon, InputSlot } from '@/components/gluestack/input';
+import { Tabs, TabsList, TabsTrigger, TabsTriggerText } from '@/components/gluestack/tabs';
+import { Text } from '@/components/gluestack/text';
+import { VStack } from '@/components/gluestack/vstack';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { DS } from '@/constants/DesignSystem';
 import { AppConfig } from '@/lib/config';
 import {
   UZ_COUNTRY_CODE,
@@ -94,360 +108,251 @@ export default function ImpulseKidsAuthScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
+        className="flex-1"
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+            paddingVertical: 28,
+            gap: 24,
+          }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.hero}>
-            <View style={styles.leoHalo}>
-              <LeoMascot pose={error ? 'oops' : step === 'otp' ? 'think' : 'wave'} size={126} />
-            </View>
-            <Text style={styles.title}>
-              {step === 'otp' ? 'Enter Verification Code' : 'Impulse Kids'}
-            </Text>
-            <Text style={styles.subtitle}>
+          <VStack space="sm" className="items-center">
+            <Center className="w-32 h-32 rounded-full bg-accent border border-primary/15 mb-1">
+              <LeoMascot
+                pose={error ? 'oops' : step === 'otp' ? 'think' : 'wave'}
+                size={112}
+              />
+            </Center>
+            <Heading size="2xl" className="text-foreground text-center tracking-tight">
+              {step === 'otp' ? 'Verification Code' : 'Impulse Kids'}
+            </Heading>
+            <Text
+              size="sm"
+              className="text-muted-foreground text-center max-w-[300px] leading-5"
+            >
               {step === 'otp'
                 ? `We sent a 6-digit code to ${pendingChallenge?.destination ?? 'your phone'}.`
                 : `Sign in to ${center?.name ?? 'Impulse'} with your Student ID or phone number.`}
             </Text>
-          </View>
+          </VStack>
 
-          <View style={[DS.card, styles.formCard]}>
-            {step === 'credentials' ? (
-              <>
-                <View style={styles.segmentTrack}>
-                  <Pressable
-                    onPress={() => {
-                      setLoginMethod('id');
+          <Card className="bg-card border border-border rounded-2xl p-5 shadow-xs">
+            <VStack space="lg">
+              {step === 'credentials' ? (
+                <>
+                  <Tabs
+                    value={loginMethod}
+                    onValueChange={(val: string) => {
+                      setLoginMethod(val === 'phone' ? 'phone' : 'id');
                       setError(null);
                     }}
-                    style={[styles.segmentBtn, loginMethod === 'id' ? styles.segmentActive : null]}
                   >
-                    <IdCard
-                      size={16}
-                      color={loginMethod === 'id' ? DS.colors.brand : DS.colors.inkMuted}
-                    />
-                    <Text
-                      style={[
-                        styles.segmentLabel,
-                        loginMethod === 'id' ? styles.segmentLabelActive : null,
-                      ]}
-                    >
-                      Student ID
-                    </Text>
-                  </Pressable>
+                    <TabsList className="w-full bg-secondary p-1 rounded-xl">
+                      <TabsTrigger
+                        value="id"
+                        className={`flex-1 rounded-lg py-2 flex-row items-center justify-center gap-1.5 ${
+                          loginMethod === 'id' ? 'bg-card shadow-xs' : 'bg-transparent'
+                        }`}
+                      >
+                        <IdCard
+                          size={15}
+                          color={loginMethod === 'id' ? '#1055F8' : '#64748B'}
+                        />
+                        <TabsTriggerText
+                          className={`text-sm font-semibold ${
+                            loginMethod === 'id' ? 'text-primary' : 'text-muted-foreground'
+                          }`}
+                        >
+                          Student ID
+                        </TabsTriggerText>
+                      </TabsTrigger>
 
-                  <Pressable
-                    onPress={() => {
-                      setLoginMethod('phone');
-                      setError(null);
-                    }}
-                    style={[styles.segmentBtn, loginMethod === 'phone' ? styles.segmentActive : null]}
-                  >
-                    <Phone
-                      size={16}
-                      color={loginMethod === 'phone' ? DS.colors.brand : DS.colors.inkMuted}
-                    />
-                    <Text
-                      style={[
-                        styles.segmentLabel,
-                        loginMethod === 'phone' ? styles.segmentLabelActive : null,
-                      ]}
-                    >
-                      Phone
-                    </Text>
-                  </Pressable>
-                </View>
+                      <TabsTrigger
+                        value="phone"
+                        className={`flex-1 rounded-lg py-2 flex-row items-center justify-center gap-1.5 ${
+                          loginMethod === 'phone' ? 'bg-card shadow-xs' : 'bg-transparent'
+                        }`}
+                      >
+                        <Phone
+                          size={15}
+                          color={loginMethod === 'phone' ? '#1055F8' : '#64748B'}
+                        />
+                        <TabsTriggerText
+                          className={`text-sm font-semibold ${
+                            loginMethod === 'phone' ? 'text-primary' : 'text-muted-foreground'
+                          }`}
+                        >
+                          Phone
+                        </TabsTriggerText>
+                      </TabsTrigger>
+                    </TabsList>
+                  </Tabs>
 
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>
-                    {loginMethod === 'id' ? 'Student ID' : `Phone Number (${UZ_COUNTRY_CODE})`}
-                  </Text>
-                  {loginMethod === 'id' ? (
-                    <TextInput
-                      placeholder="STU-000123"
-                      placeholderTextColor={DS.colors.inkSubtle}
-                      value={studentCode}
-                      onChangeText={setStudentCode}
-                      autoCapitalize="characters"
-                      autoCorrect={false}
-                      style={styles.input}
-                    />
-                  ) : (
-                    <View style={styles.phoneWrap}>
-                      <Text style={styles.phonePrefix}>{UZ_COUNTRY_CODE}</Text>
-                      <TextInput
-                        placeholder="90 123 45 67"
-                        placeholderTextColor={DS.colors.inkSubtle}
-                        value={formatNationalNumber(phoneDigits)}
-                        onChangeText={(txt) => setPhoneDigits(digitsOnly(txt))}
-                        keyboardType="phone-pad"
-                        maxLength={12}
-                        style={styles.phoneInput}
+                  <FormControl isInvalid={Boolean(error)}>
+                    <FormControlLabel className="mb-1.5">
+                      <FormControlLabelText className="text-foreground font-semibold text-sm">
+                        {loginMethod === 'id'
+                          ? 'Student ID'
+                          : `Phone Number (${UZ_COUNTRY_CODE})`}
+                      </FormControlLabelText>
+                    </FormControlLabel>
+
+                    {loginMethod === 'id' ? (
+                      <Input className="h-12 rounded-xl bg-background border-border px-3">
+                        <InputSlot className="pr-2">
+                          <InputIcon as={IdCard} className="text-muted-foreground" />
+                        </InputSlot>
+                        <InputField
+                          placeholder="STU-000123"
+                          value={studentCode}
+                          onChangeText={setStudentCode}
+                          autoCapitalize="characters"
+                          autoCorrect={false}
+                          className="text-foreground text-base font-medium"
+                        />
+                      </Input>
+                    ) : (
+                      <Input className="h-12 rounded-xl bg-background border-border px-3">
+                        <InputSlot className="pr-2">
+                          <Text size="sm" bold className="text-muted-foreground">
+                            {UZ_COUNTRY_CODE}
+                          </Text>
+                        </InputSlot>
+                        <InputField
+                          placeholder="90 123 45 67"
+                          value={formatNationalNumber(phoneDigits)}
+                          onChangeText={(txt) => setPhoneDigits(digitsOnly(txt))}
+                          keyboardType="phone-pad"
+                          maxLength={12}
+                          className="text-foreground text-base font-medium"
+                        />
+                      </Input>
+                    )}
+
+                    <FormControlHelper className="mt-1">
+                      <FormControlHelperText className="text-xs text-muted-foreground">
+                        {loginMethod === 'id'
+                          ? 'Ask your Impulse teacher if you forgot your Student ID.'
+                          : 'Enter the phone number linked to your student account.'}
+                      </FormControlHelperText>
+                    </FormControlHelper>
+                  </FormControl>
+
+                  <FormControl isInvalid={Boolean(error)}>
+                    <FormControlLabel className="mb-1.5">
+                      <FormControlLabelText className="text-foreground font-semibold text-sm">
+                        Password
+                      </FormControlLabelText>
+                    </FormControlLabel>
+
+                    <Input className="h-12 rounded-xl bg-background border-border px-3">
+                      <InputSlot className="pr-2">
+                        <InputIcon as={KeyRound} className="text-muted-foreground" />
+                      </InputSlot>
+                      <InputField
+                        placeholder="Enter your password"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={!showPassword}
+                        autoCapitalize="none"
+                        className="text-foreground text-base font-medium"
                       />
-                    </View>
-                  )}
-                </View>
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>Password</Text>
-                  <View style={styles.passwordRow}>
-                    <TextInput
-                      placeholder="Enter your password"
-                      placeholderTextColor={DS.colors.inkSubtle}
-                      value={password}
-                      onChangeText={setPassword}
-                      secureTextEntry={!showPassword}
-                      autoCapitalize="none"
-                      style={styles.passwordInput}
+                      <InputSlot
+                        className="pl-2"
+                        onPress={() => setShowPassword((v) => !v)}
+                      >
+                        <InputIcon
+                          as={showPassword ? EyeOff : Eye}
+                          className="text-muted-foreground"
+                        />
+                      </InputSlot>
+                    </Input>
+                  </FormControl>
+                </>
+              ) : (
+                <FormControl isInvalid={Boolean(error)}>
+                  <FormControlLabel className="mb-1.5">
+                    <FormControlLabelText className="text-foreground font-semibold text-sm">
+                      6-Digit Verification Code
+                    </FormControlLabelText>
+                  </FormControlLabel>
+                  <Input className="h-14 rounded-xl bg-background border-border px-3">
+                    <InputSlot className="pr-2">
+                      <InputIcon as={ShieldCheck} className="text-primary" />
+                    </InputSlot>
+                    <InputField
+                      placeholder="123456"
+                      value={otpCode}
+                      onChangeText={setOtpCode}
+                      keyboardType="number-pad"
+                      maxLength={6}
+                      className="text-foreground text-xl font-bold tracking-widest text-center"
                     />
-                    <Pressable
-                      onPress={() => setShowPassword((v) => !v)}
-                      hitSlop={10}
-                      style={styles.eyeBtn}
-                    >
-                      {showPassword ? (
-                        <EyeOff size={18} color={DS.colors.inkMuted} />
-                      ) : (
-                        <Eye size={18} color={DS.colors.inkMuted} />
-                      )}
-                    </Pressable>
-                  </View>
-                </View>
-              </>
-            ) : (
-              <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>6-Digit Code</Text>
-                <TextInput
-                  placeholder="123456"
-                  placeholderTextColor={DS.colors.inkSubtle}
-                  value={otpCode}
-                  onChangeText={setOtpCode}
-                  keyboardType="number-pad"
-                  maxLength={6}
-                  style={[styles.input, styles.otpInput]}
-                />
-              </View>
-            )}
+                  </Input>
+                </FormControl>
+              )}
 
-            {error ? (
-              <View style={styles.errorBox}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>
-            ) : null}
+              {error ? (
+                <Alert
+                  variant="destructive"
+                  className="rounded-xl bg-red-50 border-red-200 px-3.5 py-2.5"
+                >
+                  <AlertIcon as={AlertCircle} className="text-destructive" />
+                  <AlertText className="text-destructive text-xs font-semibold">
+                    {error}
+                  </AlertText>
+                </Alert>
+              ) : null}
 
-            <View style={{ marginTop: 4 }}>
-              <GameButton
-                label={
-                  busy
+              <Button
+                size="lg"
+                isDisabled={busy}
+                className="h-12 rounded-xl w-full"
+                onPress={step === 'otp' ? handleVerifyOtp : handleSignIn}
+              >
+                {busy ? <ButtonSpinner color="#FFFFFF" /> : null}
+                <ButtonText className="font-bold text-base">
+                  {busy
                     ? 'Signing in...'
                     : step === 'otp'
                       ? 'Verify Code'
-                      : 'Sign In'
-                }
-                disabled={busy}
-                color={DS.colors.brand}
-                depthColor={DS.colors.brandDeep}
-                onPress={step === 'otp' ? handleVerifyOtp : handleSignIn}
-              />
-            </View>
+                      : 'Sign In'}
+                </ButtonText>
+              </Button>
 
-            {step === 'otp' ? (
-              <Pressable
-                onPress={() => {
-                  setStep('credentials');
-                  setOtpCode('');
-                  setError(null);
-                }}
-                style={styles.switchLink}
-              >
-                <Text style={styles.switchLinkText}>Use a different account</Text>
-              </Pressable>
-            ) : null}
-          </View>
+              {step === 'otp' ? (
+                <Button
+                  variant="link"
+                  size="sm"
+                  onPress={() => {
+                    setStep('credentials');
+                    setOtpCode('');
+                    setError(null);
+                  }}
+                >
+                  <ButtonText className="text-primary font-semibold">
+                    Use a different account
+                  </ButtonText>
+                </Button>
+              ) : null}
+            </VStack>
+          </Card>
 
-          <Text style={styles.footerText}>{AppConfig.applicationId}</Text>
+          <Box className="items-center">
+            <Text size="xs" className="text-muted-foreground font-medium">
+              {AppConfig.applicationId}
+            </Text>
+          </Box>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: DS.colors.canvas,
-  },
-  flex: {
-    flex: 1,
-  },
-  scroll: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 28,
-    gap: 24,
-  },
-  hero: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  leoHalo: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: DS.colors.brandSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  title: {
-    ...DS.type.pageTitle,
-    fontSize: 28,
-    lineHeight: 34,
-    textAlign: 'center',
-  },
-  subtitle: {
-    ...DS.type.body,
-    color: DS.colors.inkSecondary,
-    textAlign: 'center',
-    maxWidth: 300,
-  },
-  formCard: {
-    padding: 20,
-    gap: 16,
-  },
-  segmentTrack: {
-    flexDirection: 'row',
-    backgroundColor: DS.colors.surfaceSubtle,
-    padding: 4,
-    borderRadius: 12,
-    gap: 4,
-  },
-  segmentBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    height: 38,
-    borderRadius: 9,
-  },
-  segmentActive: {
-    backgroundColor: DS.colors.surface,
-    borderWidth: 1,
-    borderColor: DS.colors.border,
-  },
-  segmentLabel: {
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: DS.colors.inkMuted,
-  },
-  segmentLabelActive: {
-    color: DS.colors.brand,
-  },
-  fieldGroup: {
-    gap: 6,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: DS.colors.ink,
-  },
-  input: {
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: DS.colors.border,
-    backgroundColor: DS.colors.canvas,
-    paddingHorizontal: 14,
-    fontSize: 15,
-    fontWeight: '600',
-    color: DS.colors.ink,
-  },
-  phoneWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: DS.colors.border,
-    backgroundColor: DS.colors.canvas,
-    paddingHorizontal: 14,
-    gap: 8,
-  },
-  phonePrefix: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: DS.colors.inkSecondary,
-  },
-  phoneInput: {
-    flex: 1,
-    height: 46,
-    fontSize: 15,
-    fontWeight: '600',
-    color: DS.colors.ink,
-  },
-  passwordRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: DS.colors.border,
-    backgroundColor: DS.colors.canvas,
-    paddingLeft: 14,
-    paddingRight: 8,
-  },
-  passwordInput: {
-    flex: 1,
-    height: 46,
-    fontSize: 15,
-    fontWeight: '600',
-    color: DS.colors.ink,
-  },
-  eyeBtn: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  otpInput: {
-    textAlign: 'center',
-    fontSize: 22,
-    letterSpacing: 6,
-    fontWeight: '800',
-  },
-  errorBox: {
-    backgroundColor: DS.colors.redSoft,
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  errorText: {
-    color: DS.colors.redInk,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  switchLink: {
-    alignItems: 'center',
-    paddingVertical: 4,
-  },
-  switchLinkText: {
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: DS.colors.brand,
-  },
-  footerText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: DS.colors.inkSubtle,
-    textAlign: 'center',
-  },
-});

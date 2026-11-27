@@ -35,7 +35,7 @@ App-builder-rapidNative/
 
 Every new app scaffolded via `pnpm app:new <slug>` ships ready out-of-the-box with:
 
-- **gluestack-ui v5 (`components/gluestack/*`)** powered by **UniWind + Tailwind CSS v4** (`GluestackUIProvider` in `app/_layout.tsx`, `global.css`, `metro.config.js`, `gluestack-ui.config.json`) with **34 preinstalled components**:
+- **gluestack-ui v5 (`components/gluestack/*`)** powered by **UniWind + Tailwind CSS v4** (`GluestackUIProvider` in `app/_layout.tsx`, `global.css`, `metro.config.js`, `gluestack-ui.config.json`) with **all 57 preinstalled components** (including `menu`, `bottomsheet`, `actionsheet`, `avatar`, `image`, `image-viewer`, `tabs`, `table`, `calendar`, `date-time-picker`, `popover`, `tooltip`, `liquid-glass`, `grid`, `button`, `card`, `input`, `form-control`, `modal`, `alert-dialog`, `drawer`, `switch`, `progress`, `toast`, `accordion`, `skeleton`, and more):
   `accordion` · `actionsheet` · `alert` · `alert-dialog` · `avatar` · `badge` · `box` · `button` · `card` · `center` · `checkbox` · `divider` · `drawer` · `fab` · `form-control` · `heading` · `hstack` · `icon` · `image` · `input` · `link` · `modal` · `pressable` · `progress` · `radio` · `select` · `skeleton` · `slider` · `spinner` · `switch` · `text` · `textarea` · `toast` · `vstack`
 - **gluestack-ui MCP Server** (`.mcp.json`, `.vscode/mcp.json`, `.cursor/mcp.json` → `pnpm --silent mcp:gluestack`): exposes `list_components`, `get_component`, `get_component_docs`, `get_component_examples`, and `add_component_to_app` for all 60+ gluestack-ui v5 components.
 - **Factory Motion & Chart Primitives (`components/ui/*`)**:

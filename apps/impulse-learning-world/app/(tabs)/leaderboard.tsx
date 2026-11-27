@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Coins, Crown, Flame, Trophy, Zap } from 'lucide-react-native';
+import {
+  Avatar,
+  AvatarFallbackText,
+  AvatarImage,
+} from '@/components/gluestack/avatar';
+import { Badge, BadgeText } from '@/components/gluestack/badge';
+import { Box } from '@/components/gluestack/box';
+import { Button, ButtonText } from '@/components/gluestack/button';
+import { Card } from '@/components/gluestack/card';
+import { Divider } from '@/components/gluestack/divider';
+import { Heading } from '@/components/gluestack/heading';
+import { HStack } from '@/components/gluestack/hstack';
+import { Tabs, TabsList, TabsTrigger, TabsTriggerText } from '@/components/gluestack/tabs';
+import { Text } from '@/components/gluestack/text';
+import { VStack } from '@/components/gluestack/vstack';
 import { GameHud } from '@/components/game';
 import { LEO_ART, LeoMascot } from '@/components/mascot/LeoMascot';
 import { Screen } from '@/components/ui';
-import { DS } from '@/constants/DesignSystem';
 import { api } from '@/lib/api';
 import type { LeaderboardScope } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
@@ -79,414 +92,260 @@ export default function KidsLeaderboardScreen() {
     <Screen hasTabBar refreshing={loading} onRefresh={() => void refreshAll()}>
       <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
-      {/* Clean Mode Switcher */}
-      <View style={styles.segmentTrack}>
-        <Pressable
-          onPress={() => setBoardMode('league')}
-          style={[styles.segmentBtn, boardMode === 'league' ? styles.segmentActive : null]}
-        >
-          <Text
-            style={[
-              styles.segmentLabel,
-              boardMode === 'league' ? styles.segmentLabelActive : null,
-            ]}
+      {/* Gluestack Tabs Switcher */}
+      <Tabs
+        value={boardMode}
+        onValueChange={(v: string) => setBoardMode(v === 'coins' ? 'coins' : 'league')}
+      >
+        <TabsList className="w-full bg-slate-200/75 p-1 rounded-xl">
+          <TabsTrigger
+            value="league"
+            className={`flex-1 rounded-lg py-2 items-center justify-center ${
+              boardMode === 'league' ? 'bg-card shadow-xs' : 'bg-transparent'
+            }`}
           >
-            Weekly League
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setBoardMode('coins')}
-          style={[styles.segmentBtn, boardMode === 'coins' ? styles.segmentActive : null]}
-        >
-          <Text
-            style={[
-              styles.segmentLabel,
-              boardMode === 'coins' ? styles.segmentLabelActive : null,
-            ]}
+            <TabsTriggerText
+              className={`text-sm font-bold ${
+                boardMode === 'league' ? 'text-foreground' : 'text-muted-foreground'
+              }`}
+            >
+              Weekly League
+            </TabsTriggerText>
+          </TabsTrigger>
+          <TabsTrigger
+            value="coins"
+            className={`flex-1 rounded-lg py-2 items-center justify-center ${
+              boardMode === 'coins' ? 'bg-card shadow-xs' : 'bg-transparent'
+            }`}
           >
-            Coin Leaders
-          </Text>
-        </Pressable>
-      </View>
+            <TabsTriggerText
+              className={`text-sm font-bold ${
+                boardMode === 'coins' ? 'text-foreground' : 'text-muted-foreground'
+              }`}
+            >
+              Coin Leaders
+            </TabsTriggerText>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {boardMode === 'coins' ? (
-        <View style={styles.scopeRow}>
+        <HStack space="xs">
           {SCOPES.map((s) => {
             const active = leaderboardScope === s.key;
             return (
-              <Pressable
+              <Button
                 key={s.key}
+                size="sm"
+                variant={active ? 'default' : 'outline'}
+                className={`rounded-full px-3.5 h-8 ${
+                  active ? '' : 'bg-card border-border'
+                }`}
                 onPress={() => void loadLeaderboardScope(s.key)}
-                style={[styles.scopePill, active ? styles.scopePillActive : null]}
               >
-                <Text style={[styles.scopeText, active ? styles.scopeTextActive : null]}>
+                <ButtonText
+                  className={`text-xs font-bold ${
+                    active ? 'text-white' : 'text-muted-foreground'
+                  }`}
+                >
                   {s.label}
-                </Text>
-              </Pressable>
+                </ButtonText>
+              </Button>
             );
           })}
-        </View>
+        </HStack>
       ) : null}
 
-      {/* Refined Midnight Podium Stage (calm hierarchy, no garish neon blocks) */}
-      <View style={styles.podiumCard}>
-        <View style={styles.podiumHeader}>
-          <View style={styles.divisionPill}>
-            <Trophy size={13} color="#FDE047" />
-            <Text style={styles.divisionText}>
-              {boardMode === 'league' ? `${tierName} League` : 'Top Coin Earners'}
+      {/* Podium Stage Card */}
+      <Card className="bg-slate-900 border-0 rounded-3xl pt-4 px-4 pb-0 overflow-hidden">
+        <VStack space="md">
+          <HStack className="items-center justify-between" space="sm">
+            <Badge className="rounded-full bg-white/10 border-0 px-3 py-1 gap-1.5">
+              <Trophy size={13} color="#FDE047" />
+              <BadgeText className="text-white font-bold normal-case">
+                {boardMode === 'league' ? `${tierName} League` : 'Top Coin Earners'}
+              </BadgeText>
+            </Badge>
+            <Text size="xs" bold className="text-slate-300">
+              {myRow
+                ? `#${myRow.rank}  ·  ${myRow.score} ${myRow.unitLabel}`
+                : boardMode === 'coins'
+                  ? `${totalCoins} Coins`
+                  : 'Unranked'}
             </Text>
-          </View>
-          <Text style={styles.rankSummary}>
-            {myRow
-              ? `#${myRow.rank}  ·  ${myRow.score} ${myRow.unitLabel}`
-              : boardMode === 'coins'
-                ? `${totalCoins} Coins`
-                : 'Unranked'}
-          </Text>
-        </View>
+          </HStack>
 
-        {podiumOrder.length > 0 ? (
-          <View style={styles.podiumRow}>
-            {podiumOrder.map((entry) => {
-              const isFirst = entry.rank === 1;
-              const pillarHeight = entry.rank === 1 ? 84 : entry.rank === 2 ? 62 : 48;
-              const pillarBg =
-                entry.rank === 1 ? '#F59E0B' : entry.rank === 2 ? '#2563EB' : '#334155';
-              const ringColor =
-                entry.rank === 1 ? '#FDE047' : entry.rank === 2 ? '#93C5FD' : '#64748B';
-              const avatarUri = api.assetUrl(entry.avatarUrl);
+          {podiumOrder.length > 0 ? (
+            <HStack className="items-end pt-1" space="sm">
+              {podiumOrder.map((entry) => {
+                const isFirst = entry.rank === 1;
+                const pillarHeight = entry.rank === 1 ? 82 : entry.rank === 2 ? 60 : 46;
+                const pillarBg =
+                  entry.rank === 1 ? '#F59E0B' : entry.rank === 2 ? '#2563EB' : '#334155';
+                const ringClass =
+                  entry.rank === 1
+                    ? 'border-amber-300'
+                    : entry.rank === 2
+                      ? 'border-blue-300'
+                      : 'border-slate-500';
+                const avatarUri = api.assetUrl(entry.avatarUrl);
 
-              return (
-                <View key={entry.id} style={styles.podiumCol}>
-                  <View style={styles.crownSlot}>
-                    {isFirst ? <Crown size={18} color="#FDE047" fill="#FDE047" /> : null}
-                  </View>
-                  <View style={[styles.podiumAvatarRing, { borderColor: ringColor }]}>
-                    <Image
-                      source={avatarUri ? { uri: avatarUri } : LEO_ART[isFirst ? 'cheer' : 'wave']}
-                      style={isFirst ? styles.avatarLg : styles.avatarSm}
-                    />
-                  </View>
-                  <Text style={styles.podiumName} numberOfLines={1}>
-                    {entry.me ? 'You' : entry.name.split(' ')[0]}
-                  </Text>
-                  <Text style={styles.podiumScore}>
-                    {entry.score} {entry.unitLabel}
-                  </Text>
-                  <View style={[styles.pillar, { height: pillarHeight, backgroundColor: pillarBg }]}>
-                    <Text style={styles.pillarNum}>{entry.rank}</Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        ) : (
-          <View style={styles.emptyPodium}>
-            <LeoMascot pose="cheer" size={76} />
-            <Text style={styles.emptyPodiumText}>
-              Finish one lesson to join this week’s podium!
-            </Text>
-          </View>
-        )}
-      </View>
+                return (
+                  <VStack key={entry.id} className="flex-1 items-center" space="xs">
+                    <Box className="h-5 justify-center">
+                      {isFirst ? <Crown size={18} color="#FDE047" fill="#FDE047" /> : null}
+                    </Box>
+                    <Avatar
+                      className={`${
+                        isFirst ? 'h-14 w-14' : 'h-12 w-12'
+                      } border-2 ${ringClass} bg-slate-800`}
+                    >
+                      {avatarUri ? (
+                        <AvatarFallbackText className="text-white font-bold">
+                          {entry.name}
+                        </AvatarFallbackText>
+                      ) : null}
+                      <AvatarImage
+                        source={
+                          avatarUri
+                            ? { uri: avatarUri }
+                            : LEO_ART[isFirst ? 'cheer' : 'wave']
+                        }
+                        alt={entry.name}
+                      />
+                    </Avatar>
+                    <Text size="xs" bold className="text-white" numberOfLines={1}>
+                      {entry.me ? 'You' : entry.name.split(' ')[0]}
+                    </Text>
+                    <Text size="2xs" bold className="text-slate-400 mb-1">
+                      {entry.score} {entry.unitLabel}
+                    </Text>
+                    <Box
+                      className="w-full rounded-t-2xl items-center justify-center"
+                      style={{ height: pillarHeight, backgroundColor: pillarBg }}
+                    >
+                      <Text size="xl" bold className="text-white">
+                        {entry.rank}
+                      </Text>
+                    </Box>
+                  </VStack>
+                );
+              })}
+            </HStack>
+          ) : (
+            <VStack space="sm" className="items-center pb-5">
+              <LeoMascot pose="cheer" size={76} />
+              <Text size="xs" className="text-slate-300 text-center">
+                Finish one lesson to join this week’s podium!
+              </Text>
+            </VStack>
+          )}
+        </VStack>
+      </Card>
 
-      {/* Unified Standings Card */}
-      <View style={styles.section}>
-        <View style={styles.sectionHead}>
-          <Text style={DS.type.sectionTitle}>Standings</Text>
+      {/* Standings List Card */}
+      <VStack space="sm">
+        <HStack className="items-center justify-between">
+          <Heading size="md" className="text-foreground">
+            Standings
+          </Heading>
           {boardMode === 'league' && league?.promote ? (
-            <Text style={DS.type.caption}>Top {league.promote} promote</Text>
+            <Badge variant="secondary" className="rounded-full px-2.5">
+              <BadgeText className="text-muted-foreground normal-case font-semibold">
+                Top {league.promote} promote
+              </BadgeText>
+            </Badge>
           ) : null}
-        </View>
+        </HStack>
 
         {rows.length > 0 ? (
-          <View style={[DS.card, styles.listCard]}>
+          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
             {rows.map((entry, idx) => {
               const avatarUri = api.assetUrl(entry.avatarUrl);
               return (
-                <View
-                  key={entry.id}
-                  style={[
-                    styles.standingRow,
-                    idx > 0 ? styles.rowDivider : null,
-                    entry.me ? styles.myRowHighlight : null,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.rankNum,
-                      entry.rank <= 3 ? { color: DS.colors.amberDeep } : null,
-                    ]}
+                <Box key={entry.id}>
+                  {idx > 0 ? <Divider className="bg-border" /> : null}
+                  <HStack
+                    className={`items-center px-3.5 py-3 ${
+                      entry.me ? 'bg-accent/70' : ''
+                    }`}
+                    space="sm"
                   >
-                    {entry.rank}
-                  </Text>
-
-                  <View style={styles.rowAvatar}>
-                    <Image
-                      source={avatarUri ? { uri: avatarUri } : LEO_ART.idle}
-                      style={styles.rowAvatarImg}
-                    />
-                  </View>
-
-                  <View style={{ flex: 1, minWidth: 0, gap: 1 }}>
                     <Text
-                      style={[
-                        DS.type.cardTitle,
-                        entry.me ? { color: DS.colors.brand } : null,
-                      ]}
-                      numberOfLines={1}
+                      size="sm"
+                      bold
+                      className={`w-6 text-center ${
+                        entry.rank <= 3 ? 'text-amber-600' : 'text-muted-foreground'
+                      }`}
                     >
-                      {entry.name}
-                      {entry.me ? ' (You)' : ''}
+                      {entry.rank}
                     </Text>
-                    {entry.streak > 0 ? (
-                      <View style={styles.streakInline}>
-                        <Flame size={12} color={DS.colors.orange} fill={DS.colors.orange} />
-                        <Text style={DS.type.caption}>{entry.streak}d streak</Text>
-                      </View>
-                    ) : null}
-                  </View>
 
-                  <View style={styles.scoreRight}>
-                    {boardMode === 'league' ? (
-                      <Zap size={14} color={DS.colors.brand} fill={DS.colors.brand} />
-                    ) : (
-                      <Coins size={14} color={DS.colors.amberDeep} />
-                    )}
-                    <Text style={styles.scoreVal}>{entry.score}</Text>
-                  </View>
-                </View>
+                    <Avatar className="h-9 w-9 bg-secondary">
+                      {avatarUri ? (
+                        <AvatarFallbackText className="text-foreground font-bold text-xs">
+                          {entry.name}
+                        </AvatarFallbackText>
+                      ) : null}
+                      <AvatarImage
+                        source={avatarUri ? { uri: avatarUri } : LEO_ART.idle}
+                        alt={entry.name}
+                      />
+                    </Avatar>
+
+                    <VStack className="flex-1 min-w-0">
+                      <HStack className="items-center" space="xs">
+                        <Text
+                          size="sm"
+                          bold
+                          className={`flex-shrink ${
+                            entry.me ? 'text-primary' : 'text-foreground'
+                          }`}
+                          numberOfLines={1}
+                        >
+                          {entry.name}
+                        </Text>
+                        {entry.me ? (
+                          <Badge className="rounded-full bg-primary/15 border-0 px-2 py-0.5">
+                            <BadgeText className="text-primary text-[10px] font-bold normal-case">
+                              You
+                            </BadgeText>
+                          </Badge>
+                        ) : null}
+                      </HStack>
+                      {entry.streak > 0 ? (
+                        <HStack className="items-center" space="xs">
+                          <Flame size={11} color="#EA580C" fill="#EA580C" />
+                          <Text size="2xs" className="text-muted-foreground">
+                            {entry.streak}d streak
+                          </Text>
+                        </HStack>
+                      ) : null}
+                    </VStack>
+
+                    <HStack className="items-center" space="xs">
+                      {boardMode === 'league' ? (
+                        <Zap size={14} color="#1055F8" fill="#1055F8" />
+                      ) : (
+                        <Coins size={14} color="#D97706" />
+                      )}
+                      <Text size="sm" bold className="text-foreground">
+                        {entry.score}
+                      </Text>
+                    </HStack>
+                  </HStack>
+                </Box>
               );
             })}
-          </View>
+          </Card>
         ) : (
-          <View style={[DS.card, styles.emptyCard]}>
-            <Text style={DS.type.caption}>No leaderboard entries yet.</Text>
-          </View>
+          <Card className="bg-card border border-border rounded-2xl p-5 items-center">
+            <Text size="xs" className="text-muted-foreground">
+              No leaderboard entries yet.
+            </Text>
+          </Card>
         )}
-      </View>
+      </VStack>
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  segmentTrack: {
-    flexDirection: 'row',
-    backgroundColor: '#E8EEF8',
-    padding: 4,
-    borderRadius: 12,
-    gap: 4,
-  },
-  segmentBtn: {
-    flex: 1,
-    height: 36,
-    borderRadius: 9,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  segmentActive: {
-    backgroundColor: DS.colors.surface,
-    borderWidth: 1,
-    borderColor: DS.colors.border,
-  },
-  segmentLabel: {
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: DS.colors.inkMuted,
-  },
-  segmentLabelActive: {
-    color: DS.colors.ink,
-  },
-  scopeRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  scopePill: {
-    paddingHorizontal: 13,
-    paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: DS.colors.surface,
-    borderWidth: 1,
-    borderColor: DS.colors.border,
-  },
-  scopePillActive: {
-    backgroundColor: DS.colors.brandSoft,
-    borderColor: DS.colors.brandBorder,
-  },
-  scopeText: {
-    fontSize: 12.5,
-    fontWeight: '700',
-    color: DS.colors.inkSecondary,
-  },
-  scopeTextActive: {
-    color: DS.colors.brand,
-  },
-  podiumCard: {
-    backgroundColor: DS.colors.navy,
-    borderRadius: 22,
-    paddingTop: 16,
-    paddingHorizontal: 16,
-    overflow: 'hidden',
-    gap: 14,
-  },
-  podiumHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  divisionPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    paddingHorizontal: 11,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  divisionText: {
-    color: '#FFFFFF',
-    fontSize: 12.5,
-    fontWeight: '700',
-  },
-  rankSummary: {
-    color: '#CBD5E1',
-    fontSize: 12.5,
-    fontWeight: '700',
-    fontVariant: ['tabular-nums'],
-  },
-  podiumRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 10,
-    paddingTop: 4,
-  },
-  podiumCol: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 4,
-  },
-  crownSlot: {
-    height: 20,
-    justifyContent: 'center',
-  },
-  podiumAvatarRing: {
-    borderWidth: 2.5,
-    borderRadius: 999,
-    padding: 2,
-    backgroundColor: DS.colors.navyCard,
-  },
-  avatarLg: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-  },
-  avatarSm: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-  },
-  podiumName: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '700',
-    marginTop: 2,
-  },
-  podiumScore: {
-    color: '#94A3B8',
-    fontSize: 11.5,
-    fontWeight: '700',
-    fontVariant: ['tabular-nums'],
-    marginBottom: 4,
-  },
-  pillar: {
-    width: '100%',
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pillarNum: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    fontWeight: '900',
-  },
-  emptyPodium: {
-    alignItems: 'center',
-    gap: 8,
-    paddingBottom: 18,
-  },
-  emptyPodiumText: {
-    color: '#CBD5E1',
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  section: {
-    gap: 10,
-  },
-  sectionHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  listCard: {
-    overflow: 'hidden',
-  },
-  standingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  rowDivider: {
-    borderTopWidth: 1,
-    borderTopColor: DS.colors.border,
-  },
-  myRowHighlight: {
-    backgroundColor: DS.colors.brandSoft,
-  },
-  rankNum: {
-    width: 22,
-    textAlign: 'center',
-    fontSize: 14,
-    fontWeight: '800',
-    color: DS.colors.inkMuted,
-    fontVariant: ['tabular-nums'],
-  },
-  rowAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: DS.colors.surfaceSubtle,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowAvatarImg: {
-    width: 38,
-    height: 38,
-  },
-  streakInline: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-  },
-  scoreRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  scoreVal: {
-    fontSize: 14.5,
-    fontWeight: '800',
-    color: DS.colors.ink,
-    fontVariant: ['tabular-nums'],
-  },
-  emptyCard: {
-    padding: 20,
-    alignItems: 'center',
-  },
-});

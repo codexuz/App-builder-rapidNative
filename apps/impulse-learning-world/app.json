@@ -36,7 +36,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#F5F8FF"
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "extra": {
       "studentBrand": {

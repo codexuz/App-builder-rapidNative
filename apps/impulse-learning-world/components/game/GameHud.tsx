@@ -1,8 +1,34 @@
 import React from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Coins, Flame, Zap } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import {
+  BookOpen,
+  Coins,
+  EllipsisVertical,
+  Flame,
+  LogOut,
+  RefreshCw,
+  Store,
+  User,
+  Zap,
+} from 'lucide-react-native';
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallbackText,
+  AvatarImage,
+} from '@/components/gluestack/avatar';
+import { Badge, BadgeText } from '@/components/gluestack/badge';
+import { HStack } from '@/components/gluestack/hstack';
+import {
+  Menu,
+  MenuItem,
+  MenuItemLabel,
+  MenuSeparator,
+} from '@/components/gluestack/menu';
+import { Pressable } from '@/components/gluestack/pressable';
+import { Text } from '@/components/gluestack/text';
+import { VStack } from '@/components/gluestack/vstack';
 import { LEO_ART } from '@/components/mascot/LeoMascot';
-import { DS } from '@/constants/DesignSystem';
 import { api } from '@/lib/api';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
@@ -11,131 +37,172 @@ export interface GameHudProps {
 }
 
 /**
- * Clean, balanced top app header matching Impulse production discipline:
- * - Left: 40x40 circular avatar + Name & Level subtitle (zero pill-inside-pill clutter)
- * - Right: Unified equal-height Streak, Coins & XP counters with consistent Lucide iconography
+ * Gluestack-powered top header bar:
+ * - Left: Gluestack Avatar (with fallback text, image, & active badge) + Name & Level
+ * - Right: Compact Gluestack Badges for Streak / Coins / XP + Gluestack Menu dropdown
  */
 export function GameHud({ onAvatarPress }: GameHudProps) {
-  const { me, gamification, today } = useKidsApp();
+  const router = useRouter();
+  const { me, gamification, today, refreshAll, signOut } = useKidsApp();
 
   const firstName = me?.firstName || 'Student';
+  const fullName = me ? `${me.firstName} ${me.lastName ?? ''}`.trim() : 'Student';
   const levelNum = today?.level.level ?? 1;
   const streak = gamification?.streak?.currentStreak ?? 0;
+  const activeToday = gamification?.streak?.activeToday ?? false;
   const coins = gamification?.wallet?.cachedCoinBalance ?? today?.coins ?? 0;
   const xp = gamification?.wallet?.cachedXp ?? today?.level.xp ?? 0;
   const avatarUri = api.assetUrl(me?.avatarUrl);
 
   return (
-    <View style={styles.bar}>
+    <HStack className="items-center justify-between py-1" space="sm">
       <Pressable
-        onPress={onAvatarPress}
+        onPress={onAvatarPress ?? (() => router.push('/(tabs)/profile'))}
         accessibilityRole="button"
         accessibilityLabel="Open profile"
-        style={styles.identity}
+        className="flex-row items-center gap-2.5 flex-shrink min-w-0"
       >
-        <View style={styles.avatarRing}>
-          <Image
+        <Avatar className="h-10 w-10 bg-accent border border-primary/25">
+          {avatarUri ? (
+            <AvatarFallbackText className="text-primary font-bold">
+              {fullName}
+            </AvatarFallbackText>
+          ) : null}
+          <AvatarImage
             source={avatarUri ? { uri: avatarUri } : LEO_ART.wave}
-            style={styles.avatar}
-            resizeMode="cover"
+            alt={fullName}
           />
-        </View>
-        <View style={styles.nameCol}>
-          <Text style={styles.name} numberOfLines={1}>
+          {activeToday ? (
+            <AvatarBadge className="bg-emerald-500 border-white" />
+          ) : null}
+        </Avatar>
+
+        <VStack className="flex-shrink min-w-0">
+          <Text
+            size="md"
+            bold
+            className="text-foreground leading-tight"
+            numberOfLines={1}
+          >
             {firstName}
           </Text>
-          <Text style={styles.sub} numberOfLines={1}>
+          <Text size="xs" className="text-muted-foreground font-semibold">
             Level {levelNum}
           </Text>
-        </View>
+        </VStack>
       </Pressable>
 
-      <View style={styles.metrics}>
-        <View style={styles.metricChip}>
-          <Flame size={15} color={DS.colors.orange} fill={DS.colors.orange} />
-          <Text style={[styles.metricText, { color: DS.colors.orangeInk }]}>{streak}</Text>
-        </View>
+      <HStack className="items-center" space="xs">
+        <Badge
+          variant="outline"
+          className="h-8 px-2.5 rounded-full bg-card border-border gap-1"
+        >
+          <Flame size={14} color="#EA580C" fill="#EA580C" />
+          <BadgeText className="text-orange-700 font-extrabold normal-case">
+            {streak}
+          </BadgeText>
+        </Badge>
 
-        <View style={styles.metricChip}>
-          <Coins size={15} color={DS.colors.amberDeep} />
-          <Text style={[styles.metricText, { color: DS.colors.amberInk }]}>{coins}</Text>
-        </View>
+        <Badge
+          variant="outline"
+          className="h-8 px-2.5 rounded-full bg-card border-border gap-1"
+        >
+          <Coins size={14} color="#D97706" />
+          <BadgeText className="text-amber-700 font-extrabold normal-case">
+            {coins}
+          </BadgeText>
+        </Badge>
 
-        <View style={styles.metricChip}>
-          <Zap size={15} color={DS.colors.brand} fill={DS.colors.brand} />
-          <Text style={[styles.metricText, { color: DS.colors.brand }]}>{xp}</Text>
-        </View>
-      </View>
-    </View>
+        <Badge
+          variant="outline"
+          className="h-8 px-2.5 rounded-full bg-card border-border gap-1"
+        >
+          <Zap size={14} color="#1055F8" fill="#1055F8" />
+          <BadgeText className="text-primary font-extrabold normal-case">
+            {xp}
+          </BadgeText>
+        </Badge>
+
+        <Menu
+          placement="bottom right"
+          offset={6}
+          trigger={({ ...triggerProps }) => (
+            <Pressable
+              {...triggerProps}
+              accessibilityRole="button"
+              accessibilityLabel="Open quick menu"
+              className="h-8 w-8 rounded-full bg-card border border-border items-center justify-center active:bg-accent"
+            >
+              <EllipsisVertical size={16} color="#475569" />
+            </Pressable>
+          )}
+        >
+          <MenuItem
+            key="words"
+            textValue="Word Cards"
+            onPress={() => router.push('/words' as never)}
+            className="gap-2.5 py-2.5"
+          >
+            <BookOpen size={15} color="#1055F8" />
+            <MenuItemLabel className="text-sm font-semibold text-foreground">
+              Word Cards
+            </MenuItemLabel>
+          </MenuItem>
+
+          <MenuItem
+            key="shop"
+            textValue="Coin Shop"
+            onPress={() => router.push('/shop' as never)}
+            className="gap-2.5 py-2.5"
+          >
+            <Store size={15} color="#D97706" />
+            <MenuItemLabel className="text-sm font-semibold text-foreground">
+              Coin Shop
+            </MenuItemLabel>
+          </MenuItem>
+
+          <MenuItem
+            key="profile"
+            textValue="My Profile"
+            onPress={() => router.push('/(tabs)/profile')}
+            className="gap-2.5 py-2.5"
+          >
+            <User size={15} color="#475569" />
+            <MenuItemLabel className="text-sm font-semibold text-foreground">
+              My Profile
+            </MenuItemLabel>
+          </MenuItem>
+
+          <MenuItem
+            key="refresh"
+            textValue="Refresh Data"
+            onPress={() => void refreshAll()}
+            className="gap-2.5 py-2.5"
+          >
+            <RefreshCw size={15} color="#475569" />
+            <MenuItemLabel className="text-sm font-semibold text-foreground">
+              Refresh Data
+            </MenuItemLabel>
+          </MenuItem>
+
+          <MenuSeparator />
+
+          <MenuItem
+            key="signout"
+            textValue="Sign Out"
+            onPress={async () => {
+              await signOut();
+              router.replace('/auth');
+            }}
+            className="gap-2.5 py-2.5"
+          >
+            <LogOut size={15} color="#DC2626" />
+            <MenuItemLabel className="text-sm font-semibold text-destructive">
+              Sign Out
+            </MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </HStack>
+    </HStack>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 10,
-    paddingVertical: 4,
-  },
-  identity: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    flexShrink: 1,
-    minWidth: 0,
-  },
-  avatarRing: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: DS.colors.brandSoft,
-    borderWidth: 1.5,
-    borderColor: DS.colors.brandBorder,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatar: {
-    width: 38,
-    height: 38,
-  },
-  nameCol: {
-    flexShrink: 1,
-    minWidth: 0,
-  },
-  name: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: '800',
-    color: DS.colors.ink,
-    letterSpacing: -0.3,
-  },
-  sub: {
-    fontSize: 12,
-    lineHeight: 15,
-    fontWeight: '600',
-    color: DS.colors.inkMuted,
-  },
-  metrics: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  metricChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    height: 32,
-    paddingHorizontal: 9,
-    borderRadius: 999,
-    backgroundColor: DS.colors.surface,
-    borderWidth: 1,
-    borderColor: DS.colors.border,
-  },
-  metricText: {
-    fontSize: 12.5,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
-  },
-});

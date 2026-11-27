@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   Award,
+  Check,
   CheckCircle2,
+  ChevronRight,
   Coins,
   Flame,
   Globe,
@@ -11,22 +12,69 @@ import {
   LogOut,
   RefreshCw,
   Snowflake,
+  Users,
   Volume2,
   VolumeX,
 } from 'lucide-react-native';
-import { GameButton } from '@/components/game';
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+  ActionsheetItem,
+  ActionsheetItemText,
+} from '@/components/gluestack/actionsheet';
+import {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from '@/components/gluestack/alert-dialog';
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallbackText,
+  AvatarImage,
+} from '@/components/gluestack/avatar';
+import { Badge, BadgeText } from '@/components/gluestack/badge';
+import { Box } from '@/components/gluestack/box';
+import { Button, ButtonIcon, ButtonText } from '@/components/gluestack/button';
+import { Card } from '@/components/gluestack/card';
+import { Center } from '@/components/gluestack/center';
+import { Divider } from '@/components/gluestack/divider';
+import { Heading } from '@/components/gluestack/heading';
+import { HStack } from '@/components/gluestack/hstack';
+import { Pressable } from '@/components/gluestack/pressable';
+import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
+import { Switch } from '@/components/gluestack/switch';
+import { Text } from '@/components/gluestack/text';
+import {
+  Toast,
+  ToastDescription,
+  ToastTitle,
+  useToast,
+} from '@/components/gluestack/toast';
+import { VStack } from '@/components/gluestack/vstack';
 import { LEO_ART } from '@/components/mascot/LeoMascot';
 import { Screen } from '@/components/ui';
-import { DS } from '@/constants/DesignSystem';
 import { api } from '@/lib/api';
 import type { AppLocale } from '@/lib/api/types';
 import { AppConfig } from '@/lib/config';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
 const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const LOCALE_LABELS: Record<AppLocale, string> = {
+  en: 'English',
+  uz: 'O‘zbekcha',
+  ru: 'Русский',
+};
 
 export default function KidsProfileScreen() {
   const router = useRouter();
+  const toast = useToast();
   const {
     center,
     me,
@@ -46,7 +94,9 @@ export default function KidsProfileScreen() {
     signOut,
   } = useKidsApp();
 
-  const [notice, setNotice] = useState<string | null>(null);
+  const [langSheetOpen, setLangSheetOpen] = useState(false);
+  const [childSheetOpen, setChildSheetOpen] = useState(false);
+  const [signOutDialogOpen, setSignOutDialogOpen] = useState(false);
 
   const fullName = me ? `${me.firstName} ${me.lastName ?? ''}`.trim() : 'Student';
   const avatarUri = api.assetUrl(me?.avatarUrl);
@@ -62,572 +112,495 @@ export default function KidsProfileScreen() {
   const achievements = gamification?.achievements ?? [];
   const transactions = (gamification?.transactions ?? []).slice(0, 5);
 
+  const showToast = (title: string, description: string, action: 'success' | 'error' = 'success') => {
+    toast.show({
+      placement: 'top',
+      duration: 2800,
+      render: ({ id }) => (
+        <Toast nativeID={`profile-toast-${id}`} action={action} variant="solid" className="rounded-xl px-4 py-3">
+          <ToastTitle className="font-bold">{title}</ToastTitle>
+          <ToastDescription>{description}</ToastDescription>
+        </Toast>
+      ),
+    });
+  };
+
   const handleBuyFreeze = async () => {
     const res = await buyStreakFreeze();
-    setNotice(res.message);
+    showToast(res.ok ? 'Streak Freeze Added' : 'Streak Freeze', res.message, res.ok ? 'success' : 'error');
   };
 
   return (
     <Screen hasTabBar refreshing={loading} onRefresh={() => void refreshAll()}>
-      <View style={styles.pageHeader}>
-        <Text style={DS.type.pageTitle}>Profile</Text>
-        <Pressable
+      {/* Header */}
+      <HStack className="items-center justify-between">
+        <Heading size="xl" className="text-foreground">
+          Profile
+        </Heading>
+        <Button
+          size="icon"
+          variant="outline"
+          className="h-9 w-9 rounded-full bg-card border-border"
           onPress={() => void refreshAll()}
-          hitSlop={8}
-          style={styles.refreshBtn}
           accessibilityLabel="Refresh live data"
         >
-          <RefreshCw size={17} color={DS.colors.inkSecondary} />
-        </Pressable>
-      </View>
+          <RefreshCw size={16} color="#475569" />
+        </Button>
+      </HStack>
 
       {/* Unified Student Summary Card */}
-      <View style={[DS.card, styles.heroCard]}>
-        <View style={styles.identityRow}>
-          <View style={styles.avatarRing}>
-            <Image
-              source={avatarUri ? { uri: avatarUri } : LEO_ART.wave}
-              style={styles.avatarImg}
-            />
-          </View>
-          <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
-            <View style={styles.nameLine}>
-              <Text style={styles.studentName} numberOfLines={1}>
-                {fullName}
-              </Text>
-              {gamification?.verified ? (
-                <CheckCircle2 size={17} color={DS.colors.brand} />
+      <Card className="bg-card border border-border rounded-2xl p-4">
+        <VStack space="md">
+          <HStack className="items-center" space="md">
+            <Avatar className="h-16 w-16 bg-accent border-2 border-primary/25">
+              {avatarUri ? (
+                <AvatarFallbackText className="text-primary font-bold text-lg">
+                  {fullName}
+                </AvatarFallbackText>
               ) : null}
-            </View>
-            <Text style={DS.type.caption} numberOfLines={1}>
-              {me?.phone ?? center?.name ?? AppConfig.appName}
-            </Text>
-          </View>
-        </View>
+              <AvatarImage
+                source={avatarUri ? { uri: avatarUri } : LEO_ART.wave}
+                alt={fullName}
+              />
+              <AvatarBadge className="bg-emerald-500 border-white" />
+            </Avatar>
 
-        <View style={styles.levelBlock}>
-          <View style={styles.levelTop}>
-            <Text style={styles.levelTitle}>Level {levelNum}</Text>
-            <Text style={styles.levelNumbers}>
-              {levelInto} / {levelSpan} XP
-            </Text>
-          </View>
-          <View style={styles.levelTrack}>
-            <View style={[styles.levelFill, { width: `${levelPct}%` }]} />
-          </View>
-        </View>
+            <VStack className="flex-1 min-w-0" space="xs">
+              <HStack className="items-center" space="xs">
+                <Heading size="md" className="text-foreground flex-shrink" numberOfLines={1}>
+                  {fullName}
+                </Heading>
+                {gamification?.verified ? (
+                  <CheckCircle2 size={16} color="#1055F8" />
+                ) : null}
+              </HStack>
+              <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
+                {me?.phone ?? center?.name ?? AppConfig.appName}
+              </Text>
+            </VStack>
+          </HStack>
 
-        <View style={styles.metricsStrip}>
-          <View style={styles.metricCell}>
-            <Text style={DS.type.metric}>{xp.toLocaleString()}</Text>
-            <Text style={DS.type.caption}>Total XP</Text>
-          </View>
-          <View style={styles.metricDivider} />
-          <View style={styles.metricCell}>
-            <Text style={DS.type.metric}>{coins.toLocaleString()}</Text>
-            <Text style={DS.type.caption}>Coins</Text>
-          </View>
-          <View style={styles.metricDivider} />
-          <View style={styles.metricCell}>
-            <Text style={DS.type.metric}>{freezes}</Text>
-            <Text style={DS.type.caption}>Freezes</Text>
-          </View>
-        </View>
-      </View>
+          <VStack space="xs">
+            <HStack className="items-center justify-between">
+              <Text size="xs" bold className="text-foreground">
+                Level {levelNum}
+              </Text>
+              <Text size="xs" bold className="text-primary">
+                {levelInto} / {levelSpan} XP
+              </Text>
+            </HStack>
+            <Progress value={levelPct} className="h-2 bg-secondary rounded-full">
+              <ProgressFilledTrack className="bg-primary rounded-full" />
+            </Progress>
+          </VStack>
 
-      {notice ? (
-        <View style={[DS.card, styles.noticeCard]}>
-          <Text style={DS.type.body}>{notice}</Text>
-        </View>
-      ) : null}
+          <Divider className="bg-border" />
 
-      {/* Multi-Child Parent Switcher */}
-      {studentIds.length > 1 ? (
-        <View style={styles.section}>
-          <Text style={DS.type.sectionTitle}>Switch Student</Text>
-          <View style={styles.chipRow}>
-            {studentIds.map((sid, idx) => {
-              const active = sid === studentId;
-              return (
-                <Pressable
-                  key={sid}
-                  onPress={() => void switchStudent(sid)}
-                  style={[styles.choicePill, active ? styles.choicePillActive : null]}
-                >
-                  <Text style={[styles.choiceText, active ? styles.choiceTextActive : null]}>
-                    Child {idx + 1}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
-      ) : null}
+          <HStack className="items-center">
+            <VStack className="flex-1 items-center">
+              <Text size="lg" bold className="text-foreground">
+                {xp.toLocaleString()}
+              </Text>
+              <Text size="xs" className="text-muted-foreground">
+                Total XP
+              </Text>
+            </VStack>
+            <Divider orientation="vertical" className="h-7 bg-border" />
+            <VStack className="flex-1 items-center">
+              <Text size="lg" bold className="text-foreground">
+                {coins.toLocaleString()}
+              </Text>
+              <Text size="xs" className="text-muted-foreground">
+                Coins
+              </Text>
+            </VStack>
+            <Divider orientation="vertical" className="h-7 bg-border" />
+            <VStack className="flex-1 items-center">
+              <Text size="lg" bold className="text-foreground">
+                {freezes}
+              </Text>
+              <Text size="xs" className="text-muted-foreground">
+                Freezes
+              </Text>
+            </VStack>
+          </HStack>
+        </VStack>
+      </Card>
 
       {/* Streak Card */}
-      <View style={styles.section}>
-        <Text style={DS.type.sectionTitle}>Daily Streak</Text>
-        <View style={[DS.card, styles.streakCard]}>
-          <View style={styles.streakHead}>
-            <View style={styles.flameIconBox}>
-              <Flame size={20} color={DS.colors.orange} fill={DS.colors.orange} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={DS.type.cardTitle}>{streak}-day streak</Text>
-              <Text style={DS.type.caption}>
-                {longestStreak > 0 ? `Longest streak: ${longestStreak} days` : 'Start learning today'}
-              </Text>
-            </View>
-          </View>
+      <VStack space="sm">
+        <Heading size="md" className="text-foreground">
+          Daily Streak
+        </Heading>
+        <Card className="bg-card border border-border rounded-2xl p-4">
+          <VStack space="md">
+            <HStack className="items-center" space="md">
+              <Center className="w-10 h-10 rounded-xl bg-orange-50">
+                <Flame size={20} color="#EA580C" fill="#EA580C" />
+              </Center>
+              <VStack className="flex-1">
+                <Text size="sm" bold className="text-foreground">
+                  {streak}-day streak
+                </Text>
+                <Text size="xs" className="text-muted-foreground">
+                  {longestStreak > 0
+                    ? `Longest streak: ${longestStreak} days`
+                    : 'Start learning today'}
+                </Text>
+              </VStack>
+            </HStack>
 
-          <View style={styles.weekRow}>
-            {WEEKDAYS.map((day, idx) => {
-              const done = idx < Math.min(7, streak);
-              return (
-                <View key={`${day}-${idx}`} style={styles.dayItem}>
-                  <View style={[styles.dayCircle, done ? styles.dayCircleDone : null]}>
-                    {done ? (
-                      <Flame size={15} color="#FFFFFF" fill="#FFFFFF" />
-                    ) : (
-                      <View style={styles.dayDot} />
-                    )}
-                  </View>
-                  <Text style={styles.dayLabel}>{day}</Text>
-                </View>
-              );
-            })}
-          </View>
+            <HStack className="justify-between">
+              {WEEKDAYS.map((day, idx) => {
+                const done = idx < Math.min(7, streak);
+                return (
+                  <VStack key={`${day}-${idx}`} className="flex-1 items-center" space="xs">
+                    <Center
+                      className={`w-8 h-8 rounded-full ${
+                        done ? 'bg-orange-500' : 'bg-secondary'
+                      }`}
+                    >
+                      {done ? (
+                        <Flame size={14} color="#FFFFFF" fill="#FFFFFF" />
+                      ) : (
+                        <Box className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                      )}
+                    </Center>
+                    <Text size="2xs" bold className="text-muted-foreground">
+                      {day}
+                    </Text>
+                  </VStack>
+                );
+              })}
+            </HStack>
 
-          {today?.freeze.enabled !== false ? (
-            <Pressable onPress={handleBuyFreeze} style={styles.freezeRow}>
-              <Snowflake size={17} color={DS.colors.brand} />
-              <Text style={styles.freezeText}>Buy Streak Freeze</Text>
-              <View style={styles.freezePrice}>
-                <Coins size={13} color={DS.colors.amberDeep} />
-                <Text style={styles.freezePriceText}>{today?.freeze.price ?? 100}</Text>
-              </View>
-            </Pressable>
-          ) : null}
-        </View>
-      </View>
+            {today?.freeze.enabled !== false ? (
+              <>
+                <Divider className="bg-border" />
+                <Pressable onPress={() => void handleBuyFreeze()}>
+                  <HStack className="items-center justify-between">
+                    <HStack className="items-center" space="sm">
+                      <Snowflake size={17} color="#1055F8" />
+                      <Text size="sm" bold className="text-foreground">
+                        Buy Streak Freeze
+                      </Text>
+                    </HStack>
+                    <Badge
+                      variant="outline"
+                      className="rounded-full bg-amber-50 border-amber-200 px-2.5 py-0.5 gap-1"
+                    >
+                      <Coins size={12} color="#D97706" />
+                      <BadgeText className="text-amber-700 font-extrabold normal-case">
+                        {today?.freeze.price ?? 100}
+                      </BadgeText>
+                    </Badge>
+                  </HStack>
+                </Pressable>
+              </>
+            ) : null}
+          </VStack>
+        </Card>
+      </VStack>
 
       {/* Active Enrollments */}
       {enrollments.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={DS.type.sectionTitle}>My Classes</Text>
-          <View style={[DS.card, styles.groupedCard]}>
+        <VStack space="sm">
+          <Heading size="md" className="text-foreground">
+            My Classes
+          </Heading>
+          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
             {enrollments.map((enr, idx) => (
-              <View
-                key={enr.id}
-                style={[styles.listRow, idx > 0 ? styles.rowDivider : null]}
-              >
-                <View style={[styles.rowIcon, { backgroundColor: DS.colors.brandSoft }]}>
-                  <GraduationCap size={18} color={DS.colors.brand} />
-                </View>
-                <View style={{ flex: 1, minWidth: 0 }}>
-                  <Text style={DS.type.cardTitle} numberOfLines={1}>
-                    {enr.course?.name ?? enr.level?.name ?? 'Impulse Class'}
-                  </Text>
-                  <Text style={DS.type.caption} numberOfLines={1}>
-                    {[enr.level?.name, enr.group?.name].filter(Boolean).join(' · ') || enr.status}
-                  </Text>
-                </View>
-                <View style={styles.statusPill}>
-                  <Text style={styles.statusText}>{enr.status}</Text>
-                </View>
-              </View>
+              <Box key={enr.id}>
+                {idx > 0 ? <Divider className="bg-border" /> : null}
+                <HStack className="items-center p-3.5" space="md">
+                  <Center className="w-10 h-10 rounded-xl bg-accent">
+                    <GraduationCap size={18} color="#1055F8" />
+                  </Center>
+                  <VStack className="flex-1 min-w-0">
+                    <Text size="sm" bold className="text-foreground" numberOfLines={1}>
+                      {enr.course?.name ?? enr.level?.name ?? 'Impulse Class'}
+                    </Text>
+                    <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
+                      {[enr.level?.name, enr.group?.name].filter(Boolean).join(' · ') ||
+                        enr.status}
+                    </Text>
+                  </VStack>
+                  <Badge className="rounded-full bg-emerald-50 border-0 px-2.5 py-0.5">
+                    <BadgeText className="text-emerald-700 text-[11px] font-bold">
+                      {enr.status}
+                    </BadgeText>
+                  </Badge>
+                </HStack>
+              </Box>
             ))}
-          </View>
-        </View>
+          </Card>
+        </VStack>
       ) : null}
 
       {/* Achievements */}
       {achievements.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={DS.type.sectionTitle}>Badges</Text>
-          <View style={[DS.card, styles.groupedCard]}>
+        <VStack space="sm">
+          <Heading size="md" className="text-foreground">
+            Badges
+          </Heading>
+          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
             {achievements.map((item, idx) => (
-              <View
-                key={item.id}
-                style={[styles.listRow, idx > 0 ? styles.rowDivider : null]}
-              >
-                <View style={[styles.rowIcon, { backgroundColor: DS.colors.amberSoft }]}>
-                  <Award size={18} color={DS.colors.amberDeep} />
-                </View>
-                <View style={{ flex: 1, minWidth: 0 }}>
-                  <Text style={DS.type.cardTitle} numberOfLines={1}>
-                    {item.achievement.name}
-                  </Text>
-                  {item.achievement.description ? (
-                    <Text style={DS.type.caption} numberOfLines={2}>
-                      {item.achievement.description}
+              <Box key={item.id}>
+                {idx > 0 ? <Divider className="bg-border" /> : null}
+                <HStack className="items-center p-3.5" space="md">
+                  <Center className="w-10 h-10 rounded-xl bg-amber-50">
+                    <Award size={18} color="#D97706" />
+                  </Center>
+                  <VStack className="flex-1 min-w-0">
+                    <Text size="sm" bold className="text-foreground" numberOfLines={1}>
+                      {item.achievement.name}
                     </Text>
-                  ) : null}
-                </View>
-              </View>
+                    {item.achievement.description ? (
+                      <Text size="xs" className="text-muted-foreground" numberOfLines={2}>
+                        {item.achievement.description}
+                      </Text>
+                    ) : null}
+                  </VStack>
+                </HStack>
+              </Box>
             ))}
-          </View>
-        </View>
+          </Card>
+        </VStack>
       ) : null}
 
       {/* Recent Coin Activity */}
       {transactions.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={DS.type.sectionTitle}>Recent Coins</Text>
-          <View style={[DS.card, styles.groupedCard]}>
+        <VStack space="sm">
+          <Heading size="md" className="text-foreground">
+            Recent Coins
+          </Heading>
+          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
             {transactions.map((tx, idx) => (
-              <View
-                key={tx.id}
-                style={[styles.listRow, idx > 0 ? styles.rowDivider : null]}
-              >
-                <View style={[styles.rowIcon, { backgroundColor: DS.colors.amberSoft }]}>
-                  <Coins size={17} color={DS.colors.amberDeep} />
-                </View>
-                <View style={{ flex: 1, minWidth: 0 }}>
-                  <Text style={DS.type.cardTitle} numberOfLines={1}>
-                    {tx.description || tx.type}
+              <Box key={tx.id}>
+                {idx > 0 ? <Divider className="bg-border" /> : null}
+                <HStack className="items-center p-3.5" space="md">
+                  <Center className="w-9 h-9 rounded-xl bg-amber-50">
+                    <Coins size={16} color="#D97706" />
+                  </Center>
+                  <VStack className="flex-1 min-w-0">
+                    <Text size="sm" bold className="text-foreground" numberOfLines={1}>
+                      {tx.description || tx.type}
+                    </Text>
+                    <Text size="xs" className="text-muted-foreground">
+                      {new Date(tx.createdAt).toLocaleDateString()}
+                    </Text>
+                  </VStack>
+                  <Text
+                    size="sm"
+                    bold
+                    className={tx.amount >= 0 ? 'text-emerald-700' : 'text-destructive'}
+                  >
+                    {tx.amount >= 0 ? `+${tx.amount}` : tx.amount}
                   </Text>
-                  <Text style={DS.type.caption}>
-                    {new Date(tx.createdAt).toLocaleDateString()}
-                  </Text>
-                </View>
-                <Text
-                  style={[
-                    styles.txAmount,
-                    { color: tx.amount >= 0 ? DS.colors.greenInk : DS.colors.redInk },
-                  ]}
-                >
-                  {tx.amount >= 0 ? `+${tx.amount}` : tx.amount}
-                </Text>
-              </View>
+                </HStack>
+              </Box>
             ))}
-          </View>
-        </View>
+          </Card>
+        </VStack>
       ) : null}
 
-      {/* Preferences */}
-      <View style={styles.section}>
-        <Text style={DS.type.sectionTitle}>Settings</Text>
-        <View style={[DS.card, styles.groupedCard]}>
-          <View style={styles.prefBlock}>
-            <View style={styles.prefTitleRow}>
-              <Globe size={17} color={DS.colors.inkSecondary} />
-              <Text style={DS.type.cardTitle}>Language</Text>
-            </View>
-            <View style={styles.chipRow}>
-              {(['en', 'uz', 'ru'] as AppLocale[]).map((code) => {
-                const active = locale === code;
-                return (
-                  <Pressable
-                    key={code}
-                    onPress={() => void setLocale(code)}
-                    style={[styles.choicePill, active ? styles.choicePillActive : null]}
-                  >
-                    <Text style={[styles.choiceText, active ? styles.choiceTextActive : null]}>
-                      {code === 'en' ? 'English' : code === 'uz' ? 'O‘zbekcha' : 'Русский'}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-
+      {/* Settings Card with Gluestack Switch & Bottom Sheet triggers */}
+      <VStack space="sm">
+        <Heading size="md" className="text-foreground">
+          Settings
+        </Heading>
+        <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
           <Pressable
-            onPress={() => setSoundEnabled(!soundEnabled)}
-            style={[styles.listRow, styles.rowDivider]}
+            onPress={() => setLangSheetOpen(true)}
+            className="p-3.5 active:bg-accent/50"
           >
-            {soundEnabled ? (
-              <Volume2 size={18} color={DS.colors.brand} />
-            ) : (
-              <VolumeX size={18} color={DS.colors.inkMuted} />
-            )}
-            <Text style={[DS.type.cardTitle, { flex: 1 }]}>Voice & Sound Effects</Text>
-            <Text style={[styles.soundState, { color: soundEnabled ? DS.colors.greenInk : DS.colors.inkMuted }]}>
-              {soundEnabled ? 'On' : 'Off'}
-            </Text>
+            <HStack className="items-center justify-between" space="md">
+              <HStack className="items-center" space="sm">
+                <Globe size={18} color="#475569" />
+                <Text size="sm" bold className="text-foreground">
+                  Language
+                </Text>
+              </HStack>
+              <HStack className="items-center" space="xs">
+                <Text size="sm" className="text-muted-foreground font-medium">
+                  {LOCALE_LABELS[locale]}
+                </Text>
+                <ChevronRight size={16} color="#94A3B8" />
+              </HStack>
+            </HStack>
           </Pressable>
-        </View>
-      </View>
 
-      <GameButton
-        label="Sign Out"
-        color={DS.colors.red}
-        depthColor={DS.colors.redDeep}
-        icon={<LogOut size={16} color="#FFFFFF" />}
-        onPress={async () => {
-          await signOut();
-          router.replace('/auth');
-        }}
-      />
+          {studentIds.length > 1 ? (
+            <>
+              <Divider className="bg-border" />
+              <Pressable
+                onPress={() => setChildSheetOpen(true)}
+                className="p-3.5 active:bg-accent/50"
+              >
+                <HStack className="items-center justify-between" space="md">
+                  <HStack className="items-center" space="sm">
+                    <Users size={18} color="#475569" />
+                    <Text size="sm" bold className="text-foreground">
+                      Switch Student
+                    </Text>
+                  </HStack>
+                  <HStack className="items-center" space="xs">
+                    <Text size="sm" className="text-muted-foreground font-medium">
+                      Child {Math.max(1, studentIds.indexOf(studentId ?? '') + 1)}
+                    </Text>
+                    <ChevronRight size={16} color="#94A3B8" />
+                  </HStack>
+                </HStack>
+              </Pressable>
+            </>
+          ) : null}
 
-      <Text style={styles.versionFoot}>
+          <Divider className="bg-border" />
+
+          <HStack className="items-center justify-between px-3.5 py-2.5" space="md">
+            <HStack className="items-center" space="sm">
+              {soundEnabled ? (
+                <Volume2 size={18} color="#1055F8" />
+              ) : (
+                <VolumeX size={18} color="#64748B" />
+              )}
+              <Text size="sm" bold className="text-foreground">
+                Voice & Sound Effects
+              </Text>
+            </HStack>
+            <Switch
+              value={soundEnabled}
+              onValueChange={(val) => setSoundEnabled(val)}
+            />
+          </HStack>
+        </Card>
+      </VStack>
+
+      <Button
+        variant="outline"
+        size="lg"
+        className="h-12 rounded-xl border-red-200 bg-card w-full"
+        onPress={() => setSignOutDialogOpen(true)}
+      >
+        <ButtonIcon as={LogOut} className="text-destructive" />
+        <ButtonText className="text-destructive font-bold">Sign Out</ButtonText>
+      </Button>
+
+      <Text size="xs" className="text-muted-foreground text-center mb-1">
         {AppConfig.appName} · {AppConfig.applicationId}
       </Text>
+
+      {/* Language Picker Actionsheet (Bottom Sheet) */}
+      <Actionsheet isOpen={langSheetOpen} onClose={() => setLangSheetOpen(false)}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent className="bg-card px-4 pb-6 pt-2 rounded-t-3xl">
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator className="bg-border w-12" />
+          </ActionsheetDragIndicatorWrapper>
+          <Heading size="md" className="text-foreground self-start px-2 py-2">
+            Choose Language
+          </Heading>
+          {(['en', 'uz', 'ru'] as AppLocale[]).map((code) => {
+            const active = locale === code;
+            return (
+              <ActionsheetItem
+                key={code}
+                className="justify-between rounded-xl px-3 py-3"
+                onPress={() => {
+                  void setLocale(code);
+                  setLangSheetOpen(false);
+                }}
+              >
+                <ActionsheetItemText
+                  className={`text-base ${
+                    active ? 'text-primary font-bold' : 'text-foreground font-medium'
+                  }`}
+                >
+                  {LOCALE_LABELS[code]}
+                </ActionsheetItemText>
+                {active ? <Check size={18} color="#1055F8" /> : null}
+              </ActionsheetItem>
+            );
+          })}
+        </ActionsheetContent>
+      </Actionsheet>
+
+      {/* Multi-Child Switcher Actionsheet (Bottom Sheet) */}
+      <Actionsheet isOpen={childSheetOpen} onClose={() => setChildSheetOpen(false)}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent className="bg-card px-4 pb-6 pt-2 rounded-t-3xl">
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator className="bg-border w-12" />
+          </ActionsheetDragIndicatorWrapper>
+          <Heading size="md" className="text-foreground self-start px-2 py-2">
+            Switch Student
+          </Heading>
+          {studentIds.map((sid, idx) => {
+            const active = sid === studentId;
+            return (
+              <ActionsheetItem
+                key={sid}
+                className="justify-between rounded-xl px-3 py-3"
+                onPress={() => {
+                  void switchStudent(sid);
+                  setChildSheetOpen(false);
+                }}
+              >
+                <ActionsheetItemText
+                  className={`text-base ${
+                    active ? 'text-primary font-bold' : 'text-foreground font-medium'
+                  }`}
+                >
+                  Child {idx + 1}
+                </ActionsheetItemText>
+                {active ? <Check size={18} color="#1055F8" /> : null}
+              </ActionsheetItem>
+            );
+          })}
+        </ActionsheetContent>
+      </Actionsheet>
+
+      {/* Sign Out Confirmation AlertDialog */}
+      <AlertDialog
+        isOpen={signOutDialogOpen}
+        onClose={() => setSignOutDialogOpen(false)}
+      >
+        <AlertDialogBackdrop />
+        <AlertDialogContent className="bg-card rounded-2xl p-5 border border-border">
+          <AlertDialogHeader>
+            <Heading size="md" className="text-foreground">
+              Sign out of Impulse Kids?
+            </Heading>
+          </AlertDialogHeader>
+          <AlertDialogBody className="mt-2 mb-4">
+            <Text size="sm" className="text-muted-foreground">
+              Your progress is saved safely on Impulse servers. You can sign back in anytime with your Student ID or phone.
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter className="gap-2.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl border-border flex-1 h-10"
+              onPress={() => setSignOutDialogOpen(false)}
+            >
+              <ButtonText className="text-foreground font-semibold">Cancel</ButtonText>
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="rounded-xl flex-1 h-10"
+              onPress={async () => {
+                setSignOutDialogOpen(false);
+                await signOut();
+                router.replace('/auth');
+              }}
+            >
+              <ButtonText className="text-white font-bold">Sign Out</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  pageHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  refreshBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: DS.colors.surface,
-    borderWidth: 1,
-    borderColor: DS.colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heroCard: {
-    padding: 18,
-    gap: 16,
-  },
-  identityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  avatarRing: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: DS.colors.brandSoft,
-    borderWidth: 2,
-    borderColor: DS.colors.brandBorder,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarImg: {
-    width: 58,
-    height: 58,
-  },
-  nameLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  studentName: {
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: '800',
-    color: DS.colors.ink,
-    letterSpacing: -0.3,
-  },
-  levelBlock: {
-    gap: 6,
-  },
-  levelTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  levelTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: DS.colors.ink,
-  },
-  levelNumbers: {
-    fontSize: 12.5,
-    fontWeight: '700',
-    color: DS.colors.brand,
-    fontVariant: ['tabular-nums'],
-  },
-  levelTrack: {
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: DS.colors.surfaceSubtle,
-    overflow: 'hidden',
-  },
-  levelFill: {
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: DS.colors.brand,
-  },
-  metricsStrip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: DS.colors.border,
-  },
-  metricCell: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 2,
-  },
-  metricDivider: {
-    width: 1,
-    height: 28,
-    backgroundColor: DS.colors.border,
-  },
-  noticeCard: {
-    padding: 12,
-  },
-  section: {
-    gap: 10,
-  },
-  streakCard: {
-    padding: 16,
-    gap: 16,
-  },
-  streakHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  flameIconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: DS.colors.orangeSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  weekRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  dayItem: {
-    alignItems: 'center',
-    gap: 6,
-    flex: 1,
-  },
-  dayCircle: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: DS.colors.surfaceSubtle,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayCircleDone: {
-    backgroundColor: DS.colors.orange,
-  },
-  dayDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: DS.colors.borderStrong,
-  },
-  dayLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: DS.colors.inkMuted,
-  },
-  freezeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: DS.colors.border,
-  },
-  freezeText: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: '700',
-    color: DS.colors.ink,
-  },
-  freezePrice: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-    backgroundColor: DS.colors.amberSoft,
-  },
-  freezePriceText: {
-    fontSize: 12.5,
-    fontWeight: '800',
-    color: DS.colors.amberInk,
-    fontVariant: ['tabular-nums'],
-  },
-  groupedCard: {
-    overflow: 'hidden',
-  },
-  listRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
-    gap: 12,
-  },
-  rowDivider: {
-    borderTopWidth: 1,
-    borderTopColor: DS.colors.border,
-  },
-  rowIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statusPill: {
-    backgroundColor: DS.colors.greenSoft,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  statusText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: DS.colors.greenInk,
-  },
-  txAmount: {
-    fontSize: 14.5,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
-  },
-  prefBlock: {
-    padding: 14,
-    gap: 10,
-  },
-  prefTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  choicePill: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 10,
-    backgroundColor: DS.colors.surfaceSubtle,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  choicePillActive: {
-    backgroundColor: DS.colors.brandSoft,
-    borderColor: DS.colors.brandBorder,
-  },
-  choiceText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: DS.colors.inkSecondary,
-  },
-  choiceTextActive: {
-    color: DS.colors.brand,
-  },
-  soundState: {
-    fontSize: 13.5,
-    fontWeight: '700',
-  },
-  versionFoot: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: DS.colors.inkSubtle,
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-});

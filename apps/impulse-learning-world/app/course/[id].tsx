@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, Check, Coins, Lock, Play, Star } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { AnimatedPressable } from '@/components/ui';
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+} from '@/components/gluestack/actionsheet';
+import { Badge, BadgeText } from '@/components/gluestack/badge';
+import { Box } from '@/components/gluestack/box';
+import { Button, ButtonIcon, ButtonText } from '@/components/gluestack/button';
+import { Card } from '@/components/gluestack/card';
+import { Center } from '@/components/gluestack/center';
+import { Heading } from '@/components/gluestack/heading';
+import { HStack } from '@/components/gluestack/hstack';
+import { Pressable } from '@/components/gluestack/pressable';
+import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
+import { Skeleton } from '@/components/gluestack/skeleton';
+import { Text } from '@/components/gluestack/text';
+import { VStack } from '@/components/gluestack/vstack';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { DS } from '@/constants/DesignSystem';
 import type { Course, CourseLesson } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
@@ -18,7 +35,7 @@ const UNIT_GRADIENTS: Array<[string, string]> = [
   ['#D97706', '#F59E0B'],
 ];
 
-const NODE_OFFSETS = [0, -56, 0, 56];
+const NODE_OFFSETS = [0, -52, 0, 52];
 
 function lockCaption(lesson: CourseLesson): string {
   if (!lesson.lock) return 'Locked';
@@ -33,31 +50,27 @@ function lockCaption(lesson: CourseLesson): string {
 
 function PathConnector({ fromX, toX }: { fromX: number; toX: number }) {
   const width = 220;
-  const height = 38;
+  const height = 36;
   const x1 = width / 2 + fromX;
   const x2 = width / 2 + toX;
   const d = `M ${x1} 2 C ${x1} ${height * 0.55}, ${x2} ${height * 0.45}, ${x2} ${height - 2}`;
 
   return (
-    <View style={styles.connectorWrap} pointerEvents="none">
+    <Center className="h-9 my-0.5" pointerEvents="none">
       <Svg width={width} height={height}>
         <Path
           d={d}
           stroke="#CBD5E1"
-          strokeWidth={3}
+          strokeWidth={2.5}
           strokeDasharray="6 6"
           strokeLinecap="round"
           fill="none"
         />
       </Svg>
-    </View>
+    </Center>
   );
 }
 
-/**
- * Tactile Duolingo-style Stepping-Stone Learning Path:
- * Clean Unit Banners + centered S-curve 3D lesson nodes connected by smooth dotted SVG trails.
- */
 export default function CourseRoadmapScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
@@ -69,6 +82,7 @@ export default function CourseRoadmapScreen() {
   );
   const [loading, setLoading] = useState(!course);
   const [error, setError] = useState<string | null>(null);
+  const [lockedLesson, setLockedLesson] = useState<CourseLesson | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -96,45 +110,72 @@ export default function CourseRoadmapScreen() {
   const allLessons = course?.units.flatMap((u) => u.lessons) ?? [];
   const completedCount = allLessons.filter((l) => l.progress?.status === 'COMPLETED').length;
   const pct = allLessons.length > 0 ? Math.round((completedCount / allLessons.length) * 100) : 0;
+  const activeOpenLesson =
+    allLessons.find((l) => l.progress?.status !== 'COMPLETED' && l.open !== false && !l.lock) ??
+    null;
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.topBar}>
-        <Pressable onPress={() => router.back()} hitSlop={10} style={styles.backBtn}>
-          <ArrowLeft size={20} color={DS.colors.ink} />
-        </Pressable>
-        <View style={{ flex: 1, minWidth: 0 }}>
-          <Text style={DS.type.cardTitle} numberOfLines={1}>
+    <SafeAreaView className="flex-1 bg-background">
+      {/* Header */}
+      <HStack className="items-center px-4 py-2.5 bg-card" space="sm">
+        <Button
+          size="icon"
+          variant="secondary"
+          className="h-9 w-9 rounded-full"
+          onPress={() => router.back()}
+          accessibilityLabel="Go back"
+        >
+          <ArrowLeft size={18} color="#0F172A" />
+        </Button>
+
+        <VStack className="flex-1 min-w-0">
+          <Heading size="sm" className="text-foreground" numberOfLines={1}>
             {course?.title ?? 'Course Path'}
-          </Text>
-          <Text style={DS.type.caption}>
+          </Heading>
+          <Text size="xs" className="text-muted-foreground">
             {completedCount} of {allLessons.length} lessons · {pct}%
           </Text>
-        </View>
+        </VStack>
+
         {course?.lessonRewardCoins ? (
-          <View style={styles.rewardChip}>
-            <Coins size={14} color={DS.colors.amberDeep} />
-            <Text style={styles.rewardChipText}>+{course.lessonRewardCoins}</Text>
-          </View>
+          <Badge
+            variant="outline"
+            className="rounded-full bg-amber-50 border-amber-200 px-2.5 py-1 gap-1"
+          >
+            <Coins size={13} color="#D97706" />
+            <BadgeText className="text-amber-700 font-extrabold normal-case">
+              +{course.lessonRewardCoins}
+            </BadgeText>
+          </Badge>
         ) : null}
-      </View>
+      </HStack>
 
-      <View style={styles.topTrack}>
-        <View style={[styles.topFill, { width: `${pct}%` }]} />
-      </View>
+      <Progress value={pct} className="h-1 bg-border rounded-none">
+        <ProgressFilledTrack className="bg-primary rounded-none" />
+      </Progress>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ padding: 16, paddingBottom: 40, gap: 22 }}
+        showsVerticalScrollIndicator={false}
+      >
         {loading ? (
-          <View style={[DS.card, styles.stateCard]}>
-            <LeoMascot pose="think" size={80} />
-            <Text style={DS.type.cardTitle}>Loading lessons...</Text>
-          </View>
+          <Card className="bg-card border border-border rounded-2xl p-5">
+            <VStack space="md">
+              <Skeleton variant="rounded" className="h-20 w-full" />
+              <Skeleton variant="circular" className="h-16 w-16 self-center" />
+              <Skeleton variant="circular" className="h-16 w-16 self-center" />
+            </VStack>
+          </Card>
         ) : error ? (
-          <View style={[DS.card, styles.stateCard]}>
+          <Card className="bg-card border border-border rounded-2xl p-6 items-center gap-2">
             <LeoMascot pose="oops" size={80} />
-            <Text style={DS.type.cardTitle}>Could not load course</Text>
-            <Text style={[DS.type.caption, { textAlign: 'center' }]}>{error}</Text>
-          </View>
+            <Heading size="sm" className="text-foreground">
+              Could not load course
+            </Heading>
+            <Text size="xs" className="text-muted-foreground text-center">
+              {error}
+            </Text>
+          </Card>
         ) : null}
 
         {course?.units.map((unit, uIdx) => {
@@ -142,23 +183,33 @@ export default function CourseRoadmapScreen() {
           const unitDone = unit.lessons.filter((l) => l.progress?.status === 'COMPLETED').length;
 
           return (
-            <View key={unit.id} style={styles.unitBlock}>
-              <LinearGradient
-                colors={grad}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.unitBanner}
-              >
-                <View style={styles.unitTextCol}>
-                  <Text style={styles.unitMeta}>
-                    Unit {unit.position} · {unitDone}/{unit.lessons.length} done
-                  </Text>
-                  <Text style={styles.unitTitle}>{unit.title}</Text>
-                </View>
-                <LeoMascot pose={uIdx % 2 === 0 ? 'wave' : 'cheer'} size={62} />
-              </LinearGradient>
+            <VStack key={unit.id} space="lg">
+              <Box className="rounded-2xl overflow-hidden shadow-xs">
+                <LinearGradient
+                  colors={grad}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 14,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 12,
+                  }}
+                >
+                  <VStack className="flex-1" space="xs">
+                    <Text size="xs" bold className="text-white/85">
+                      Unit {unit.position} · {unitDone}/{unit.lessons.length} done
+                    </Text>
+                    <Heading size="md" className="text-white">
+                      {unit.title}
+                    </Heading>
+                  </VStack>
+                  <LeoMascot pose={uIdx % 2 === 0 ? 'wave' : 'cheer'} size={58} />
+                </LinearGradient>
+              </Box>
 
-              <View style={styles.pathCol}>
+              <VStack className="items-center py-1">
                 {unit.lessons.map((lesson, lIdx) => {
                   const done = lesson.progress?.status === 'COMPLETED';
                   const locked = lesson.open === false || Boolean(lesson.lock);
@@ -169,70 +220,72 @@ export default function CourseRoadmapScreen() {
                       ? NODE_OFFSETS[(lIdx + 1) % NODE_OFFSETS.length]
                       : null;
 
-                  const bg = done
-                    ? DS.colors.green
-                    : locked
-                      ? '#E2E8F0'
-                      : DS.colors.brand;
-                  const lip = done
-                    ? DS.colors.greenDeep
-                    : locked
-                      ? '#CBD5E1'
-                      : DS.colors.brandDeep;
-
                   return (
-                    <View key={lesson.id} style={styles.nodeWrapper}>
-                      <View style={[styles.nodeAnchor, { transform: [{ translateX: xOffset }] }]}>
+                    <VStack key={lesson.id} className="items-center w-full">
+                      <VStack
+                        className="items-center"
+                        space="xs"
+                        style={{ transform: [{ translateX: xOffset }] }}
+                      >
                         {isCurrent ? (
-                          <View style={styles.startTooltip}>
-                            <Text style={styles.startTooltipText}>START</Text>
-                          </View>
+                          <Badge className="rounded-full bg-card border border-primary/30 px-3 py-0.5 shadow-xs">
+                            <BadgeText className="text-primary text-[10px] font-extrabold">
+                              START
+                            </BadgeText>
+                          </Badge>
                         ) : null}
 
-                        <AnimatedPressable
-                          disabled={locked}
-                          onPress={() => router.push(`/lesson/${lesson.id}` as never)}
-                          style={styles.nodeTapTarget}
+                        <Pressable
+                          onPress={() => {
+                            if (locked) {
+                              setLockedLesson(lesson);
+                            } else {
+                              router.push(`/lesson/${lesson.id}` as never);
+                            }
+                          }}
+                          className="items-center gap-2 active:opacity-80"
                         >
-                          <View
-                            style={[
-                              styles.nodeOuter,
-                              isCurrent ? styles.nodeOuterActive : null,
-                            ]}
+                          <Box
+                            className={`p-1.5 rounded-full ${
+                              isCurrent ? 'border-2 border-primary/35 bg-card shadow-sm' : ''
+                            }`}
                           >
-                            <View
-                              style={[
-                                styles.node3D,
-                                { backgroundColor: bg, borderBottomColor: lip },
-                              ]}
+                            <Center
+                              className={`w-16 h-16 rounded-full ${
+                                done
+                                  ? 'bg-emerald-500'
+                                  : locked
+                                    ? 'bg-slate-200 border border-slate-300'
+                                    : 'bg-primary'
+                              }`}
                             >
-                              <View style={styles.nodeHighlight} />
                               {done ? (
-                                <Check size={28} color="#FFFFFF" strokeWidth={3.2} />
+                                <Check size={26} color="#FFFFFF" strokeWidth={3} />
                               ) : locked ? (
-                                <Lock size={22} color="#64748B" strokeWidth={2.4} />
+                                <Lock size={20} color="#64748B" strokeWidth={2.3} />
                               ) : (
-                                <Play size={26} color="#FFFFFF" fill="#FFFFFF" />
+                                <Play size={24} color="#FFFFFF" fill="#FFFFFF" />
                               )}
-                            </View>
+                            </Center>
                             {done ? (
-                              <View style={styles.starBadge}>
-                                <Star size={12} color="#FFFFFF" fill="#FFFFFF" />
-                              </View>
+                              <Center className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white absolute right-0.5 bottom-0.5">
+                                <Star size={11} color="#FFFFFF" fill="#FFFFFF" />
+                              </Center>
                             ) : null}
-                          </View>
+                          </Box>
 
-                          <View style={styles.nodeCaptionBox}>
+                          <VStack className="items-center max-w-[190px]">
                             <Text
-                              style={[
-                                styles.nodeTitle,
-                                locked ? { color: DS.colors.inkMuted } : null,
-                              ]}
+                              size="sm"
+                              bold
+                              className={`text-center ${
+                                locked ? 'text-muted-foreground' : 'text-foreground'
+                              }`}
                               numberOfLines={2}
                             >
                               {lesson.title}
                             </Text>
-                            <Text style={styles.nodeMeta} numberOfLines={2}>
+                            <Text size="xs" className="text-muted-foreground text-center" numberOfLines={2}>
                               {locked
                                 ? lockCaption(lesson)
                                 : lesson.estimatedMinutes
@@ -241,199 +294,72 @@ export default function CourseRoadmapScreen() {
                                     ? 'Completed'
                                     : 'Tap to play'}
                             </Text>
-                          </View>
-                        </AnimatedPressable>
-                      </View>
+                          </VStack>
+                        </Pressable>
+                      </VStack>
 
                       {nextOffset !== null ? (
                         <PathConnector fromX={xOffset} toX={nextOffset} />
                       ) : null}
-                    </View>
+                    </VStack>
                   );
                 })}
-              </View>
-            </View>
+              </VStack>
+            </VStack>
           );
         })}
       </ScrollView>
+
+      {/* Locked Lesson Info Actionsheet (Bottom Sheet) */}
+      <Actionsheet isOpen={Boolean(lockedLesson)} onClose={() => setLockedLesson(null)}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent className="bg-card px-5 pb-7 pt-2 rounded-t-3xl">
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator className="bg-border w-12" />
+          </ActionsheetDragIndicatorWrapper>
+
+          {lockedLesson ? (
+            <VStack space="md" className="w-full items-center pt-3">
+              <Center className="w-14 h-14 rounded-2xl bg-slate-100">
+                <Lock size={26} color="#475569" />
+              </Center>
+              <VStack space="xs" className="items-center">
+                <Heading size="md" className="text-foreground text-center">
+                  {lockedLesson.title}
+                </Heading>
+                <Text size="sm" className="text-muted-foreground text-center max-w-[280px]">
+                  {lockCaption(lockedLesson)}
+                </Text>
+              </VStack>
+
+              <HStack space="sm" className="w-full mt-1">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="flex-1 h-12 rounded-xl border-border"
+                  onPress={() => setLockedLesson(null)}
+                >
+                  <ButtonText className="text-foreground font-semibold">Close</ButtonText>
+                </Button>
+                {activeOpenLesson ? (
+                  <Button
+                    size="lg"
+                    className="flex-1 h-12 rounded-xl"
+                    onPress={() => {
+                      const targetId = activeOpenLesson.id;
+                      setLockedLesson(null);
+                      router.push(`/lesson/${targetId}` as never);
+                    }}
+                  >
+                    <ButtonIcon as={Play} className="text-white" />
+                    <ButtonText className="font-bold">Open Next</ButtonText>
+                  </Button>
+                ) : null}
+              </HStack>
+            </VStack>
+          ) : null}
+        </ActionsheetContent>
+      </Actionsheet>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: DS.colors.canvas,
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    gap: 12,
-    backgroundColor: DS.colors.surface,
-  },
-  backBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: DS.colors.surfaceSubtle,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rewardChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: DS.colors.amberSoft,
-  },
-  rewardChipText: {
-    color: DS.colors.amberInk,
-    fontSize: 12.5,
-    fontWeight: '800',
-    fontVariant: ['tabular-nums'],
-  },
-  topTrack: {
-    height: 3,
-    backgroundColor: DS.colors.border,
-  },
-  topFill: {
-    height: 3,
-    backgroundColor: DS.colors.brand,
-  },
-  scroll: {
-    padding: 16,
-    paddingBottom: 40,
-    gap: 24,
-  },
-  stateCard: {
-    padding: 24,
-    alignItems: 'center',
-    gap: 8,
-  },
-  unitBlock: {
-    gap: 22,
-  },
-  unitBanner: {
-    borderRadius: 20,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  unitTextCol: {
-    flex: 1,
-    gap: 3,
-  },
-  unitMeta: {
-    color: 'rgba(255,255,255,0.84)',
-    fontSize: 12.5,
-    fontWeight: '700',
-  },
-  unitTitle: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    lineHeight: 25,
-    fontWeight: '800',
-    letterSpacing: -0.3,
-  },
-  pathCol: {
-    alignItems: 'center',
-    paddingVertical: 6,
-  },
-  nodeWrapper: {
-    alignItems: 'center',
-    width: '100%',
-  },
-  nodeAnchor: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  nodeTapTarget: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  startTooltip: {
-    backgroundColor: DS.colors.surface,
-    borderWidth: 1.5,
-    borderColor: DS.colors.brandBorder,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 999,
-    marginBottom: 2,
-  },
-  startTooltipText: {
-    color: DS.colors.brand,
-    fontSize: 11,
-    fontWeight: '900',
-    letterSpacing: 0.7,
-  },
-  nodeOuter: {
-    padding: 5,
-    borderRadius: 44,
-  },
-  nodeOuterActive: {
-    borderWidth: 3,
-    borderColor: DS.colors.brandBorder,
-    backgroundColor: '#FFFFFF',
-  },
-  node3D: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    borderBottomWidth: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  nodeHighlight: {
-    position: 'absolute',
-    top: 7,
-    left: 16,
-    right: 16,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'rgba(255,255,255,0.24)',
-  },
-  starBadge: {
-    position: 'absolute',
-    right: 2,
-    bottom: 2,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: DS.colors.amber,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nodeCaptionBox: {
-    alignItems: 'center',
-    maxWidth: 190,
-    gap: 2,
-  },
-  nodeTitle: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: '700',
-    color: DS.colors.ink,
-    textAlign: 'center',
-  },
-  nodeMeta: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: DS.colors.inkMuted,
-    textAlign: 'center',
-  },
-  connectorWrap: {
-    height: 38,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 2,
-  },
-});

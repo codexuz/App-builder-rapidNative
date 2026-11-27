@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Image, Pressable, StyleSheet, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
+import { type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -9,6 +9,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { Image } from '@/components/gluestack/image';
+import { Pressable } from '@/components/gluestack/pressable';
 import { playTileTapSound } from '@/utils/soundFeedback';
 
 export type LeoPose =
@@ -45,7 +47,7 @@ export interface LeoMascotProps {
 }
 
 /**
- * Official Impulse snow leopard mascot Leo — mirrors erp-lms/apps/student/components/mascot/leo.tsx
+ * Official Impulse snow leopard mascot Leo — rendered via gluestack Image
  * with gentle floating bob, energetic cheer/roar hop, and playful tap jump.
  */
 export function LeoMascot({
@@ -97,11 +99,14 @@ export function LeoMascot({
       disabled={!onPress && !animate}
       accessibilityRole="imagebutton"
       accessibilityLabel={`Leo the snow leopard (${pose})`}
-      style={[styles.wrap, { width: size, height }, style]}
+      className="items-center justify-center"
+      style={[{ width: size, height }, style]}
     >
       <Animated.View style={animStyle}>
         <Image
           source={LEO_ART[pose]}
+          size="none"
+          alt={`Leo (${pose})`}
           style={{ width: size, height }}
           resizeMode="contain"
         />
@@ -109,10 +114,3 @@ export function LeoMascot({
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

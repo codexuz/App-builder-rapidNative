@@ -1,38 +1,51 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
+  AlertCircle,
   BookOpen,
   Check,
+  ChevronDown,
   ChevronRight,
+  ChevronUp,
+  Coins,
+  Flame,
   Play,
+  RotateCcw,
+  Sparkles,
+  Trophy,
   Volume2,
   VolumeX,
   X,
+  Zap,
 } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  ConfettiBurst,
-  GameButton,
-  MascotChatBubble,
-  ProgressBar,
-  SentenceBuilderStage,
-  VictoryCelebration,
-  speakEnglishText,
-  type VictorySummaryData,
-} from '@/components/game';
+  Accordion,
+  AccordionContent,
+  AccordionHeader,
+  AccordionItem,
+  AccordionTitleText,
+  AccordionTrigger,
+} from '@/components/gluestack/accordion';
+import { Alert, AlertIcon, AlertText } from '@/components/gluestack/alert';
+import { Badge, BadgeText } from '@/components/gluestack/badge';
+import { Box } from '@/components/gluestack/box';
+import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '@/components/gluestack/button';
+import { Card } from '@/components/gluestack/card';
+import { Center } from '@/components/gluestack/center';
+import { Divider } from '@/components/gluestack/divider';
+import { Heading } from '@/components/gluestack/heading';
+import { HStack } from '@/components/gluestack/hstack';
+import { Input, InputField } from '@/components/gluestack/input';
+import { Pressable } from '@/components/gluestack/pressable';
+import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
+import { Spinner } from '@/components/gluestack/spinner';
+import { Text } from '@/components/gluestack/text';
+import { Textarea, TextareaInput } from '@/components/gluestack/textarea';
+import { VStack } from '@/components/gluestack/vstack';
+import { ConfettiBurst, speakEnglishText } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { AnimatedPressable, Badge, Card } from '@/components/ui';
-import { DS } from '@/constants/DesignSystem';
-import { useAppTheme } from '@/constants/Theme';
 import { api } from '@/lib/api';
 import type {
   AttemptResult,
@@ -48,20 +61,17 @@ import {
   playVictoryFeedback,
 } from '@/utils/soundFeedback';
 
-/**
- * 100% Live Backend Impulse Kids Lesson & Interactive Exercise Player:
- * - Loads GET /lms/lessons/:id?studentId=...
- * - Phase 1 (study): Theory & Magic Words with Leo voice playback + exercise selector
- * - Phase 2 (play): Interactive Duolingo-style question runner (SINGLE_CHOICE, MULTI_CHOICE,
- *   TRUE_FALSE, ORDER Sentence Builder, TEXT/NUMERIC/ESSAY) wired to POST /lms/exercises/:id/start
- *   and POST /lms/exercises/:id/submit
- * - Phase 3 (victory): Server-graded AttemptResult inside 3D Leo VictoryCelebration
- * - Phase 4 (review): Full per-question server grading review when answersShown is enabled
- */
+interface VictorySummary {
+  accuracyPercent: number;
+  xpEarned: number;
+  coinsEarned: number;
+  streakDays: number;
+  unlockedNextLessonTitle?: string | null;
+}
+
 export default function KidsLessonScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
-  const { colors, typography, radii } = useAppTheme();
   const {
     studentId,
     courses,
@@ -97,7 +107,7 @@ export default function KidsLessonScreen() {
   const [attemptResult, setAttemptResult] = useState<AttemptResult | null>(null);
   const [confettiKey, setConfettiKey] = useState(0);
   const [isLeoSpeaking, setIsLeoSpeaking] = useState(false);
-  const [victory, setVictory] = useState<VictorySummaryData | null>(null);
+  const [victory, setVictory] = useState<VictorySummary | null>(null);
 
   const startedAtRef = useRef<number>(Date.now());
   const stopAudioRef = useRef<(() => void) | null>(null);
@@ -239,7 +249,6 @@ export default function KidsLessonScreen() {
       return;
     }
 
-    // Final question -> submit to live backend POST /lms/exercises/:id/submit
     setSubmitting(true);
     setSubmitError(null);
     try {
@@ -261,11 +270,13 @@ export default function KidsLessonScreen() {
       const maxScoreNum = Number(result.maxScore) || 0;
       const scoreNum = Number(result.score ?? 0);
       const accuracyPercent =
-        maxScoreNum > 0 ? Math.max(0, Math.min(100, Math.round((scoreNum / maxScoreNum) * 100))) : 100;
+        maxScoreNum > 0
+          ? Math.max(0, Math.min(100, Math.round((scoreNum / maxScoreNum) * 100)))
+          : 100;
 
       const allLessons = parentCourse?.units.flatMap((u) => u.lessons) ?? [];
       const curPos = allLessons.findIndex((l) => l.id === lessonId);
-      const nextUnlocked = curPos >= 0 ? allLessons[curPos + 1]?.title ?? null : null;
+      const nextUnlocked = curPos >= 0 ? (allLessons[curPos + 1]?.title ?? null) : null;
 
       setVictory({
         accuracyPercent,
@@ -286,74 +297,119 @@ export default function KidsLessonScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.safe, styles.center, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color="#1055F8" />
-        <Text style={[typography.callout, { color: colors.textSecondary, marginTop: 10 }]}>
-          Loading lesson from Impulse...
-        </Text>
+      <SafeAreaView className="flex-1 bg-background">
+        <Center className="flex-1 px-6">
+          <VStack space="md" className="items-center">
+            <Spinner size="large" />
+            <Text size="sm" className="text-muted-foreground">
+              Loading lesson from Impulse...
+            </Text>
+          </VStack>
+        </Center>
       </SafeAreaView>
     );
   }
 
   if (loadError || !lesson) {
     return (
-      <SafeAreaView style={[styles.safe, styles.center, { backgroundColor: colors.background, padding: 24 }]}>
-        <LeoMascot pose="oops" size={120} />
-        <Text style={[typography.title2, { color: colors.textPrimary, textAlign: 'center', marginTop: 8 }]}>
-          Could Not Open Lesson
-        </Text>
-        <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center', marginBottom: 16 }]}>
-          {loadError ?? 'Lesson not found.'}
-        </Text>
-        <View style={{ width: '100%', maxWidth: 260, gap: 10 }}>
-          <GameButton label="Try Again" color="#1055F8" depthColor="#0A3BB3" onPress={fetchLesson} />
-          <GameButton label="Go Back" color="#64748B" depthColor="#475569" onPress={() => router.back()} />
-        </View>
+      <SafeAreaView className="flex-1 bg-background">
+        <Center className="flex-1 px-6">
+          <VStack space="md" className="items-center w-full max-w-[300px]">
+            <LeoMascot pose="oops" size={118} />
+            <Heading size="lg" className="text-foreground text-center">
+              Could Not Open Lesson
+            </Heading>
+            <Text size="sm" className="text-muted-foreground text-center">
+              {loadError ?? 'Lesson not found.'}
+            </Text>
+            <Button size="lg" className="w-full h-12 rounded-xl" onPress={fetchLesson}>
+              <ButtonText className="font-bold">Try Again</ButtonText>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full h-12 rounded-xl border-border"
+              onPress={() => router.back()}
+            >
+              <ButtonText className="text-foreground font-semibold">Go Back</ButtonText>
+            </Button>
+          </VStack>
+        </Center>
       </SafeAreaView>
     );
   }
 
+  // PHASE 4: ANSWER REVIEW
   if (phase === 'review' && attemptResult) {
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <View style={styles.topBar}>
-          <Pressable
+      <SafeAreaView className="flex-1 bg-background">
+        <HStack className="items-center px-4 py-2.5 bg-card border-b border-border" space="sm">
+          <Button
+            size="icon"
+            variant="secondary"
+            className="h-9 w-9 rounded-full"
             onPress={() => setPhase('victory')}
-            style={[styles.closeBtn, { backgroundColor: colors.surfaceMuted }]}
           >
-            <X size={20} color={colors.textPrimary} />
-          </Pressable>
-          <Text style={[typography.headline, { color: colors.textPrimary, flex: 1 }]}>
+            <X size={18} color="#0F172A" />
+          </Button>
+          <Heading size="md" className="text-foreground flex-1">
             Answer Review
-          </Text>
-          <Badge
-            label={`${attemptResult.score ?? 0}/${attemptResult.maxScore}`}
-            tone="accent"
-          />
-        </View>
+          </Heading>
+          <Badge className="rounded-full bg-accent border-0 px-3 py-1">
+            <BadgeText className="text-primary font-extrabold normal-case">
+              {attemptResult.score ?? 0}/{attemptResult.maxScore}
+            </BadgeText>
+          </Badge>
+        </HStack>
 
-        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={{ padding: 16, paddingBottom: 32, gap: 12 }}
+          showsVerticalScrollIndicator={false}
+        >
           {questions.map((q, idx) => {
             const ans = attemptResult.answers.find((a) => a.questionId === q.id);
             const ok = ans?.isCorrect === true;
             return (
               <Card
                 key={q.id}
-                style={[
-                  styles.reviewCard,
-                  { borderColor: ok ? '#58CC02' : '#FF4B4B', borderWidth: 1.5 },
-                ]}
+                className={`bg-card rounded-2xl p-4 border ${
+                  ok ? 'border-emerald-300' : 'border-red-300'
+                }`}
               >
-                <View style={styles.reviewHead}>
-                  <Badge label={`Q${idx + 1}`} tone={ok ? 'success' : 'danger'} />
-                  <Badge label={ok ? 'Correct' : 'Check Again'} tone={ok ? 'success' : 'danger'} />
-                </View>
-                <Text style={[typography.headline, { color: colors.textPrimary }]}>{q.prompt}</Text>
-                {ans?.feedback ? (
-                  <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                    {ans.feedback}
+                <VStack space="sm">
+                  <HStack className="items-center justify-between">
+                    <Badge
+                      className={`rounded-full border-0 px-2.5 py-0.5 ${
+                        ok ? 'bg-emerald-50' : 'bg-red-50'
+                      }`}
+                    >
+                      <BadgeText
+                        className={`text-xs font-bold ${
+                          ok ? 'text-emerald-700' : 'text-destructive'
+                        }`}
+                      >
+                        Question {idx + 1}
+                      </BadgeText>
+                    </Badge>
+                    <Badge
+                      className={`rounded-full border-0 px-2.5 py-0.5 ${
+                        ok ? 'bg-emerald-500' : 'bg-destructive'
+                      }`}
+                    >
+                      <BadgeText className="text-white text-xs font-bold normal-case">
+                        {ok ? 'Correct' : 'Review'}
+                      </BadgeText>
+                    </Badge>
+                  </HStack>
+                  <Text size="md" bold className="text-foreground">
+                    {q.prompt}
                   </Text>
-                ) : null}
+                  {ans?.feedback ? (
+                    <Text size="xs" className="text-muted-foreground">
+                      {ans.feedback}
+                    </Text>
+                  ) : null}
+                </VStack>
               </Card>
             );
           })}
@@ -362,34 +418,133 @@ export default function KidsLessonScreen() {
     );
   }
 
+  // PHASE 3: VICTORY SUMMARY (Clean Gluestack Card)
   if (phase === 'victory' && victory) {
     const allLessons = parentCourse?.units.flatMap((u) => u.lessons) ?? [];
     const completedCount = allLessons.filter(
       (l) => l.id === lessonId || l.progress?.status === 'COMPLETED'
     ).length;
+    const coursePct = allLessons.length
+      ? Math.round((completedCount / allLessons.length) * 100)
+      : 100;
 
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <VictoryCelebration
-          lessonTitle={lesson.title}
-          courseName={parentCourse?.title ?? lesson.unit?.course?.title ?? 'Impulse Kids'}
-          completedCount={completedCount}
-          totalCount={Math.max(1, allLessons.length)}
-          summary={victory}
-          accentColor="#1055F8"
-          deepColor="#0A3BB3"
-          confettiKey={confettiKey}
-          onClaimAndExit={() => router.back()}
-          onPracticeAgain={() => {
-            if (attemptResult?.answersShown) {
-              setPhase('review');
-            } else {
-              setVictory(null);
-              setPhase('study');
-              resetQuestionInputs();
-            }
+      <SafeAreaView className="flex-1 bg-background">
+        <ConfettiBurst triggerKey={confettiKey} intensity="grand" />
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            padding: 20,
+            gap: 16,
           }}
-        />
+          showsVerticalScrollIndicator={false}
+        >
+          <VStack space="sm" className="items-center">
+            <Center className="w-32 h-32 rounded-full bg-accent border border-primary/20">
+              <LeoMascot pose="cheer" size={114} />
+            </Center>
+            <Badge className="rounded-full bg-emerald-50 border-0 px-3 py-1 gap-1.5">
+              <Trophy size={13} color="#15803D" />
+              <BadgeText className="text-emerald-700 font-extrabold normal-case">
+                Lesson Complete
+              </BadgeText>
+            </Badge>
+            <Heading size="2xl" className="text-foreground text-center">
+              Great Work!
+            </Heading>
+            <Text size="sm" className="text-muted-foreground text-center">
+              {lesson.title}
+            </Text>
+          </VStack>
+
+          <Card className="bg-card border border-border rounded-2xl p-4">
+            <HStack className="items-center">
+              <VStack className="flex-1 items-center" space="xs">
+                <Sparkles size={18} color="#15803D" />
+                <Text size="lg" bold className="text-foreground">
+                  {victory.accuracyPercent}%
+                </Text>
+                <Text size="xs" className="text-muted-foreground">
+                  Accuracy
+                </Text>
+              </VStack>
+              <Divider orientation="vertical" className="h-10 bg-border" />
+              <VStack className="flex-1 items-center" space="xs">
+                <Zap size={18} color="#1055F8" fill="#1055F8" />
+                <Text size="lg" bold className="text-foreground">
+                  +{victory.xpEarned}
+                </Text>
+                <Text size="xs" className="text-muted-foreground">
+                  XP Earned
+                </Text>
+              </VStack>
+              <Divider orientation="vertical" className="h-10 bg-border" />
+              <VStack className="flex-1 items-center" space="xs">
+                <Coins size={18} color="#D97706" />
+                <Text size="lg" bold className="text-foreground">
+                  +{victory.coinsEarned}
+                </Text>
+                <Text size="xs" className="text-muted-foreground">
+                  Coins
+                </Text>
+              </VStack>
+            </HStack>
+          </Card>
+
+          <Card className="bg-card border border-border rounded-2xl p-4">
+            <VStack space="sm">
+              <HStack className="items-center justify-between">
+                <Text size="sm" bold className="text-foreground">
+                  {parentCourse?.title ?? 'Course Progress'}
+                </Text>
+                <Text size="xs" bold className="text-primary">
+                  {completedCount}/{Math.max(1, allLessons.length)} lessons
+                </Text>
+              </HStack>
+              <Progress value={coursePct} className="h-2 bg-secondary rounded-full">
+                <ProgressFilledTrack className="bg-primary rounded-full" />
+              </Progress>
+              {victory.streakDays > 0 ? (
+                <HStack className="items-center pt-1" space="xs">
+                  <Flame size={14} color="#EA580C" fill="#EA580C" />
+                  <Text size="xs" bold className="text-orange-700">
+                    {victory.streakDays}-day learning streak active!
+                  </Text>
+                </HStack>
+              ) : null}
+            </VStack>
+          </Card>
+
+          <VStack space="sm" className="mt-2">
+            <Button
+              size="lg"
+              className="h-12 rounded-xl w-full"
+              onPress={() => router.back()}
+            >
+              <ButtonText className="font-bold">Continue Learning</ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-12 rounded-xl border-border bg-card w-full"
+              onPress={() => {
+                if (attemptResult?.answersShown) {
+                  setPhase('review');
+                } else {
+                  setVictory(null);
+                  setPhase('study');
+                  resetQuestionInputs();
+                }
+              }}
+            >
+              <ButtonText className="text-foreground font-semibold">
+                {attemptResult?.answersShown ? 'Review My Answers' : 'Practice Again'}
+              </ButtonText>
+            </Button>
+          </VStack>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -402,233 +557,334 @@ export default function KidsLessonScreen() {
       .flatMap((b) => b.content.items ?? []);
 
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: DS.colors.canvas }]}>
-        <View style={[styles.topBar, { backgroundColor: DS.colors.surface, borderBottomWidth: 1, borderBottomColor: DS.colors.border }]}>
-          <Pressable
+      <SafeAreaView className="flex-1 bg-background">
+        <HStack className="items-center px-4 py-2.5 bg-card border-b border-border" space="sm">
+          <Button
+            size="icon"
+            variant="secondary"
+            className="h-9 w-9 rounded-full"
             onPress={() => router.back()}
-            style={[styles.closeBtn, { backgroundColor: DS.colors.surfaceSubtle }]}
+            accessibilityLabel="Close lesson"
           >
-            <X size={20} color={DS.colors.ink} />
-          </Pressable>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={DS.type.cardTitle} numberOfLines={1}>
+            <X size={18} color="#0F172A" />
+          </Button>
+          <VStack className="flex-1 min-w-0">
+            <Heading size="sm" className="text-foreground" numberOfLines={1}>
               {lesson.title}
-            </Text>
-            <Text style={DS.type.caption} numberOfLines={1}>
+            </Heading>
+            <Text size="xs" className="text-muted-foreground" numberOfLines={1}>
               {lesson.unit?.course?.title ?? 'Impulse Kids'}
             </Text>
-          </View>
-        </View>
+          </VStack>
+          <Button
+            size="icon"
+            variant="secondary"
+            className="h-9 w-9 rounded-full bg-accent"
+            onPress={() => speakAsLeo(`${lesson.title}. ${lesson.description ?? ''}`)}
+            accessibilityLabel="Read aloud"
+          >
+            <Volume2 size={17} color="#1055F8" />
+          </Button>
+        </HStack>
 
-        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-          <MascotChatBubble
-            message={
-              lesson.description ??
-              'Read the lesson and listen to the new words, then start the quiz!'
-            }
-            pose="wave"
-            accentColor={DS.colors.brand}
-            softAccentColor={DS.colors.brandSoft}
-            isSpeaking={isLeoSpeaking}
-            onSpeakPress={() =>
-              speakAsLeo(`${lesson.title}. ${lesson.description ?? ''}`)
-            }
-          />
+        <ScrollView
+          contentContainerStyle={{ padding: 16, paddingBottom: 28, gap: 14 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Leo Guide Card */}
+          <Card className="bg-card border border-border rounded-2xl p-3.5">
+            <HStack className="items-center" space="md">
+              <Center className="w-16 h-16 rounded-2xl bg-accent">
+                <LeoMascot pose={isLeoSpeaking ? 'cheer' : 'wave'} size={58} />
+              </Center>
+              <VStack className="flex-1 min-w-0" space="xs">
+                <Badge className="self-start rounded-full bg-accent border-0 px-2.5 py-0.5">
+                  <BadgeText className="text-primary text-[10px] font-bold">
+                    Leo Guide
+                  </BadgeText>
+                </Badge>
+                <Text size="sm" className="text-foreground leading-5">
+                  {lesson.description ??
+                    'Read the notes and listen to the new words, then start the quiz!'}
+                </Text>
+              </VStack>
+            </HStack>
+          </Card>
 
           {submitError ? (
-            <Card variant="muted" style={styles.errorBanner}>
-              <Text style={styles.errorText}>{submitError}</Text>
-            </Card>
+            <Alert variant="destructive" className="rounded-xl bg-red-50 border-red-200 p-3">
+              <AlertIcon as={AlertCircle} className="text-destructive" />
+              <AlertText className="text-destructive text-xs font-semibold">
+                {submitError}
+              </AlertText>
+            </Alert>
           ) : null}
 
-          {textBlocks.map((block) => (
-            <View key={block.id} style={[DS.card, styles.theoryCard, { padding: 16 }]}>
-              <View style={styles.theoryHead}>
-                <BookOpen size={17} color={DS.colors.brand} />
-                <Text style={DS.type.cardTitle}>Lesson Notes</Text>
-              </View>
-              <Text style={[DS.type.body, { lineHeight: 22 }]}>
-                {(block.content.markdown ?? '').replace(/\*\*/g, '').replace(/\*/g, '')}
-              </Text>
-            </View>
-          ))}
-
-          {vocabItems.length > 0 ? (
-            <View style={styles.vocabStack}>
-              <Text style={DS.type.sectionTitle}>Vocabulary</Text>
-              <View style={[DS.card, { overflow: 'hidden' }]}>
-                {vocabItems.map((w, idx) => (
-                  <View
-                    key={w.term}
-                    style={[
-                      styles.vocabCard,
-                      { padding: 14 },
-                      idx > 0 ? { borderTopWidth: 1, borderTopColor: DS.colors.border } : null,
-                    ]}
-                  >
-                    <View style={styles.vocabTop}>
-                      <View style={{ flex: 1, gap: 2 }}>
-                        <Text style={DS.type.cardTitle}>{w.term}</Text>
-                        {w.pronunciation ? (
-                          <Text style={DS.type.caption}>
-                            {w.pronunciation} {w.partOfSpeech ? `· ${w.partOfSpeech}` : ''}
-                          </Text>
-                        ) : null}
-                      </View>
-                      <AnimatedPressable
-                        onPress={() => speakAsLeo(`${w.term}. ${w.example ?? ''}`)}
-                        style={[styles.audioBtn, { backgroundColor: DS.colors.brandSoft }]}
-                      >
-                        <Volume2 size={18} color={DS.colors.brand} />
-                      </AnimatedPressable>
-                    </View>
-                    <Text style={[DS.type.body, { color: DS.colors.greenInk, fontWeight: '700' }]}>
-                      {w.meaning}
-                    </Text>
-                    {w.example ? (
-                      <Text style={[DS.type.caption, { fontStyle: 'italic' }]}>
-                        "{w.example}"
+          {/* Gluestack Accordion for Lesson Notes */}
+          {textBlocks.length > 0 ? (
+            <Accordion
+              type="multiple"
+              defaultValue={['notes']}
+              className="bg-card border border-border rounded-2xl overflow-hidden"
+            >
+              <AccordionItem value="notes" className="border-0">
+                <AccordionHeader>
+                  <AccordionTrigger className="px-4 py-3.5">
+                    {({ isExpanded }: { isExpanded: boolean }) => (
+                      <HStack className="items-center justify-between w-full">
+                        <HStack className="items-center" space="sm">
+                          <BookOpen size={17} color="#1055F8" />
+                          <AccordionTitleText className="text-foreground font-bold text-sm">
+                            Lesson Notes
+                          </AccordionTitleText>
+                        </HStack>
+                        {isExpanded ? (
+                          <ChevronUp size={17} color="#64748B" />
+                        ) : (
+                          <ChevronDown size={17} color="#64748B" />
+                        )}
+                      </HStack>
+                    )}
+                  </AccordionTrigger>
+                </AccordionHeader>
+                <AccordionContent className="px-4 pb-4 pt-0">
+                  <VStack space="sm">
+                    {textBlocks.map((block) => (
+                      <Text key={block.id} size="sm" className="text-foreground leading-6">
+                        {(block.content.markdown ?? '').replace(/\*\*/g, '').replace(/\*/g, '')}
                       </Text>
-                    ) : null}
-                  </View>
+                    ))}
+                  </VStack>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ) : null}
+
+          {/* Vocabulary Card */}
+          {vocabItems.length > 0 ? (
+            <VStack space="sm">
+              <HStack className="items-center justify-between">
+                <Heading size="md" className="text-foreground">
+                  Vocabulary
+                </Heading>
+                <Badge variant="secondary" className="rounded-full px-2.5">
+                  <BadgeText className="text-muted-foreground font-semibold normal-case">
+                    {vocabItems.length} words
+                  </BadgeText>
+                </Badge>
+              </HStack>
+
+              <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+                {vocabItems.map((w, idx) => (
+                  <Box key={w.term}>
+                    {idx > 0 ? <Divider className="bg-border" /> : null}
+                    <VStack className="p-3.5" space="xs">
+                      <HStack className="items-center justify-between" space="sm">
+                        <VStack className="flex-1 min-w-0">
+                          <Text size="md" bold className="text-foreground">
+                            {w.term}
+                          </Text>
+                          {w.pronunciation ? (
+                            <Text size="xs" className="text-muted-foreground">
+                              {w.pronunciation} {w.partOfSpeech ? `· ${w.partOfSpeech}` : ''}
+                            </Text>
+                          ) : null}
+                        </VStack>
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          className="h-9 w-9 rounded-xl bg-accent"
+                          onPress={() => speakAsLeo(`${w.term}. ${w.example ?? ''}`)}
+                          accessibilityLabel={`Listen to ${w.term}`}
+                        >
+                          <Volume2 size={17} color="#1055F8" />
+                        </Button>
+                      </HStack>
+                      <Text size="sm" bold className="text-emerald-700">
+                        {w.meaning}
+                      </Text>
+                      {w.example ? (
+                        <Text size="xs" italic className="text-muted-foreground">
+                          &ldquo;{w.example}&rdquo;
+                        </Text>
+                      ) : null}
+                    </VStack>
+                  </Box>
                 ))}
-              </View>
-            </View>
+              </Card>
+            </VStack>
           ) : null}
 
           {lesson.exercises.length > 1 ? (
-            <View style={styles.vocabStack}>
-              <Text style={[typography.title2, { color: colors.textPrimary }]}>
+            <VStack space="sm">
+              <Heading size="md" className="text-foreground">
                 Exercises
-              </Text>
-              {lesson.exercises.map((ex, idx) => (
-                <AnimatedPressable
-                  key={ex.id}
-                  onPress={() => void handleStartQuiz(idx)}
-                  style={[
-                    styles.exPickCard,
-                    { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radii.lg },
-                  ]}
-                >
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={[typography.headline, { color: colors.textPrimary }]}>
-                      {ex.title}
-                    </Text>
-                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                      {ex.questions.length} questions · Max {ex.maxScore} pts
-                    </Text>
-                  </View>
-                  <ChevronRight size={18} color={colors.textTertiary} />
-                </AnimatedPressable>
-              ))}
-            </View>
+              </Heading>
+              <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+                {lesson.exercises.map((ex, idx) => (
+                  <Box key={ex.id}>
+                    {idx > 0 ? <Divider className="bg-border" /> : null}
+                    <Pressable
+                      onPress={() => void handleStartQuiz(idx)}
+                      className="p-3.5 active:bg-accent/50"
+                    >
+                      <HStack className="items-center justify-between" space="sm">
+                        <VStack className="flex-1 min-w-0">
+                          <Text size="sm" bold className="text-foreground">
+                            {ex.title}
+                          </Text>
+                          <Text size="xs" className="text-muted-foreground">
+                            {ex.questions.length} questions · Max {ex.maxScore} pts
+                          </Text>
+                        </VStack>
+                        <ChevronRight size={17} color="#94A3B8" />
+                      </HStack>
+                    </Pressable>
+                  </Box>
+                ))}
+              </Card>
+            </VStack>
           ) : null}
         </ScrollView>
 
-        <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
-          <GameButton
-            label={
-              activeExercise
-                ? `Start ${activeExercise.title} (${activeExercise.questions.length} Qs)`
-                : 'Mark Lesson Complete'
-            }
-            color="#58CC02"
-            depthColor="#46A302"
-            icon={<Play size={17} color="#FFFFFF" fill="#FFFFFF" />}
+        <Box className="px-4 py-3 bg-card border-t border-border">
+          <Button
+            size="lg"
+            className="h-12 rounded-xl w-full"
             onPress={() => void handleStartQuiz(0)}
-          />
-        </View>
+          >
+            <ButtonIcon as={Play} className="text-white" />
+            <ButtonText className="font-bold">
+              {activeExercise
+                ? `Start ${activeExercise.title} (${activeExercise.questions.length} Qs)`
+                : 'Mark Lesson Complete'}
+            </ButtonText>
+          </Button>
+        </Box>
       </SafeAreaView>
     );
   }
 
-  // PHASE 2: INTERACTIVE LIVE EXERCISE PLAYER
+  // PHASE 2: INTERACTIVE LIVE EXERCISE PLAYER (Clean Gluestack Components — ZERO 3D Duolingo borders)
   const orderItems = currentQuestion?.data.items ?? [];
   const orderTiles = orderItems.map((it) => it.text);
-  const progressValue = (qIdx + 1) / Math.max(1, questions.length);
+  const progressPct = Math.round(((qIdx + 1) / Math.max(1, questions.length)) * 100);
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+    <SafeAreaView className="flex-1 bg-background">
       <ConfettiBurst triggerKey={confettiKey} intensity="small" />
 
-      <View style={styles.topBar}>
-        <Pressable
+      <HStack className="items-center px-4 py-2.5 bg-card border-b border-border" space="sm">
+        <Button
+          size="icon"
+          variant="secondary"
+          className="h-9 w-9 rounded-full"
           onPress={() => {
             stopAudioRef.current?.();
             setPhase('study');
           }}
-          hitSlop={10}
-          style={[styles.closeBtn, { backgroundColor: colors.surfaceMuted }]}
         >
-          <X size={20} color={colors.textPrimary} />
-        </Pressable>
+          <X size={18} color="#0F172A" />
+        </Button>
 
-        <View style={{ flex: 1 }}>
-          <ProgressBar progress={progressValue} color="#1055F8" height={14} />
-        </View>
+        <Box className="flex-1">
+          <Progress value={progressPct} className="h-2.5 bg-secondary rounded-full">
+            <ProgressFilledTrack className="bg-primary rounded-full" />
+          </Progress>
+        </Box>
 
-        <Pressable
+        <Button
+          size="icon"
+          variant="secondary"
+          className="h-8 w-8 rounded-full"
           onPress={() => {
             if (soundEnabled) stopAudioRef.current?.();
             setSoundEnabled(!soundEnabled);
           }}
-          style={[styles.soundBtn, { backgroundColor: colors.surfaceMuted }]}
         >
           {soundEnabled ? (
-            <Volume2 size={17} color="#1055F8" />
+            <Volume2 size={16} color="#1055F8" />
           ) : (
-            <VolumeX size={17} color={colors.textTertiary} />
+            <VolumeX size={16} color="#64748B" />
           )}
-        </Pressable>
+        </Button>
 
-        <Badge label={`${qIdx + 1}/${Math.max(1, questions.length)}`} tone="accent" />
-      </View>
+        <Badge className="rounded-full bg-accent border-0 px-2.5 py-1">
+          <BadgeText className="text-primary font-extrabold normal-case">
+            {qIdx + 1}/{Math.max(1, questions.length)}
+          </BadgeText>
+        </Badge>
+      </HStack>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ padding: 16, paddingBottom: 28, gap: 16 }}
+        showsVerticalScrollIndicator={false}
+      >
         {submitError ? (
-          <Card variant="muted" style={styles.errorBanner}>
-            <Text style={styles.errorText}>{submitError}</Text>
-          </Card>
+          <Alert variant="destructive" className="rounded-xl bg-red-50 border-red-200 p-3">
+            <AlertIcon as={AlertCircle} className="text-destructive" />
+            <AlertText className="text-destructive text-xs font-semibold">
+              {submitError}
+            </AlertText>
+          </Alert>
         ) : null}
 
         {currentQuestion ? (
           <>
-            <MascotChatBubble
-              eyebrow={
-                currentQuestion.type === 'ORDER'
-                  ? 'Sentence Builder'
-                  : currentQuestion.type === 'TRUE_FALSE'
-                    ? 'True or False'
-                    : currentQuestion.type === 'MULTI_CHOICE'
-                      ? 'Pick All That Fit'
-                      : 'Quiz Challenge'
-              }
-              message={currentQuestion.prompt}
-              subHint={currentQuestion.data.hint ?? undefined}
-              pose={canAdvance ? 'cheer' : 'think'}
-              accentColor="#1055F8"
-              softAccentColor="#DBEAFE"
-              isSpeaking={isLeoSpeaking}
-              onSpeakPress={() => speakAsLeo(currentQuestion.prompt)}
-            />
+            {/* Question Prompt Card */}
+            <Card className="bg-card border border-border rounded-2xl p-4">
+              <HStack className="items-start" space="md">
+                <Center className="w-16 h-16 rounded-2xl bg-accent">
+                  <LeoMascot pose={canAdvance ? 'cheer' : 'think'} size={58} />
+                </Center>
+                <VStack className="flex-1 min-w-0" space="xs">
+                  <HStack className="items-center justify-between">
+                    <Badge className="rounded-full bg-accent border-0 px-2.5 py-0.5">
+                      <BadgeText className="text-primary text-[10px] font-bold">
+                        {currentQuestion.type === 'ORDER'
+                          ? 'Sentence Builder'
+                          : currentQuestion.type === 'TRUE_FALSE'
+                            ? 'True or False'
+                            : currentQuestion.type === 'MULTI_CHOICE'
+                              ? 'Pick All That Fit'
+                              : 'Quiz Challenge'}
+                      </BadgeText>
+                    </Badge>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 rounded-lg"
+                      onPress={() => speakAsLeo(currentQuestion.prompt)}
+                    >
+                      <Volume2 size={16} color="#1055F8" />
+                    </Button>
+                  </HStack>
 
-            {/* SINGLE_CHOICE & MULTI_CHOICE */}
-            {currentQuestion.type === 'SINGLE_CHOICE' || currentQuestion.type === 'MULTI_CHOICE' ? (
-              <View style={styles.optionsCol}>
+                  <Heading size="md" className="text-foreground leading-6">
+                    {currentQuestion.prompt}
+                  </Heading>
+
+                  {currentQuestion.data.hint ? (
+                    <Text size="xs" className="text-muted-foreground">
+                      Hint: {currentQuestion.data.hint}
+                    </Text>
+                  ) : null}
+                </VStack>
+              </HStack>
+            </Card>
+
+            {/* SINGLE_CHOICE & MULTI_CHOICE (Clean Gluestack Option Cards) */}
+            {currentQuestion.type === 'SINGLE_CHOICE' ||
+            currentQuestion.type === 'MULTI_CHOICE' ? (
+              <VStack space="sm">
                 {(currentQuestion.data.options ?? []).map((opt, idx) => {
                   const isMulti = currentQuestion.type === 'MULTI_CHOICE';
                   const isSel = isMulti
                     ? selectedMulti.includes(opt.id)
                     : selectedChoice === opt.id;
 
-                  const bg = isSel ? '#DDF4FF' : colors.surface;
-                  const border = isSel ? '#1CB0F6' : '#CBD5E1';
-                  const lip = isSel ? '#1899D6' : '#94A3B8';
-                  const capBg = isSel ? '#1CB0F6' : '#F8FAFC';
-                  const labelColor = isSel ? '#0369A1' : colors.textPrimary;
-
                   return (
-                    <AnimatedPressable
+                    <Pressable
                       key={opt.id}
                       onPress={() => {
                         playTileTapSound(undefined, soundEnabled);
@@ -642,269 +898,219 @@ export default function KidsLessonScreen() {
                           setSelectedChoice(opt.id);
                         }
                       }}
-                      style={[
-                        styles.optionBtn3D,
-                        { backgroundColor: bg, borderColor: border, borderBottomColor: lip },
-                      ]}
                     >
-                      <View
-                        style={[
-                          styles.optionKeycap,
-                          { backgroundColor: capBg, borderColor: lip, borderBottomColor: lip },
-                        ]}
+                      <Card
+                        className={`rounded-2xl p-3.5 border ${
+                          isSel
+                            ? 'bg-accent border-primary'
+                            : 'bg-card border-border'
+                        }`}
                       >
-                        {isSel ? (
-                          <Check size={15} color="#FFFFFF" strokeWidth={3} />
-                        ) : (
-                          <Text style={{ color: '#64748B', fontSize: 12.5, fontWeight: '900' }}>
-                            {String.fromCharCode(65 + idx)}
+                        <HStack className="items-center" space="md">
+                          <Center
+                            className={`w-8 h-8 rounded-lg border ${
+                              isSel
+                                ? 'bg-primary border-primary'
+                                : 'bg-secondary border-border'
+                            }`}
+                          >
+                            {isSel ? (
+                              <Check size={15} color="#FFFFFF" strokeWidth={3} />
+                            ) : (
+                              <Text size="xs" bold className="text-muted-foreground">
+                                {String.fromCharCode(65 + idx)}
+                              </Text>
+                            )}
+                          </Center>
+                          <Text
+                            size="md"
+                            bold={isSel}
+                            className={`flex-1 ${
+                              isSel ? 'text-primary' : 'text-foreground'
+                            }`}
+                          >
+                            {opt.text}
                           </Text>
-                        )}
-                      </View>
-                      <Text
-                        style={[
-                          typography.body,
-                          { color: labelColor, fontWeight: isSel ? '800' : '600', flex: 1 },
-                        ]}
-                      >
-                        {opt.text}
-                      </Text>
-                    </AnimatedPressable>
+                        </HStack>
+                      </Card>
+                    </Pressable>
                   );
                 })}
-              </View>
+              </VStack>
             ) : null}
 
-            {/* TRUE_FALSE */}
+            {/* TRUE_FALSE (Clean Gluestack Cards) */}
             {currentQuestion.type === 'TRUE_FALSE' ? (
-              <View style={styles.tfRow}>
+              <HStack space="sm">
                 {[
                   { label: 'True', val: true },
                   { label: 'False', val: false },
                 ].map((choice) => {
                   const isSel = selectedBool === choice.val;
-                  const bg = isSel ? '#DDF4FF' : colors.surface;
-                  const border = isSel ? '#1CB0F6' : '#CBD5E1';
-                  const lip = isSel ? '#1899D6' : '#94A3B8';
-                  const textCol = isSel ? '#0369A1' : colors.textPrimary;
-
                   return (
-                    <AnimatedPressable
+                    <Pressable
                       key={choice.label}
-                      containerStyle={{ flex: 1, minWidth: 0 }}
+                      className="flex-1"
                       onPress={() => {
                         playTileTapSound(choice.label, soundEnabled);
                         setSelectedBool(choice.val);
                       }}
-                      style={[
-                        styles.tfBtn3D,
-                        { backgroundColor: bg, borderColor: border, borderBottomColor: lip },
-                      ]}
                     >
-                      <Text style={[typography.title2, { color: textCol }]}>{choice.label}</Text>
-                    </AnimatedPressable>
+                      <Card
+                        className={`rounded-2xl py-6 items-center justify-center border ${
+                          isSel
+                            ? 'bg-accent border-primary'
+                            : 'bg-card border-border'
+                        }`}
+                      >
+                        <Heading
+                          size="lg"
+                          className={isSel ? 'text-primary' : 'text-foreground'}
+                        >
+                          {choice.label}
+                        </Heading>
+                      </Card>
+                    </Pressable>
                   );
                 })}
-              </View>
+              </HStack>
             ) : null}
 
-            {/* ORDER — Notebook-Lined 3D Sentence Builder */}
+            {/* ORDER — Clean Gluestack Sentence Builder */}
             {currentQuestion.type === 'ORDER' ? (
-              <SentenceBuilderStage
-                tiles={orderTiles}
-                selectedTileIndices={selectedOrderIndices}
-                checked={false}
-                isCorrect={false}
-                accentColor="#1055F8"
-                deepColor="#0A3BB3"
-                onToggleTile={(idx) => {
-                  const adding = !selectedOrderIndices.includes(idx);
-                  playTileTapSound(adding ? orderTiles[idx] : undefined, soundEnabled);
-                  setSelectedOrderIndices((prev) =>
-                    prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]
-                  );
-                }}
-                onClear={() => setSelectedOrderIndices([])}
-              />
+              <VStack space="md">
+                <Card className="bg-card border border-border rounded-2xl p-4 min-h-[112px]">
+                  <HStack className="items-center justify-between mb-3">
+                    <Text size="xs" bold className="text-muted-foreground uppercase">
+                      Your Sentence
+                    </Text>
+                    {selectedOrderIndices.length > 0 ? (
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="px-0 h-auto"
+                        onPress={() => setSelectedOrderIndices([])}
+                      >
+                        <ButtonIcon as={RotateCcw} className="text-muted-foreground" />
+                        <ButtonText className="text-xs text-muted-foreground font-semibold">
+                          Clear
+                        </ButtonText>
+                      </Button>
+                    ) : null}
+                  </HStack>
+
+                  {selectedOrderIndices.length > 0 ? (
+                    <Box className="flex-row flex-wrap gap-2">
+                      {selectedOrderIndices.map((tileIdx) => (
+                        <Button
+                          key={`picked-${tileIdx}`}
+                          size="sm"
+                          variant="default"
+                          className="rounded-xl h-9 px-3.5"
+                          onPress={() => {
+                            playTileTapSound(undefined, soundEnabled);
+                            setSelectedOrderIndices((prev) =>
+                              prev.filter((i) => i !== tileIdx)
+                            );
+                          }}
+                        >
+                          <ButtonText className="text-white font-bold text-sm">
+                            {orderTiles[tileIdx]}
+                          </ButtonText>
+                        </Button>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Center className="py-4">
+                      <Text size="sm" className="text-muted-foreground">
+                        Tap the words below in the correct order
+                      </Text>
+                    </Center>
+                  )}
+                </Card>
+
+                <Box className="flex-row flex-wrap gap-2 justify-center">
+                  {orderTiles.map((word, idx) => {
+                    const used = selectedOrderIndices.includes(idx);
+                    return (
+                      <Button
+                        key={`bank-${idx}-${word}`}
+                        size="sm"
+                        variant="outline"
+                        isDisabled={used}
+                        className={`rounded-xl h-10 px-4 ${
+                          used
+                            ? 'bg-secondary border-dashed border-border opacity-40'
+                            : 'bg-card border-border'
+                        }`}
+                        onPress={() => {
+                          playTileTapSound(word, soundEnabled);
+                          setSelectedOrderIndices((prev) => [...prev, idx]);
+                        }}
+                      >
+                        <ButtonText className="text-foreground font-semibold text-sm">
+                          {word}
+                        </ButtonText>
+                      </Button>
+                    );
+                  })}
+                </Box>
+              </VStack>
             ) : null}
 
-            {/* TEXT / NUMERIC / ESSAY / OTHER */}
+            {/* TEXT / NUMERIC / ESSAY (Gluestack Input / Textarea) */}
             {currentQuestion.type !== 'SINGLE_CHOICE' &&
             currentQuestion.type !== 'MULTI_CHOICE' &&
             currentQuestion.type !== 'TRUE_FALSE' &&
             currentQuestion.type !== 'ORDER' ? (
-              <Card style={styles.textInputCard}>
-                <TextInput
-                  value={textAnswer}
-                  onChangeText={setTextAnswer}
-                  placeholder="Type your answer here..."
-                  placeholderTextColor={colors.textTertiary}
-                  keyboardType={currentQuestion.type === 'NUMERIC' ? 'decimal-pad' : 'default'}
-                  multiline={currentQuestion.type === 'ESSAY'}
-                  style={[
-                    styles.textInput,
-                    {
-                      color: colors.textPrimary,
-                      borderColor: colors.borderStrong,
-                      borderRadius: radii.md,
-                    },
-                  ]}
-                />
+              <Card className="bg-card border border-border rounded-2xl p-4">
+                {currentQuestion.type === 'ESSAY' ? (
+                  <Textarea className="rounded-xl border-border bg-background min-h-[120px]">
+                    <TextareaInput
+                      value={textAnswer}
+                      onChangeText={setTextAnswer}
+                      placeholder="Write your answer here..."
+                      className="text-foreground text-base"
+                    />
+                  </Textarea>
+                ) : (
+                  <Input className="h-12 rounded-xl border-border bg-background px-3">
+                    <InputField
+                      value={textAnswer}
+                      onChangeText={setTextAnswer}
+                      placeholder="Type your answer here..."
+                      keyboardType={
+                        currentQuestion.type === 'NUMERIC' ? 'decimal-pad' : 'default'
+                      }
+                      className="text-foreground text-base font-medium"
+                    />
+                  </Input>
+                )}
               </Card>
             ) : null}
           </>
         ) : null}
       </ScrollView>
 
-      <View style={[styles.footer, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
-        <GameButton
-          label={
-            submitting
+      <Box className="px-4 py-3 bg-card border-t border-border">
+        <Button
+          size="lg"
+          isDisabled={!canAdvance || submitting}
+          className={`h-12 rounded-xl w-full ${
+            qIdx + 1 === questions.length ? 'bg-emerald-600' : ''
+          }`}
+          onPress={() => void handleNextOrSubmit()}
+        >
+          {submitting ? <ButtonSpinner color="#FFFFFF" /> : null}
+          <ButtonText className="font-bold">
+            {submitting
               ? 'Leo is checking your answers...'
               : qIdx + 1 === questions.length
-                ? 'Submit & See Score!'
-                : 'Next Question'
-          }
-          disabled={!canAdvance || submitting}
-          color={qIdx + 1 === questions.length ? '#58CC02' : '#1055F8'}
-          depthColor={qIdx + 1 === questions.length ? '#46A302' : '#0A3BB3'}
-          onPress={() => void handleNextOrSubmit()}
-        />
-      </View>
+                ? 'Submit & See Score'
+                : 'Next Question'}
+          </ButtonText>
+        </Button>
+      </Box>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  center: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 10,
-  },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  soundBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scroll: {
-    paddingHorizontal: 16,
-    paddingBottom: 28,
-    gap: 16,
-  },
-  errorBanner: {
-    backgroundColor: '#FFDFE0',
-    borderColor: '#FF4B4B',
-    borderWidth: 1.5,
-  },
-  errorText: {
-    color: '#CC1D1D',
-    fontSize: 13.5,
-    fontWeight: '700',
-  },
-  theoryCard: {
-    gap: 8,
-  },
-  theoryHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  vocabStack: {
-    gap: 10,
-  },
-  vocabCard: {
-    gap: 6,
-  },
-  vocabTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  audioBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  exPickCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
-    borderWidth: 1.5,
-    gap: 10,
-  },
-  optionsCol: {
-    gap: 12,
-  },
-  optionBtn3D: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 13,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderBottomWidth: 5,
-    gap: 12,
-  },
-  optionKeycap: {
-    width: 30,
-    height: 30,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderBottomWidth: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tfRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  tfBtn3D: {
-    paddingVertical: 22,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderBottomWidth: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textInputCard: {
-    padding: 12,
-  },
-  textInput: {
-    borderWidth: 1.75,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  reviewCard: {
-    gap: 8,
-  },
-  reviewHead: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  footer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-});

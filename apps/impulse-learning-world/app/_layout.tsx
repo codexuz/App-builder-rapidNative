@@ -1,15 +1,23 @@
+import '@/global.css';
+
 import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import { SafeAreaListener } from 'react-native-safe-area-context';
+import { Uniwind } from 'uniwind';
 
-import { GameButton } from '@/components/game';
+import { Button, ButtonText } from '@/components/gluestack/button';
+import { Center } from '@/components/gluestack/center';
+import { GluestackUIProvider } from '@/components/gluestack/gluestack-ui-provider';
+import { Heading } from '@/components/gluestack/heading';
+import { Spinner } from '@/components/gluestack/spinner';
+import { Text } from '@/components/gluestack/text';
+import { VStack } from '@/components/gluestack/vstack';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useAppTheme } from '@/constants/Theme';
 import { KidsAppProvider, useKidsApp } from '@/providers/KidsAppProvider';
 
 export { ErrorBoundary } from 'expo-router';
@@ -40,15 +48,19 @@ export default function RootLayout() {
   }
 
   return (
-    <KidsAppProvider>
-      <RootLayoutNav />
-    </KidsAppProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaListener onChange={({ insets }) => Uniwind.updateInsets(insets)}>
+        <GluestackUIProvider mode="light">
+          <KidsAppProvider>
+            <RootLayoutNav />
+          </KidsAppProvider>
+        </GluestackUIProvider>
+      </SafeAreaListener>
+    </GestureHandlerRootView>
   );
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const { colors, typography } = useAppTheme();
   const { status, retryBoot } = useKidsApp();
   const segments = useSegments();
   const router = useRouter();
@@ -66,46 +78,49 @@ function RootLayoutNav() {
 
   if (status === 'booting') {
     return (
-      <View style={[styles.centerState, { backgroundColor: colors.background }]}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <LeoMascot pose="wave" size={130} />
-        <ActivityIndicator size="large" color="#1055F8" style={{ marginTop: 12 }} />
-        <Text style={[typography.headline, { color: colors.textPrimary, marginTop: 10 }]}>
-          Impulse Kids
-        </Text>
-        <Text style={[typography.caption, { color: colors.textSecondary }]}>
-          Connecting to Impulse Learning Center...
-        </Text>
-      </View>
+      <Center className="flex-1 bg-background px-6">
+        <StatusBar style="dark" />
+        <VStack space="md" className="items-center">
+          <LeoMascot pose="wave" size={124} />
+          <Spinner size="large" />
+          <Heading size="lg" className="text-foreground">
+            Impulse Kids
+          </Heading>
+          <Text size="sm" className="text-muted-foreground text-center">
+            Connecting to Impulse Learning Center...
+          </Text>
+        </VStack>
+      </Center>
     );
   }
 
   if (status === 'offline') {
     return (
-      <View style={[styles.centerState, { backgroundColor: colors.background, padding: 24 }]}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <LeoMascot pose="sleep" size={136} />
-        <Text style={[typography.title1, { color: colors.textPrimary, textAlign: 'center', marginTop: 8 }]}>
-          No Internet Connection
-        </Text>
-        <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center', marginBottom: 16 }]}>
-          Leo cannot reach the Impulse server right now. Check Wi-Fi or mobile data and try again.
-        </Text>
-        <View style={{ width: '100%', maxWidth: 280 }}>
-          <GameButton
-            label="Try Again"
-            color="#1055F8"
-            depthColor="#0A3BB3"
+      <Center className="flex-1 bg-background px-6">
+        <StatusBar style="dark" />
+        <VStack space="md" className="items-center w-full max-w-[300px]">
+          <LeoMascot pose="sleep" size={132} />
+          <Heading size="xl" className="text-foreground text-center">
+            No Internet Connection
+          </Heading>
+          <Text size="sm" className="text-muted-foreground text-center">
+            Leo cannot reach the Impulse server right now. Check Wi-Fi or mobile data and try again.
+          </Text>
+          <Button
+            size="lg"
+            className="w-full rounded-xl h-12 mt-2"
             onPress={() => void retryBoot()}
-          />
-        </View>
-      </View>
+          >
+            <ButtonText className="font-bold">Try Again</ButtonText>
+          </Button>
+        </VStack>
+      </Center>
     );
   }
 
   return (
     <>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
@@ -118,12 +133,3 @@ function RootLayoutNav() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  centerState: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
-});
