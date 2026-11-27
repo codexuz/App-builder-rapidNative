@@ -1,28 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { AssetsManifestSchema, type AssetItem, type AssetsManifest } from '../schemas';
 import { loadRootEnv } from './lib/env';
+import { inspectImageFile } from './lib/image-meta';
 import { KieClient } from './lib/kie';
-
-export interface AssetManifestItem {
-  key: string;
-  filename: string;
-  prompt: string;
-  model?: string;
-  aspectRatio?: string;
-  outputFormat?: 'png' | 'jpg' | 'webp';
-  resolution?: '1K' | '2K' | '4K';
-  quality?: 'low' | 'medium' | 'high';
-  background?: 'auto' | 'transparent' | 'opaque';
-  /** Optional relative path inside the app to also copy the image to (e.g. assets/images/icon.png) */
-  copyTo?: string[];
-}
-
-export interface AssetManifest {
-  defaultModel?: string;
-  /** Shared art-direction prefix prepended to every asset prompt for visual cohesion */
-  stylePrefix?: string;
-  assets: AssetManifestItem[];
-}
+import { getFactoryDir, recordStageStatus } from './lib/state';
 
 function parseFlags(args: string[]): { positional: string[]; flags: Record<string, string | boolean> } {
   const positional: string[] = [];
@@ -49,7 +31,7 @@ function toIdentifier(key: string): string {
   return key.replace(/[^a-zA-Z0-9_]/g, '_');
 }
 
-function writeTypedAssetRegistry(appDir: string, items: AssetManifestItem[]): void {
+function writeTypedAssetRegistry(appDir: string, items: AssetItem[]): void {
   const outPath = path.join(appDir, 'constants', 'GeneratedAssets.ts');
   const existingItems = items.filter((item) =>
     fs.existsSync(path.join(appDir, 'assets', 'generated', item.filename))
@@ -88,6 +70,49 @@ async function runWithConcurrency<T>(
   await Promise.all(workers);
 }
 
+async function withRetries<T>(fn: () => Promise<T>, maxAttempts = 2): Promise<T> {
+  let lastErr: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (attempt < maxAttempts) {
+        const waitMs = 1500 * attempt;
+        console.warn(`    retry ${attempt}/${maxAttempts - 1} in ${waitMs}ms...`);
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+    }
+  }
+  throw lastErr;
+}
+
+function resolveManifestPath(appDir: string, explicitManifest?: string): string {
+  if (explicitManifest) {
+    return path.resolve(process.cwd(), explicitManifest);
+  }
+  const factoryManifest = path.join(getFactoryDir(appDir), 'ASSETS.json');
+  if (fs.existsSync(factoryManifest)) {
+    return factoryManifest;
+  }
+  return path.join(appDir, 'assets.manifest.json');
+}
+
+function composeAssetPrompt(manifest: AssetsManifest, item: AssetItem): string {
+  const parts: string[] = [];
+  if (manifest.stylePrefix) {
+    parts.push(manifest.stylePrefix.trim().replace(/\.$/, ''));
+  }
+  if (item.characterRefId) {
+    const ref = manifest.characterReferences.find((c) => c.id === item.characterRefId);
+    if (ref) {
+      parts.push(`Character ${ref.name}: ${ref.visualAttributes.trim().replace(/\.$/, '')}`);
+    }
+  }
+  parts.push(item.prompt.trim());
+  return parts.join('. ');
+}
+
 async function runBatch(positional: string[], flags: Record<string, string | boolean>): Promise<void> {
   const slug = positional[0];
   if (!slug) {
@@ -101,16 +126,15 @@ async function runBatch(positional: string[], flags: Record<string, string | boo
     throw new Error(`App directory not found: ${appDir}`);
   }
 
-  const manifestPath =
-    typeof flags.manifest === 'string'
-      ? path.resolve(process.cwd(), flags.manifest)
-      : path.join(appDir, 'assets.manifest.json');
-
+  const manifestPath = resolveManifestPath(
+    appDir,
+    typeof flags.manifest === 'string' ? flags.manifest : undefined
+  );
   if (!fs.existsSync(manifestPath)) {
     throw new Error(`Asset manifest not found: ${manifestPath}`);
   }
 
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as AssetManifest;
+  const manifest = AssetsManifestSchema.parse(JSON.parse(fs.readFileSync(manifestPath, 'utf8')));
   const force = Boolean(flags.force);
   const dryRun = Boolean(flags['dry-run']);
   const concurrency = typeof flags.concurrency === 'string' ? Number(flags.concurrency) || 4 : 4;
@@ -118,55 +142,95 @@ async function runBatch(positional: string[], flags: Record<string, string | boo
   const client = dryRun ? null : new KieClient(undefined, manifest.defaultModel);
 
   console.log(
-    `Processing ${manifest.assets.length} asset(s) for "${slug}"${dryRun ? ' [DRY RUN]' : ''}...`
+    `Processing ${manifest.assets.length} asset(s) for "${slug}" from ${path.relative(process.cwd(), manifestPath)}${dryRun ? ' [DRY RUN]' : ''}...`
   );
+
+  if (!dryRun) {
+    recordStageStatus(appDir, slug, 'assets', 'running');
+  }
+
+  let failures = 0;
 
   await runWithConcurrency(manifest.assets, concurrency, async (item) => {
     const outFile = path.join(appDir, 'assets', 'generated', item.filename);
     if (!force && fs.existsSync(outFile)) {
-      console.log(`  [skip] ${item.key} -> ${item.filename} (already exists; use --force to regenerate)`);
-      return;
-    }
-
-    if (dryRun) {
+      const meta = inspectImageFile(outFile);
+      item.width = meta.width || item.width;
+      item.height = meta.height || item.height;
+      item.status = meta.bytes > 0 ? 'approved' : 'failed';
       console.log(
-        `  [dry-run] ${item.key} (${item.model ?? manifest.defaultModel ?? 'default'}, ${item.aspectRatio ?? '1:1'}) -> ${item.filename}`
+        `  [skip] ${item.key} -> ${item.filename} (${meta.width}x${meta.height}, ${meta.format}; use --force to regenerate)`
       );
       return;
     }
 
-    console.log(`  [gen] ${item.key} -> submitting to Kie.ai...`);
-    const composedPrompt = manifest.stylePrefix
-      ? `${manifest.stylePrefix.trim().replace(/\.$/, '')}. ${item.prompt}`
-      : item.prompt;
-    const result = await client!.generateImage({
-      prompt: composedPrompt,
-      model: item.model ?? manifest.defaultModel,
-      aspectRatio: item.aspectRatio,
-      outputFormat: item.outputFormat,
-      resolution: item.resolution,
-      quality: item.quality,
-      background: item.background,
-    });
+    const composedPrompt = composeAssetPrompt(manifest, item);
 
-    await client!.downloadFile(result.urls[0], outFile);
-    console.log(
-      `  [ok]  ${item.key} -> assets/generated/${item.filename}` +
-        (result.creditsConsumed !== undefined ? ` (${result.creditsConsumed} credits)` : '')
-    );
+    if (dryRun) {
+      console.log(
+        `  [dry-run] ${item.key} (${item.type}, ${item.model ?? manifest.defaultModel ?? 'default'}, ${item.aspectRatio}) -> ${item.filename}`
+      );
+      return;
+    }
 
-    if (item.copyTo && item.copyTo.length > 0) {
-      for (const relTarget of item.copyTo) {
-        const targetAbs = path.join(appDir, relTarget);
-        fs.mkdirSync(path.dirname(targetAbs), { recursive: true });
-        fs.copyFileSync(outFile, targetAbs);
-        console.log(`        copied -> ${relTarget}`);
+    try {
+      console.log(`  [gen] ${item.key} -> submitting to Kie.ai...`);
+      const result = await withRetries(() =>
+        client!.generateImage({
+          prompt: composedPrompt,
+          model: item.model ?? manifest.defaultModel,
+          aspectRatio: item.aspectRatio,
+          outputFormat: item.outputFormat,
+          resolution: item.resolution,
+          quality: item.quality,
+          background: item.transparent ? 'transparent' : item.background,
+        })
+      );
+
+      await client!.downloadFile(result.urls[0], outFile);
+      const meta = inspectImageFile(outFile);
+      if (meta.bytes === 0 || meta.format === 'unknown') {
+        throw new Error(`Downloaded file is not a valid image (${meta.bytes} bytes)`);
       }
+
+      item.taskId = result.taskId;
+      item.width = meta.width;
+      item.height = meta.height;
+      item.status = 'approved';
+      item.generatedAt = new Date().toISOString();
+      item.error = undefined;
+
+      console.log(
+        `  [ok]  ${item.key} -> assets/generated/${item.filename} (${meta.width}x${meta.height} ${meta.format})` +
+          (result.creditsConsumed !== undefined ? ` [${result.creditsConsumed} credits]` : '')
+      );
+
+      if (item.copyTo && item.copyTo.length > 0) {
+        for (const relTarget of item.copyTo) {
+          const targetAbs = path.join(appDir, relTarget);
+          fs.mkdirSync(path.dirname(targetAbs), { recursive: true });
+          fs.copyFileSync(outFile, targetAbs);
+          console.log(`        copied -> ${relTarget}`);
+        }
+      }
+    } catch (err) {
+      failures++;
+      item.status = 'failed';
+      item.error = err instanceof Error ? err.message : String(err);
+      console.error(`  [fail] ${item.key}: ${item.error}`);
     }
   });
 
   if (!dryRun) {
+    fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
     writeTypedAssetRegistry(appDir, manifest.assets);
+    recordStageStatus(appDir, slug, 'assets', failures > 0 ? 'failed' : 'passed', {
+      artifactPath: path.relative(process.cwd(), manifestPath),
+      error: failures > 0 ? `${failures} asset(s) failed generation` : undefined,
+    });
+    if (failures > 0) {
+      process.exit(1);
+    }
   }
 }
 
@@ -193,17 +257,24 @@ async function runSingle(flags: Record<string, string | boolean>): Promise<void>
   }
 
   const client = new KieClient(undefined, model);
-  console.log(`Submitting prompt to Kie.ai (${model ?? process.env.KIE_DEFAULT_IMAGE_MODEL ?? 'gpt-image-2-6/flare-text-to-image'})...`);
-  const result = await client.generateImage({
-    prompt,
-    model,
-    aspectRatio,
-    outputFormat,
-  });
+  console.log(
+    `Submitting prompt to Kie.ai (${model ?? process.env.KIE_DEFAULT_IMAGE_MODEL ?? 'gpt-image-2-6/flare-text-to-image'})...`
+  );
+  const result = await withRetries(() =>
+    client.generateImage({
+      prompt,
+      model,
+      aspectRatio,
+      outputFormat,
+    })
+  );
 
   const absOut = path.resolve(process.cwd(), out);
   await client.downloadFile(result.urls[0], absOut);
-  console.log(`Saved -> ${path.relative(process.cwd(), absOut)}`);
+  const meta = inspectImageFile(absOut);
+  console.log(
+    `Saved -> ${path.relative(process.cwd(), absOut)} (${meta.width}x${meta.height} ${meta.format})`
+  );
 }
 
 async function main(): Promise<void> {

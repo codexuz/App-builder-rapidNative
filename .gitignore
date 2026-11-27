@@ -10,6 +10,7 @@ node_modules/
 # Expo / Build outputs
 .expo/
 .expo-verify-web/
+.factory/screenshots/
 dist/
 web-build/
 *.jks

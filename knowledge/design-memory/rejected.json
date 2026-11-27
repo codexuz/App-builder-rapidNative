@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "entries": [
+    {
+      "patternId": "clipped-floating-tabbar-390px",
+      "category": "navigation",
+      "reason": "Horizontal 4-tab FloatingTabBar overflowed the right edge on 390px screens when tabItem paddingHorizontal exceeded 8px or Animated.View lacked flex: 1.",
+      "antiPatterns": ["horizontal-overflow", "missing-flex-wrapper"],
+      "fixRule": "Always pass containerStyle={{ flex: 1, minWidth: 0 }} to AnimatedPressable inside flex rows and keep 4-tab paddingHorizontal <= 6px with overflow: hidden."
+    },
+    {
+      "patternId": "unwrapped-animated-grid-overflow",
+      "category": "layout",
+      "reason": "3-column card rows using AnimatedPressable overflowed viewport width when flex: 1 was only applied to the inner Pressable instead of Animated.View.",
+      "antiPatterns": ["horizontal-overflow", "clipped-card"],
+      "fixRule": "Apply flex: 1 and minWidth: 0 to AnimatedPressable containerStyle in multi-column mobile rows."
+    },
+    {
+      "patternId": "generic-card-slop",
+      "category": "composition",
+      "reason": "Repeating identical icon + heading + paragraph cards across every screen makes distinct apps look like the same template.",
+      "antiPatterns": ["repetitive-cards", "default-blue-gradient", "eyebrow-clutter"],
+      "fixRule": "Lead each app with a domain-authentic focal layout (journey map, balance hero, editorial feed, live canvas) matched to its selected design direction."
+    }
+  ]
+}

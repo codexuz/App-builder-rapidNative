@@ -5,13 +5,19 @@
   "description": "Personal AI Cross-Platform Mobile App Factory powered by Antigravity + Kie.ai API + Expo",
   "scripts": {
     "app:new": "tsx scripts/create-app.ts",
+    "app:compile": "tsx scripts/design-compiler.ts",
     "app:verify": "tsx scripts/verify-app.ts",
+    "app:shot": "tsx scripts/render-screens.ts",
+    "app:qa-check": "tsx scripts/qa-check.ts",
     "app:web": "tsx scripts/run-app.ts web",
     "app:phone": "tsx scripts/run-app.ts phone",
     "app:build": "tsx scripts/run-app.ts build",
     "assets:gen": "tsx scripts/kie-assets.ts batch",
     "assets:single": "tsx scripts/kie-assets.ts single",
     "typecheck:scripts": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

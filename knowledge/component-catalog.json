@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "1.0.0",
+  "templateBase": "templates/expo-base/components/ui",
+  "components": [
+    {
+      "id": "Screen",
+      "category": "layout",
+      "source": "components/ui/Screen.tsx",
+      "dependencies": ["react-native-safe-area-context"],
+      "motion": false,
+      "usage": "Root safe-area container with optional scroll, pull-to-refresh, keyboard avoidance, and tab-bar clearance.",
+      "antiUse": "Do not nest a scrolling Screen inside another ScrollView or FlatList."
+    },
+    {
+      "id": "AnimatedPressable",
+      "category": "interaction",
+      "source": "components/ui/AnimatedPressable.tsx",
+      "dependencies": ["react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "Spring press-scale feedback wrapper with optional native haptics. Pass containerStyle={{ flex: 1, minWidth: 0 }} inside flex rows.",
+      "antiUse": "Do not omit containerStyle when placing multiple AnimatedPressables in equal-width rows."
+    },
+    {
+      "id": "Button",
+      "category": "controls",
+      "source": "components/ui/Button.tsx",
+      "dependencies": ["react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "Primary, secondary, outline, ghost, and danger actions with loading and icon slots.",
+      "antiUse": "Do not use more than one primary Button competing in the same footer."
+    },
+    {
+      "id": "Card",
+      "category": "surface",
+      "source": "components/ui/Card.tsx",
+      "dependencies": ["expo-linear-gradient"],
+      "motion": true,
+      "usage": "Elevated, outlined, muted, or gradient container for cohesive grouped content.",
+      "antiUse": "Never nest Cards inside Cards or repeat identical icon+title+text Cards for an entire screen."
+    },
+    {
+      "id": "Badge",
+      "category": "feedback",
+      "source": "components/ui/Badge.tsx",
+      "dependencies": [],
+      "motion": false,
+      "usage": "Compact semantic status pill (accent, success, warning, danger, neutral).",
+      "antiUse": "Never use Badge as a decorative eyebrow above every page heading."
+    },
+    {
+      "id": "Chip",
+      "category": "controls",
+      "source": "components/ui/Chip.tsx",
+      "dependencies": ["react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "Selectable category or filter pill inside horizontal strips or wrap rows.",
+      "antiUse": "Avoid more than 6 chips without horizontal scrolling."
+    },
+    {
+      "id": "SegmentedControl",
+      "category": "controls",
+      "source": "components/ui/SegmentedControl.tsx",
+      "dependencies": ["react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "2-to-4 option mutually exclusive view or timeframe switcher (e.g., Day/Week/Month, Buy/Sell).",
+      "antiUse": "Avoid more than 4 segments or long multi-word labels on 390px screens."
+    },
+    {
+      "id": "SectionHeader",
+      "category": "typography",
+      "source": "components/ui/SectionHeader.tsx",
+      "dependencies": [],
+      "motion": false,
+      "usage": "Clean section heading with optional concise subtitle and right-aligned action.",
+      "antiUse": "Do not add numbered prefixes unless sequence order carries meaning."
+    },
+    {
+      "id": "StatTile",
+      "category": "data-visualization",
+      "source": "components/ui/StatTile.tsx",
+      "dependencies": [],
+      "motion": false,
+      "usage": "Compact KPI tile with tabular numerals and optional delta badge.",
+      "antiUse": "Do not stack more than 2–4 StatTiles without a focal hero or visualization."
+    },
+    {
+      "id": "ProgressRing",
+      "category": "data-visualization",
+      "source": "components/ui/ProgressRing.tsx",
+      "dependencies": ["react-native-reanimated", "react-native-svg"],
+      "motion": true,
+      "usage": "Animated circular progress meter with centered metric or custom child slot.",
+      "antiUse": "Do not use decorative progress rings that do not reflect real user data."
+    },
+    {
+      "id": "AnimatedCounter",
+      "category": "data-visualization",
+      "source": "components/ui/AnimatedCounter.tsx",
+      "dependencies": ["react-native-reanimated"],
+      "motion": true,
+      "usage": "Smooth tabular-nums counter for balances, scores, distances, and live KPIs.",
+      "antiUse": "Do not animate static labels or dates."
+    },
+    {
+      "id": "Input",
+      "category": "forms",
+      "source": "components/ui/Input.tsx",
+      "dependencies": [],
+      "motion": false,
+      "usage": "Accessible text field with label, leading/trailing icon slots, focus accent, and inline validation.",
+      "antiUse": "Never rely on placeholder text alone when a label clarifies field purpose."
+    },
+    {
+      "id": "EmptyState",
+      "category": "feedback",
+      "source": "components/ui/EmptyState.tsx",
+      "dependencies": [],
+      "motion": false,
+      "usage": "Purposeful zero-data state with icon/artwork slot, crisp explanation, and clear CTA.",
+      "antiUse": "Never leave a blank screen when a list or search result is empty."
+    },
+    {
+      "id": "BottomSheet",
+      "category": "overlay",
+      "source": "components/ui/BottomSheet.tsx",
+      "dependencies": ["lucide-react-native", "react-native-safe-area-context"],
+      "motion": true,
+      "usage": "Focused dismissible modal sheet for detail previews, filters, or quick actions.",
+      "antiUse": "Do not use a modal sheet for flows that belong on a dedicated stack screen."
+    },
+    {
+      "id": "FloatingTabBar",
+      "category": "navigation",
+      "source": "components/ui/FloatingTabBar.tsx",
+      "dependencies": ["expo-router", "react-native-reanimated", "expo-haptics"],
+      "motion": true,
+      "usage": "Floating pill bottom navigation bar sized cleanly for 2–4 top-level tabs.",
+      "antiUse": "Avoid 5+ tabs inside FloatingTabBar; use native-tabs for 5 destinations or compact titles."
+    },
+    {
+      "id": "SkeletonShimmer",
+      "category": "motion",
+      "source": "components/ui/SkeletonShimmer.tsx",
+      "dependencies": ["react-native-reanimated"],
+      "motion": true,
+      "usage": "Restrained loading placeholder matching final content geometry.",
+      "antiUse": "Do not use generic full-screen spinners when skeleton geometry communicates layout better."
+    },
+    {
+      "id": "StaggeredEntrance",
+      "category": "motion",
+      "source": "components/ui/StaggeredEntrance.tsx",
+      "dependencies": ["react-native-reanimated"],
+      "motion": true,
+      "usage": "Subtle staggered fade-and-lift entrance wrapper honoring reduced-motion accessibility.",
+      "antiUse": "Do not wrap every single tiny element on screen; limit to key top-level sections or list items."
+    }
+  ]
+}

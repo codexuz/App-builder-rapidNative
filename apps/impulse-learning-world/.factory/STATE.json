@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectSlug": "impulse-learning-world",
+  "displayName": "impulse-learning-world",
+  "currentStage": "compile",
+  "iteration": 0,
+  "maxIterations": 3,
+  "createdAt": "2026-11-27T04:29:56.377Z",
+  "updatedAt": "2026-11-27T04:32:32.683Z",
+  "stages": {
+    "screenshots": {
+      "status": "passed",
+      "startedAt": "2026-11-27T04:29:56.385Z",
+      "completedAt": "2026-11-27T04:31:57.469Z",
+      "artifactPath": "apps/impulse-learning-world/.factory/screenshots/iteration-01"
+    },
+    "compile": {
+      "status": "passed",
+      "startedAt": "2026-11-27T04:32:32.679Z",
+      "completedAt": "2026-11-27T04:32:32.683Z",
+      "artifactPath": "apps/impulse-learning-world/.factory/IMPLEMENTATION_BRIEF.md"
+    }
+  },
+  "artifacts": {
+    "screenshots": "apps/impulse-learning-world/.factory/screenshots/iteration-01",
+    "compile": "apps/impulse-learning-world/.factory/IMPLEMENTATION_BRIEF.md"
+  }
+}

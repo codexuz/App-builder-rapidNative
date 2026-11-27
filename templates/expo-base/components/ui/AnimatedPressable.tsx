@@ -18,6 +18,7 @@ export type HapticStyle = 'none' | 'light' | 'medium' | 'selection';
 
 export interface AnimatedPressableProps extends Omit<PressableProps, 'style'> {
   style?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   haptic?: HapticStyle;
   scaleTo?: number;
   children?: React.ReactNode;
@@ -36,6 +37,7 @@ function triggerHaptic(haptic: HapticStyle) {
 
 export function AnimatedPressable({
   style,
+  containerStyle,
   haptic = 'light',
   scaleTo = Motion.pressScale,
   disabled,
@@ -52,7 +54,7 @@ export function AnimatedPressable({
   }));
 
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View style={[containerStyle, animatedStyle]}>
       <Pressable
         disabled={disabled}
         onPressIn={(event) => {

@@ -1,0 +1,47 @@
+{
+  "slug": "impulse-learning-world",
+  "iteration": 1,
+  "viewport": "390x844",
+  "capturedAt": "2026-11-27T04:31:57.468Z",
+  "totalCaptures": 4,
+  "totalRuntimeErrors": 0,
+  "maxHorizontalOverflowPx": 0,
+  "captures": [
+    {
+      "id": "home",
+      "route": "/",
+      "theme": "light",
+      "file": "home_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "quests",
+      "route": "/quests",
+      "theme": "light",
+      "file": "quests_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "leaderboard",
+      "route": "/leaderboard",
+      "theme": "light",
+      "file": "leaderboard_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "profile",
+      "route": "/profile",
+      "theme": "light",
+      "file": "profile_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    }
+  ]
+}

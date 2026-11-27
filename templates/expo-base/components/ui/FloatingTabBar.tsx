@@ -8,7 +8,7 @@ type TabBarRenderFn = NonNullable<ComponentProps<typeof Tabs>['tabBar']>;
 export type FloatingTabBarProps = Parameters<TabBarRenderFn>[0];
 
 /**
- * Modern floating pill bottom tab bar for Expo Router `<Tabs tabBar={(p) => <FloatingTabBar {...p} />} />`.
+ * Balanced floating pill bottom tab bar for Expo Router `<Tabs tabBar={(p) => <FloatingTabBar {...p} />} />`.
  */
 export function FloatingTabBar({
   state,
@@ -62,6 +62,7 @@ export function FloatingTabBar({
               key={route.key}
               haptic="selection"
               scaleTo={0.95}
+              containerStyle={styles.tabSlot}
               accessibilityRole="tab"
               accessibilityState={isFocused ? { selected: true } : {}}
               accessibilityLabel={options.tabBarAccessibilityLabel ?? label}
@@ -74,7 +75,7 @@ export function FloatingTabBar({
                 },
               ]}
             >
-              {options.tabBarIcon?.({ focused: isFocused, color: iconColor, size: 20 })}
+              {options.tabBarIcon?.({ focused: isFocused, color: iconColor, size: 18 })}
               <Text
                 numberOfLines={1}
                 style={[
@@ -98,18 +99,24 @@ export function FloatingTabBar({
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
-    left: 20,
-    right: 20,
+    left: 14,
+    right: 14,
     alignItems: 'center',
   },
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 6,
+    justifyContent: 'space-between',
+    padding: 5,
     borderWidth: 1,
-    gap: 4,
+    gap: 2,
     maxWidth: 420,
     width: '100%',
+    overflow: 'hidden',
+  },
+  tabSlot: {
+    flex: 1,
+    minWidth: 0,
   },
   tabItem: {
     flex: 1,
@@ -117,11 +124,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 12,
-    gap: 6,
+    paddingHorizontal: 6,
+    gap: 4,
+    minWidth: 0,
   },
   tabLabel: {
-    fontSize: 13,
-    letterSpacing: -0.1,
+    fontSize: 12,
+    letterSpacing: -0.2,
+    flexShrink: 1,
   },
 });

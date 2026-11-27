@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "entries": [
+    {
+      "project": "impulse-learning-world",
+      "category": "education-game",
+      "direction": "playful",
+      "secondaryDirection": "editorial",
+      "rating": 5,
+      "qaScore": 94,
+      "highlights": [
+        "Cohesive 2.5D illustrated city landscapes paired with warm Atlas Parchment canvas and deep ink typography.",
+        "Curved SVG expedition trail connecting interactive 3D-extruded lesson nodes instead of a flat list.",
+        "Consistent Lucide iconography, floating 4-tab pill bar fitting cleanly at 390px, and zero console errors."
+      ],
+      "saveAsReference": true,
+      "recordedAt": "2026-11-26T00:00:00.000Z"
+    }
+  ]
+}

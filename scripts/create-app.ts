@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadOrInitPipelineState } from './lib/state';
 
 function parseArgs(args: string[]): { slug: string; name?: string; skipInstall: boolean } {
   let slug = '';
@@ -104,6 +105,9 @@ function main(): void {
     fs.renameSync(exampleManifest, activeManifest);
   }
 
+  // Initialize resumable pipeline state directory (.factory/STATE.json)
+  loadOrInitPipelineState(targetDir, slug, displayName);
+
   console.log(`Scaffolded "${displayName}" at apps/${slug}`);
 
   if (!skipInstall) {
@@ -112,10 +116,11 @@ function main(): void {
   }
 
   console.log('\nNext steps:');
-  console.log(`  1. Edit apps/${slug}/assets.manifest.json & run: pnpm assets:gen ${slug}`);
-  console.log(`  2. Verify build: pnpm app:verify ${slug}`);
-  console.log(`  3. Preview web:  pnpm app:web ${slug}`);
-  console.log(`  4. Preview phone (Expo Go QR): pnpm app:phone ${slug}`);
+  console.log(`  1. Author .factory/{PRD.md,DESIGN.md,TOKENS.json,SCREENS.json,MOTION.json,ASSETS.json}`);
+  console.log(`  2. Compile & validate design: pnpm app:compile ${slug}`);
+  console.log(`  3. Generate Kie.ai assets:    pnpm assets:gen ${slug}`);
+  console.log(`  4. Verify build:              pnpm app:verify ${slug}`);
+  console.log(`  5. Capture QA screenshots:    pnpm app:shot ${slug}`);
 }
 
 main();
