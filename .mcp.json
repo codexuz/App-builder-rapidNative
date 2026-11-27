@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "gluestack-ui": {
+      "command": "pnpm",
+      "args": ["--silent", "mcp:gluestack"]
+    }
+  }
+}

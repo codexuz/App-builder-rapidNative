@@ -34,6 +34,12 @@ Run lint and typecheck before declaring any task done.
 Use EAS to build, sign, and submit the app in the cloud (`eas build`, `eas submit`) and to ship over-the-air updates (`eas update`) — no local Xcode or Android Studio required. Run EAS CLI as `bunx eas-cli <command>` in Bun projects, or `npx eas-cli@latest <command>` otherwise; substitute that for bare `eas` in docs examples.
 Docs: https://docs.expo.dev/eas/index.md
 
+## Default UI Components (`gluestack-ui v5` + UniWind)
+
+- This template ships with **gluestack-ui v5** (`GluestackUIProvider` in `app/_layout.tsx`, `global.css`, UniWind + Tailwind CSS v4) and **34 preinstalled components** under `@/components/gluestack/*`.
+- Prefer `@/components/gluestack/*` (`button`, `card`, `input`, `select`, `modal`, `actionsheet`, `drawer`, `alert-dialog`, `toast`, `badge`, `avatar`, `checkbox`, `radio`, `switch`, `slider`, `progress`, `spinner`, `skeleton`, `accordion`, `vstack`, `hstack`, `box`, `text`, `heading`, etc.) by default before hand-rolling standard UI controls.
+- Use the repo's `gluestack-ui` MCP server (`list_components`, `get_component`, `get_component_docs`, `get_component_examples`, `add_component_to_app`) or run `pnpm ui:add <app-slug> <component>` from the factory root to add more components (e.g. `tabs`, `table`, `calendar`, `menu`, `popover`, `tooltip`, `bottomsheet`, `date-time-picker`).
+
 ## Rules
 
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.

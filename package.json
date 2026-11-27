@@ -16,13 +16,17 @@
     "assets:single": "tsx scripts/kie-assets.ts single",
     "assets:cutout": "tsx scripts/cutout-assets.ts",
     "refs:index": "tsx scripts/index-references.ts",
+    "mcp:gluestack": "tsx scripts/gluestack-mcp.ts",
+    "ui:add": "tsx scripts/gluestack-add.ts",
     "typecheck:scripts": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@types/node": "^22.10.0",
+    "gluestack-ui": "^5.0.3",
     "tsx": "^4.19.2",
     "typescript": "^5.8.0"
   }

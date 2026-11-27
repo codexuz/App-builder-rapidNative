@@ -117,10 +117,11 @@ function main(): void {
 
   console.log('\nNext steps:');
   console.log(`  1. Author .factory/{PRD.md,DESIGN.md,TOKENS.json,SCREENS.json,MOTION.json,ASSETS.json}`);
-  console.log(`  2. Compile & validate design: pnpm app:compile ${slug}`);
-  console.log(`  3. Generate Kie.ai assets:    pnpm assets:gen ${slug}`);
-  console.log(`  4. Verify build:              pnpm app:verify ${slug}`);
-  console.log(`  5. Capture QA screenshots:    pnpm app:shot ${slug}`);
+  console.log(`  2. Add extra gluestack UI:    pnpm ui:add ${slug} tabs table calendar`);
+  console.log(`  3. Compile & validate design: pnpm app:compile ${slug}`);
+  console.log(`  4. Generate visual assets:    pnpm assets:gen ${slug}`);
+  console.log(`  5. Verify build:              pnpm app:verify ${slug}`);
+  console.log(`  6. Capture QA screenshots:    pnpm app:shot ${slug}`);
 }
 
 main();

@@ -13,9 +13,11 @@ Implement the compiled, validated design specification as clean, cross-platform 
 Working, verified Expo application in `apps/<slug>/` passing `pnpm app:verify <slug>`.
 
 ## Rules
-- Follow `CompiledTokens.ts` and `DESIGN.md` strictly—never silently replace the approved visual direction with generic defaults.
-- Reuse and extend primitives from `components/ui/`; build bespoke domain components cleanly in `components/`.
+- **Default UI Library (`gluestack-ui v5` + UniWind):** Use the 34 preinstalled components in `components/gluestack/*` (`box`, `vstack`, `hstack`, `button`, `card`, `badge`, `avatar`, `input`, `textarea`, `form-control`, `checkbox`, `radio`, `switch`, `select`, `slider`, `progress`, `spinner`, `alert`, `alert-dialog`, `modal`, `actionsheet`, `drawer`, `divider`, `pressable`, `skeleton`, `fab`, `image`, `link`, `icon`, `toast`, `accordion`, etc.) by default for all new apps.
+- **gluestack-ui MCP Server:** Query the configured `gluestack-ui` MCP server (`list_components`, `get_component`, `get_component_docs`, `get_component_examples`, `add_component_to_app`) or run `pnpm ui:add <slug> <component...>` whenever you need additional components (such as `tabs`, `table`, `calendar`, `date-time-picker`, `bottomsheet`, `menu`, `popover`, `tooltip`, `grid`).
+- Follow `CompiledTokens.ts` and `DESIGN.md` strictly—style gluestack-ui components with Tailwind v4 / UniWind classes and semantic tokens rather than generic unstyled defaults.
+- Pair gluestack-ui components with factory motion/chart/navigation widgets in `components/ui/` (`CapsuleTabBar`, `ProgressRing`, `BarChart`, `StaggeredEntrance`, `Screen`, `SectionHeader`) and build bespoke domain components cleanly in `components/`.
 - Implement real interactive states (loading, empty, error, success, interactive controls)—no dead placeholder buttons or Lorem Ipsum.
 - Guard native-only modules (`expo-haptics`, sensors, biometrics) with `Platform.OS !== 'web'` or `.web.tsx` fallbacks.
-- Keep data/persistence behind a clean repository abstraction ready for Supabase/backend drop-in.
+- Keep data/persistence behind a clean repository abstraction ready for backend drop-in.
 - Never expose API keys or secrets in app code.
