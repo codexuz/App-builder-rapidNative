@@ -1,0 +1,78 @@
+{
+  "defaultModel": "gpt-image-2-6/flare-text-to-image",
+  "stylePrefix": "Vibrant stylized 2.5D illustrated adventure game art, crisp inked linework, Monument Valley meets Studio Ghibli warmth, rich lighting, clean composition, no text, no UI, no watermark",
+  "assets": [
+    {
+      "key": "appIcon",
+      "filename": "app-icon.jpg",
+      "prompt": "3D stylized golden expedition compass floating above a tiny emerald island surrounded by sparkling turquoise water and clouds",
+      "aspectRatio": "1:1",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "high"
+    },
+    {
+      "key": "cityA1Brighthaven",
+      "filename": "city-a1-brighthaven.jpg",
+      "prompt": "Sunlit coastal harbor village Brighthaven Bay with a crimson-striped lighthouse, boardwalk cafes, and turquoise sailboats",
+      "aspectRatio": "16:9",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    },
+    {
+      "key": "cityA2LondonSkyrail",
+      "filename": "city-a2-london-skyrail.jpg",
+      "prompt": "Whimsical London Skyrail metropolis at golden hour with a brass clock tower, elevated red sky-tram over a river park, and bookshops",
+      "aspectRatio": "16:9",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    },
+    {
+      "key": "cityB1KyotoNeon",
+      "filename": "city-b1-kyoto-neon.jpg",
+      "prompt": "Kyoto Lantern District at twilight with glowing amber and sakura pink lanterns above market alleys, wooden bridge over koi canal, pagoda silhouette",
+      "aspectRatio": "16:9",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    },
+    {
+      "key": "cityB2SummitObservatory",
+      "filename": "city-b2-summit-observatory.jpg",
+      "prompt": "Floating brass-and-glass astronomical citadel perched on alpine peaks above glowing clouds with aurora ribbons in an indigo night sky",
+      "aspectRatio": "16:9",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    },
+    {
+      "key": "avatarKai",
+      "filename": "avatar-kai.jpg",
+      "prompt": "Portrait of a confident 15-year-old explorer in a teal adventure jacket and brass goggles with a field journal, sunlit sky background",
+      "aspectRatio": "1:1",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    },
+    {
+      "key": "avatarMaya",
+      "filename": "avatar-maya.jpg",
+      "prompt": "Portrait of a bright 16-year-old student traveler wearing a coral knit scarf and round glasses holding a sketchbook, golden hour village background",
+      "aspectRatio": "1:1",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    },
+    {
+      "key": "avatarNova",
+      "filename": "avatar-nova.jpg",
+      "prompt": "Portrait of a 17-year-old student astronomer wearing an indigo starry cloak and teal headphones holding a brass spyglass, twilight sky background",
+      "aspectRatio": "1:1",
+      "outputFormat": "jpg",
+      "resolution": "1K",
+      "quality": "medium"
+    }
+  ]
+}
