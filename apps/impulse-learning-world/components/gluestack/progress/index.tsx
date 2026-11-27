@@ -12,17 +12,18 @@ export const UIProgress = createProgress({
 });
 
 const progressStyle = tva({
-  base: 'bg-primary/20 relative h-2 w-full overflow-hidden rounded-full',
+  // Duolingo-parity chunky track; the filled bar carries a glossy highlight strip.
+  base: 'bg-slate-200 relative h-4 w-full overflow-hidden rounded-full',
   variants: {
     orientation: {
-      horizontal: 'w-full h-2',
-      vertical: 'h-full w-2 justify-end',
+      horizontal: 'w-full h-4',
+      vertical: 'h-full w-4 justify-end',
     },
   },
 });
 
 const progressFilledTrackStyle = tva({
-  base: 'bg-primary  transition-all',
+  base: 'bg-success rounded-full web:transition-all overflow-hidden',
   variants: {
     orientation: {
       horizontal: 'h-full',
@@ -68,7 +69,13 @@ const ProgressFilledTrack = React.forwardRef<
         class: className,
       })}
       {...props}
-    />
+    >
+      {/* Duolingo glossy highlight strip riding on top of the filled bar */}
+      <View
+        pointerEvents="none"
+        className="absolute left-[6px] right-[6px] top-[22%] h-[26%] min-h-[2px] rounded-full bg-white/35"
+      />
+    </UIProgress.FilledTrack>
   );
 });
 

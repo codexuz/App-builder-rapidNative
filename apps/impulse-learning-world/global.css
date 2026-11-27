@@ -28,6 +28,14 @@
       --ring: 16 85 248;
       --accent: 239 246 255;
       --accent-foreground: 16 85 248;
+      /* Duolingo-style 3D tactile tokens (face + darker "lip") */
+      --primary-lip: 10 59 179;
+      --success: 88 204 2;
+      --success-lip: 70 163 2;
+      --warning: 255 150 0;
+      --warning-lip: 204 120 0;
+      --destructive-lip: 168 28 28;
+      --lip: 203 213 225;
     }
 
     @variant dark {
@@ -48,6 +56,13 @@
       --accent: 38 38 38;
       --accent-foreground: 250 250 250;
       --ring: 115 115 115;
+      --primary-lip: 163 163 163;
+      --success: 88 204 2;
+      --success-lip: 70 163 2;
+      --warning: 255 150 0;
+      --warning-lip: 204 120 0;
+      --destructive-lip: 168 28 28;
+      --lip: 64 64 64;
     }
   }
 }
@@ -73,4 +88,11 @@
   --color-ring: rgb(var(--ring));
   --color-accent: rgb(var(--accent));
   --color-accent-foreground: rgb(var(--accent-foreground));
+  --color-primary-lip: rgb(var(--primary-lip));
+  --color-success: rgb(var(--success));
+  --color-success-lip: rgb(var(--success-lip));
+  --color-warning: rgb(var(--warning));
+  --color-warning-lip: rgb(var(--warning-lip));
+  --color-destructive-lip: rgb(var(--destructive-lip));
+  --color-lip: rgb(var(--lip));
 }

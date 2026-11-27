@@ -29,7 +29,7 @@ const tabsStyle = tva({
 });
 
 const tabsListStyle = tva({
-  base: 'flex relative z-10 bg-muted p-1 rounded-lg',
+  base: 'flex relative z-10 bg-muted p-1 rounded-2xl border-2 border-border',
   variants: {
     orientation: {
       horizontal: 'flex-row',
@@ -43,18 +43,18 @@ const tabsTriggerStyle = tva({
   parentVariants: {
     variant: {
       underlined: '',
-      filled: 'rounded-lg',
+      filled: 'rounded-xl min-h-10',
     },
   },
 });
 
 const tabsTriggerTextStyle = tva({
-  base: 'text-foreground/70 data-[selected=true]:text-foreground font-medium data-[hover=true]:text-foreground/90 ',
+  base: 'text-muted-foreground data-[selected=true]:text-primary font-extrabold tracking-wide data-[hover=true]:text-foreground',
  
 });
 
 const tabsTriggerIconStyle = tva({
-  base: 'h-4 w-4 fill-none pointer-events-none shrink-0 text-foreground/70 data-[selected=true]:text-foreground',
+  base: 'h-4 w-4 fill-none pointer-events-none shrink-0 text-muted-foreground data-[selected=true]:text-primary',
 
 });
 
@@ -70,8 +70,9 @@ const tabsIndicatorStyle = tva({
   base: 'pointer-events-none',
   parentVariants: {
     variant: {
-      underlined: 'border-b  border-primary',
-      filled: 'bg-background z-20  rounded-lg',
+      underlined: 'border-b-4 border-primary rounded-full',
+      // Raised 3D "key cap" under the selected tab (Duolingo segmented control)
+      filled: 'bg-card z-20 rounded-xl border-2 border-border border-b-4 border-b-lip',
     },
   },
 });

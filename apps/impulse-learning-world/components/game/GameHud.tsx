@@ -19,6 +19,7 @@ import {
 } from '@/components/gluestack/avatar';
 import { Badge, BadgeText } from '@/components/gluestack/badge';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import {
   Menu,
   MenuItem,
@@ -29,6 +30,7 @@ import { Pressable } from '@/components/gluestack/pressable';
 import { Text } from '@/components/gluestack/text';
 import { VStack } from '@/components/gluestack/vstack';
 import { LEO_ART } from '@/components/mascot/LeoMascot';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { api } from '@/lib/api';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
@@ -62,7 +64,7 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
         accessibilityLabel="Open profile"
         className="flex-row items-center gap-2.5 flex-shrink min-w-0"
       >
-        <Avatar className="h-10 w-10 bg-accent border border-primary/25">
+        <Avatar className="h-11 w-11 bg-accent border-2 border-primary/30">
           {avatarUri ? (
             <AvatarFallbackText className="text-primary font-bold">
               {fullName}
@@ -95,30 +97,48 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
       <HStack className="items-center" space="xs">
         <Badge
           variant="outline"
-          className="h-8 px-2.5 rounded-full bg-card border-border gap-1"
+          className="h-9 px-2.5 rounded-2xl bg-card border-2 border-border border-b-[3px] border-b-lip gap-1"
         >
-          <Flame size={14} color="#EA580C" fill="#EA580C" />
-          <BadgeText className="text-orange-700 font-extrabold normal-case">
+          <Image
+            source={GeneratedAssets.streakFlame}
+            alt="Streak"
+            size="none"
+            resizeMode="contain"
+            style={{ width: 17, height: 17 }}
+          />
+          <BadgeText className="text-orange-600 text-xs font-extrabold normal-case">
             {streak}
           </BadgeText>
         </Badge>
 
         <Badge
           variant="outline"
-          className="h-8 px-2.5 rounded-full bg-card border-border gap-1"
+          className="h-9 px-2.5 rounded-2xl bg-card border-2 border-border border-b-[3px] border-b-lip gap-1"
         >
-          <Coins size={14} color="#D97706" />
-          <BadgeText className="text-amber-700 font-extrabold normal-case">
+          <Image
+            source={GeneratedAssets.coinPouch}
+            alt="Coins"
+            size="none"
+            resizeMode="contain"
+            style={{ width: 17, height: 17 }}
+          />
+          <BadgeText className="text-amber-600 text-xs font-extrabold normal-case">
             {coins}
           </BadgeText>
         </Badge>
 
         <Badge
           variant="outline"
-          className="h-8 px-2.5 rounded-full bg-card border-border gap-1"
+          className="h-9 px-2.5 rounded-2xl bg-card border-2 border-border border-b-[3px] border-b-lip gap-1"
         >
-          <Zap size={14} color="#1055F8" fill="#1055F8" />
-          <BadgeText className="text-primary font-extrabold normal-case">
+          <Image
+            source={GeneratedAssets.xpBolt}
+            alt="XP"
+            size="none"
+            resizeMode="contain"
+            style={{ width: 16, height: 16 }}
+          />
+          <BadgeText className="text-primary text-xs font-extrabold normal-case">
             {xp}
           </BadgeText>
         </Badge>
@@ -131,7 +151,7 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
               {...triggerProps}
               accessibilityRole="button"
               accessibilityLabel="Open quick menu"
-              className="h-8 w-8 rounded-full bg-card border border-border items-center justify-center active:bg-accent"
+              className="h-9 w-9 rounded-2xl bg-card border-2 border-border border-b-[3px] border-b-lip items-center justify-center active:bg-accent"
             >
               <EllipsisVertical size={16} color="#475569" />
             </Pressable>

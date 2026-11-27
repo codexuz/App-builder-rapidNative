@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   AlertCircle,
@@ -24,6 +24,7 @@ import {
   FormControlLabelText,
 } from '@/components/gluestack/form-control';
 import { Heading } from '@/components/gluestack/heading';
+import { KeyboardAvoidingView } from '@/components/gluestack/keyboard-avoiding-view';
 import { Input, InputField, InputIcon, InputSlot } from '@/components/gluestack/input';
 import { Tabs, TabsList, TabsTrigger, TabsTriggerText } from '@/components/gluestack/tabs';
 import { Text } from '@/components/gluestack/text';
@@ -38,6 +39,10 @@ import {
   toE164,
 } from '@/lib/phone';
 import { useKidsApp } from '@/providers/KidsAppProvider';
+
+// Duolingo-style segmented control: raised 3D key cap for the active method.
+const TAB_ON = 'bg-card border-border border-b-lip';
+const TAB_OFF = 'bg-transparent border-transparent';
 
 export default function ImpulseKidsAuthScreen() {
   const router = useRouter();
@@ -110,7 +115,8 @@ export default function ImpulseKidsAuthScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 12 : 0}
         className="flex-1"
       >
         <ScrollView
@@ -122,10 +128,12 @@ export default function ImpulseKidsAuthScreen() {
             gap: 24,
           }}
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
+          automaticallyAdjustKeyboardInsets
           showsVerticalScrollIndicator={false}
         >
           <VStack space="sm" className="items-center">
-            <Center className="w-32 h-32 rounded-full bg-accent border border-primary/15 mb-1">
+            <Center className="w-32 h-32 rounded-full bg-accent border-2 border-primary/15 border-b-4 border-b-primary/25 mb-1">
               <LeoMascot
                 pose={error ? 'oops' : step === 'otp' ? 'think' : 'wave'}
                 size={112}
@@ -144,7 +152,7 @@ export default function ImpulseKidsAuthScreen() {
             </Text>
           </VStack>
 
-          <Card className="bg-card border border-border rounded-2xl p-5 shadow-xs">
+          <Card className="p-5">
             <VStack space="lg">
               {step === 'credentials' ? (
                 <>
@@ -155,11 +163,11 @@ export default function ImpulseKidsAuthScreen() {
                       setError(null);
                     }}
                   >
-                    <TabsList className="w-full bg-secondary p-1 rounded-xl">
+                    <TabsList className="w-full">
                       <TabsTrigger
                         value="id"
-                        className={`flex-1 rounded-lg py-2 flex-row items-center justify-center gap-1.5 ${
-                          loginMethod === 'id' ? 'bg-card shadow-xs' : 'bg-transparent'
+                        className={`flex-1 rounded-xl py-2 flex-row items-center justify-center gap-1.5 border-2 border-b-4 ${
+                          loginMethod === 'id' ? TAB_ON : TAB_OFF
                         }`}
                       >
                         <IdCard
@@ -167,7 +175,7 @@ export default function ImpulseKidsAuthScreen() {
                           color={loginMethod === 'id' ? '#1055F8' : '#64748B'}
                         />
                         <TabsTriggerText
-                          className={`text-sm font-semibold ${
+                          className={`text-sm font-extrabold ${
                             loginMethod === 'id' ? 'text-primary' : 'text-muted-foreground'
                           }`}
                         >
@@ -177,8 +185,8 @@ export default function ImpulseKidsAuthScreen() {
 
                       <TabsTrigger
                         value="phone"
-                        className={`flex-1 rounded-lg py-2 flex-row items-center justify-center gap-1.5 ${
-                          loginMethod === 'phone' ? 'bg-card shadow-xs' : 'bg-transparent'
+                        className={`flex-1 rounded-xl py-2 flex-row items-center justify-center gap-1.5 border-2 border-b-4 ${
+                          loginMethod === 'phone' ? TAB_ON : TAB_OFF
                         }`}
                       >
                         <Phone
@@ -186,7 +194,7 @@ export default function ImpulseKidsAuthScreen() {
                           color={loginMethod === 'phone' ? '#1055F8' : '#64748B'}
                         />
                         <TabsTriggerText
-                          className={`text-sm font-semibold ${
+                          className={`text-sm font-extrabold ${
                             loginMethod === 'phone' ? 'text-primary' : 'text-muted-foreground'
                           }`}
                         >
@@ -198,7 +206,7 @@ export default function ImpulseKidsAuthScreen() {
 
                   <FormControl isInvalid={Boolean(error)}>
                     <FormControlLabel className="mb-1.5">
-                      <FormControlLabelText className="text-foreground font-semibold text-sm">
+                      <FormControlLabelText className="text-foreground font-bold text-sm">
                         {loginMethod === 'id'
                           ? 'Student ID'
                           : `Phone Number (${UZ_COUNTRY_CODE})`}
@@ -206,7 +214,7 @@ export default function ImpulseKidsAuthScreen() {
                     </FormControlLabel>
 
                     {loginMethod === 'id' ? (
-                      <Input className="h-12 rounded-xl bg-background border-border px-3">
+                      <Input>
                         <InputSlot className="pr-2">
                           <InputIcon as={IdCard} className="text-muted-foreground" />
                         </InputSlot>
@@ -216,11 +224,10 @@ export default function ImpulseKidsAuthScreen() {
                           onChangeText={setStudentCode}
                           autoCapitalize="characters"
                           autoCorrect={false}
-                          className="text-foreground text-base font-medium"
                         />
                       </Input>
                     ) : (
-                      <Input className="h-12 rounded-xl bg-background border-border px-3">
+                      <Input>
                         <InputSlot className="pr-2">
                           <Text size="sm" bold className="text-muted-foreground">
                             {UZ_COUNTRY_CODE}
@@ -232,7 +239,6 @@ export default function ImpulseKidsAuthScreen() {
                           onChangeText={(txt) => setPhoneDigits(digitsOnly(txt))}
                           keyboardType="phone-pad"
                           maxLength={12}
-                          className="text-foreground text-base font-medium"
                         />
                       </Input>
                     )}
@@ -248,12 +254,12 @@ export default function ImpulseKidsAuthScreen() {
 
                   <FormControl isInvalid={Boolean(error)}>
                     <FormControlLabel className="mb-1.5">
-                      <FormControlLabelText className="text-foreground font-semibold text-sm">
+                      <FormControlLabelText className="text-foreground font-bold text-sm">
                         Password
                       </FormControlLabelText>
                     </FormControlLabel>
 
-                    <Input className="h-12 rounded-xl bg-background border-border px-3">
+                    <Input>
                       <InputSlot className="pr-2">
                         <InputIcon as={KeyRound} className="text-muted-foreground" />
                       </InputSlot>
@@ -263,7 +269,6 @@ export default function ImpulseKidsAuthScreen() {
                         onChangeText={setPassword}
                         secureTextEntry={!showPassword}
                         autoCapitalize="none"
-                        className="text-foreground text-base font-medium"
                       />
                       <InputSlot
                         className="pl-2"
@@ -280,11 +285,11 @@ export default function ImpulseKidsAuthScreen() {
               ) : (
                 <FormControl isInvalid={Boolean(error)}>
                   <FormControlLabel className="mb-1.5">
-                    <FormControlLabelText className="text-foreground font-semibold text-sm">
+                    <FormControlLabelText className="text-foreground font-bold text-sm">
                       6-Digit Verification Code
                     </FormControlLabelText>
                   </FormControlLabel>
-                  <Input className="h-14 rounded-xl bg-background border-border px-3">
+                  <Input className="min-h-16">
                     <InputSlot className="pr-2">
                       <InputIcon as={ShieldCheck} className="text-primary" />
                     </InputSlot>
@@ -303,7 +308,7 @@ export default function ImpulseKidsAuthScreen() {
               {error ? (
                 <Alert
                   variant="destructive"
-                  className="rounded-xl bg-red-50 border-red-200 px-3.5 py-2.5"
+                  className="rounded-2xl bg-red-50 border-2 border-red-200 border-b-4 border-b-red-300 px-3.5 py-2.5"
                 >
                   <AlertIcon as={AlertCircle} className="text-destructive" />
                   <AlertText className="text-destructive text-xs font-semibold">
@@ -314,12 +319,13 @@ export default function ImpulseKidsAuthScreen() {
 
               <Button
                 size="lg"
+                variant="success"
                 isDisabled={busy}
-                className="h-12 rounded-xl w-full"
+                className="w-full"
                 onPress={step === 'otp' ? handleVerifyOtp : handleSignIn}
               >
                 {busy ? <ButtonSpinner color="#FFFFFF" /> : null}
-                <ButtonText className="font-bold text-base">
+                <ButtonText>
                   {busy
                     ? 'Signing in...'
                     : step === 'otp'

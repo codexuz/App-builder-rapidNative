@@ -9,24 +9,28 @@ import { Svg } from 'react-native-svg';
 
 const SCOPE = 'BADGE';
 
+// Duolingo-parity chunky pill badges: solid face + 2px darker lip.
 const badgeStyle = tva({
-  base: 'flex-row items-center justify-center rounded-sm px-2 py-0.5',
+  base: 'flex-row items-center justify-center gap-1 rounded-full px-2.5 py-1 border-b-2',
   variants: {
     variant: {
-      default: 'bg-primary',
-      secondary: 'bg-secondary',
-      destructive:
-        'bg-destructive dark:bg-destructive/60',
-      outline: 'border border-border dark:border-border/90 bg-transparent',
+      default: 'bg-primary border-primary-lip',
+      success: 'bg-success border-success-lip',
+      warning: 'bg-warning border-warning-lip',
+      secondary: 'bg-secondary border-lip',
+      destructive: 'bg-destructive border-destructive-lip',
+      outline: 'border-2 border-b-2 border-border border-b-lip bg-card',
     },
   },
 });
 
 const badgeTextStyle = tva({
-  base: 'text-xs font-medium tracking-normal uppercase',
+  base: 'text-[11px] font-extrabold tracking-wider uppercase',
   parentVariants: {
     variant: {
       default: 'text-primary-foreground',
+      success: 'text-white',
+      warning: 'text-white',
       secondary: 'text-secondary-foreground',
       destructive: 'text-white',
       outline: 'text-foreground',
@@ -39,6 +43,8 @@ const badgeIconStyle = tva({
   parentVariants: {
     variant: {
       default: 'text-primary-foreground',
+      success: 'text-white',
+      warning: 'text-white',
       secondary: 'text-secondary-foreground',
       destructive: 'text-white',
       outline: 'text-foreground',

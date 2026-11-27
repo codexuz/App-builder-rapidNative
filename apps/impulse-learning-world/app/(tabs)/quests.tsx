@@ -53,44 +53,38 @@ const QUEST_META: Record<
     title: string;
     desc: (t: number) => string;
     bgClass: string;
-    color: string;
-    icon: React.ComponentType<{ size?: number; color?: string }>;
+    asset: keyof typeof GeneratedAssets;
   }
 > = {
   EXERCISES: {
     title: 'Complete exercises',
     desc: (t) => `Finish ${t} ${t === 1 ? 'exercise' : 'exercises'} today`,
     bgClass: 'bg-accent',
-    color: '#1055F8',
-    icon: Target,
+    asset: 'courseBook',
   },
   GOOD_SCORE: {
     title: 'High accuracy',
     desc: (t) => `Score 80%+ on ${t} ${t === 1 ? 'exercise' : 'exercises'}`,
-    bgClass: 'bg-emerald-50',
-    color: '#15803D',
-    icon: Sparkles,
+    bgClass: 'bg-amber-50',
+    asset: 'badgeMedal',
   },
   WORDS: {
     title: 'Review vocabulary',
     desc: (t) => `Practice ${t} word cards`,
-    bgClass: 'bg-amber-50',
-    color: '#D97706',
-    icon: BookOpen,
+    bgClass: 'bg-blue-50',
+    asset: 'wordCards',
   },
   MISTAKES: {
     title: 'Fix mistakes',
     desc: (t) => `Retry ${t} tricky ${t === 1 ? 'question' : 'questions'}`,
     bgClass: 'bg-orange-50',
-    color: '#EA580C',
-    icon: RotateCcw,
+    asset: 'streakFlame',
   },
   XP: {
     title: 'Earn daily XP',
     desc: (t) => `Collect ${t} XP today`,
-    bgClass: 'bg-emerald-50',
-    color: '#15803D',
-    icon: Zap,
+    bgClass: 'bg-yellow-50',
+    asset: 'xpBolt',
   },
 };
 
@@ -168,7 +162,7 @@ export default function KidsQuestsScreen() {
         <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
         {/* Daily Treasure Chest Banner */}
-        <Box className="rounded-3xl overflow-hidden shadow-xs">
+        <Box className="rounded-3xl overflow-hidden border-2 border-[#EA580C] border-b-[5px] border-b-[#C2410C]">
           <LinearGradient
             colors={['#F59E0B', '#EA580C']}
             start={{ x: 0, y: 0 }}
@@ -176,7 +170,7 @@ export default function KidsQuestsScreen() {
             style={{ padding: 18, gap: 14 }}
           >
             <HStack className="items-center" space="md">
-              <Center className="w-18 h-18 rounded-2xl bg-white/20 p-2">
+              <Center className="w-18 h-18 rounded-2xl bg-white/20">
                 <Image
                   source={GeneratedAssets.treasureChest}
                   size="none"
@@ -200,8 +194,8 @@ export default function KidsQuestsScreen() {
                 </Text>
                 <HStack className="items-center mt-1" space="sm">
                   <Box className="flex-1">
-                    <Progress value={chestPct} className="h-2 bg-white/30 rounded-full">
-                      <ProgressFilledTrack className="bg-white rounded-full" />
+                    <Progress value={chestPct} className="h-3.5 bg-white/30">
+                      <ProgressFilledTrack className="bg-white" />
                     </Progress>
                   </Box>
                   <Text size="xs" bold className="text-white">
@@ -216,7 +210,7 @@ export default function KidsQuestsScreen() {
                 size="lg"
                 variant="secondary"
                 isDisabled={openingChest}
-                className="h-11 rounded-xl bg-white active:bg-slate-100 w-full"
+                className="bg-white border-white border-b-orange-200 active:bg-slate-100 w-full"
                 onPress={handleOpenChest}
               >
                 {openingChest ? (
@@ -246,16 +240,14 @@ export default function KidsQuestsScreen() {
           </HStack>
 
           {quests.length > 0 ? (
-            <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+            <Card className="p-0 overflow-hidden">
               {quests.map((quest, idx) => {
                 const meta = QUEST_META[quest.type] ?? {
                   title: quest.type,
                   desc: (t: number) => `Reach ${t} today`,
                   bgClass: 'bg-accent',
-                  color: '#1055F8',
-                  icon: Target,
+                  asset: 'xpBolt' as const,
                 };
-                const IconComp = meta.icon;
                 const pct = Math.min(
                   100,
                   Math.round((quest.progress / Math.max(1, quest.target)) * 100)
@@ -265,8 +257,14 @@ export default function KidsQuestsScreen() {
                   <Box key={`${quest.type}-${idx}`}>
                     {idx > 0 ? <Divider className="bg-border" /> : null}
                     <HStack className="items-center p-3.5" space="md">
-                      <Center className={`w-10 h-10 rounded-xl ${meta.bgClass}`}>
-                        <IconComp size={19} color={meta.color} />
+                      <Center className={`w-12 h-12 rounded-2xl ${meta.bgClass}`}>
+                        <Image
+                          source={GeneratedAssets[meta.asset]}
+                          alt={meta.title}
+                          size="none"
+                          resizeMode="contain"
+                          style={{ width: 38, height: 38 }}
+                        />
                       </Center>
 
                       <VStack className="flex-1 min-w-0" space="xs">
@@ -294,12 +292,10 @@ export default function KidsQuestsScreen() {
                         </Text>
                         <Progress
                           value={pct}
-                          className="h-1.5 bg-secondary rounded-full mt-0.5"
+                          className="h-3 mt-0.5"
                         >
                           <ProgressFilledTrack
-                            className={`rounded-full ${
-                              quest.done ? 'bg-emerald-500' : 'bg-primary'
-                            }`}
+                            className={quest.done ? 'bg-success' : 'bg-primary'}
                           />
                         </Progress>
                       </VStack>
@@ -309,7 +305,7 @@ export default function KidsQuestsScreen() {
               })}
             </Card>
           ) : (
-            <Card className="bg-card border border-border rounded-2xl p-6">
+            <Card className="p-6">
               <VStack space="sm" className="items-center">
                 <LeoMascot pose="idle" size={76} />
                 <Heading size="sm" className="text-foreground">
@@ -352,7 +348,7 @@ export default function KidsQuestsScreen() {
                 return (
                   <Card
                     key={prod.id}
-                    className="bg-card border border-border rounded-2xl p-3.5 items-center gap-2.5"
+                    className="p-3.5 items-center gap-2.5"
                     style={{ width: '48.4%' }}
                   >
                     <Center className="w-14 h-14 rounded-2xl bg-accent overflow-hidden">
@@ -365,7 +361,13 @@ export default function KidsQuestsScreen() {
                           resizeMode="cover"
                         />
                       ) : (
-                        <Gift size={24} color="#1055F8" />
+                        <Image
+                          source={GeneratedAssets.giftPrize}
+                          alt={prod.name}
+                          size="none"
+                          resizeMode="contain"
+                          style={{ width: 46, height: 46 }}
+                        />
                       )}
                     </Center>
                     <Text
@@ -380,7 +382,7 @@ export default function KidsQuestsScreen() {
                       size="sm"
                       variant={canAfford ? 'default' : 'secondary'}
                       isDisabled={!canAfford}
-                      className="w-full rounded-xl h-9"
+                      className="w-full"
                       onPress={() => setSelectedProd(prod)}
                     >
                       <Coins size={13} color={canAfford ? '#FFFFFF' : '#64748B'} />
@@ -397,7 +399,7 @@ export default function KidsQuestsScreen() {
               })}
             </Box>
           ) : (
-            <Card className="bg-card border border-border rounded-2xl p-5 items-center">
+            <Card className="p-5 items-center">
               <Text size="xs" className="text-muted-foreground">
                 No shop prizes available from your center yet.
               </Text>
@@ -427,7 +429,13 @@ export default function KidsQuestsScreen() {
                       resizeMode="cover"
                     />
                   ) : (
-                    <Gift size={28} color="#1055F8" />
+                    <Image
+                      source={GeneratedAssets.giftPrize}
+                      alt={selectedProd.name}
+                      size="none"
+                      resizeMode="contain"
+                      style={{ width: 54, height: 54 }}
+                    />
                   )}
                 </Center>
                 <VStack className="flex-1 min-w-0" space="xs">
@@ -469,21 +477,20 @@ export default function KidsQuestsScreen() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="flex-1 h-12 rounded-xl border-border"
+                  className="flex-1 px-3"
                   onPress={() => setSelectedProd(null)}
                 >
-                  <ButtonText className="text-foreground font-semibold">
-                    Cancel
-                  </ButtonText>
+                  <ButtonText className="text-sm">Cancel</ButtonText>
                 </Button>
                 <Button
                   size="lg"
+                  variant="success"
                   isDisabled={ordering}
-                  className="flex-1 h-12 rounded-xl"
+                  className="flex-1 px-3"
                   onPress={() => void handleConfirmOrder()}
                 >
                   {ordering ? <ButtonSpinner color="#FFFFFF" /> : null}
-                  <ButtonText className="font-bold">
+                  <ButtonText className="text-sm" numberOfLines={1}>
                     {ordering ? 'Ordering...' : 'Confirm Order'}
                   </ButtonText>
                 </Button>

@@ -20,12 +20,13 @@ const UIInput = createInput({
 });
 
 
+// Duolingo-parity tactile field: soft slate fill, 2px rim + 3px lip; focus = white fill + cobalt rim.
 const inputStyle = tva({
-  base: 'min-h-9 w-full flex-row items-center rounded-md border border-border  dark:bg-input/30 bg-transparent shadow-xs transition-[color,box-shadow] overflow-hidden data-[focus=true]:outline-none data-[focus=true]:border-ring dark:data-[focus=true]:border-ring data-[focus=true]:web:ring-[3px] data-[focus=true]:web:ring-ring/50 data-[invalid=true]:border-destructive/40 dark:data-[invalid=true]:border-destructive/40 data-[invalid=true]:web:ring-destructive/20 dark:data-[invalid=true]:web:ring-destructive/40 data-[disabled=true]:pointer-events-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50 px-3 gap-2',
+  base: 'min-h-14 w-full flex-row items-center rounded-2xl border-2 border-border border-b-[3px] border-b-lip bg-muted/60 overflow-hidden px-4 gap-2.5 web:transition-colors data-[hover=true]:border-lip data-[focus=true]:outline-none data-[focus=true]:bg-card data-[focus=true]:border-primary data-[focus=true]:border-b-primary-lip data-[invalid=true]:border-red-400 data-[invalid=true]:border-b-destructive-lip data-[invalid=true]:bg-red-50 data-[disabled=true]:pointer-events-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50',
 });
 
 const inputIconStyle = tva({
-  base: 'justify-center items-center text-muted-foreground fill-none h-4 w-4',
+  base: 'justify-center items-center text-muted-foreground fill-none h-5 w-5',
 });
 
 const inputSlotStyle = tva({
@@ -33,7 +34,7 @@ const inputSlotStyle = tva({
 });
 
 const inputFieldStyle = tva({
-  base: 'flex-1 text-foreground text-sm md:text-sm py-1 h-full placeholder:text-muted-foreground  web:outline-none ios:leading-[0px] web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
+  base: 'flex-1 min-w-0 text-foreground text-base font-semibold py-2 h-full placeholder:text-muted-foreground placeholder:font-medium web:outline-none ios:leading-[0px] web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
 });
 
 type IInputProps = React.ComponentProps<typeof UIInput> &

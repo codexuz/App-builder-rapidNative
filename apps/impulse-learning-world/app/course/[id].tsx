@@ -19,12 +19,14 @@ import { Card } from '@/components/gluestack/card';
 import { Center } from '@/components/gluestack/center';
 import { Heading } from '@/components/gluestack/heading';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import { Pressable } from '@/components/gluestack/pressable';
 import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
 import { Skeleton } from '@/components/gluestack/skeleton';
 import { Text } from '@/components/gluestack/text';
 import { VStack } from '@/components/gluestack/vstack';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import type { Course, CourseLesson } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
@@ -150,8 +152,8 @@ export default function CourseRoadmapScreen() {
         ) : null}
       </HStack>
 
-      <Progress value={pct} className="h-1 bg-border rounded-none">
-        <ProgressFilledTrack className="bg-primary rounded-none" />
+      <Progress value={pct} className="h-2.5 bg-slate-200 rounded-none">
+        <ProgressFilledTrack className="bg-success rounded-r-full" />
       </Progress>
 
       <ScrollView
@@ -159,7 +161,7 @@ export default function CourseRoadmapScreen() {
         showsVerticalScrollIndicator={false}
       >
         {loading ? (
-          <Card className="bg-card border border-border rounded-2xl p-5">
+          <Card className="p-5">
             <VStack space="md">
               <Skeleton variant="rounded" className="h-20 w-full" />
               <Skeleton variant="circular" className="h-16 w-16 self-center" />
@@ -167,7 +169,7 @@ export default function CourseRoadmapScreen() {
             </VStack>
           </Card>
         ) : error ? (
-          <Card className="bg-card border border-border rounded-2xl p-6 items-center gap-2">
+          <Card className="p-6 items-center gap-2">
             <LeoMascot pose="oops" size={80} />
             <Heading size="sm" className="text-foreground">
               Could not load course
@@ -184,7 +186,7 @@ export default function CourseRoadmapScreen() {
 
           return (
             <VStack key={unit.id} space="lg">
-              <Box className="rounded-2xl overflow-hidden shadow-xs">
+              <Box className="rounded-2xl overflow-hidden border-2 border-black/10 border-b-[5px] border-b-black/25">
                 <LinearGradient
                   colors={grad}
                   start={{ x: 0, y: 0 }}
@@ -228,8 +230,11 @@ export default function CourseRoadmapScreen() {
                         style={{ transform: [{ translateX: xOffset }] }}
                       >
                         {isCurrent ? (
-                          <Badge className="rounded-full bg-card border border-primary/30 px-3 py-0.5 shadow-xs">
-                            <BadgeText className="text-primary text-[10px] font-extrabold">
+                          <Badge
+                            variant="outline"
+                            className="rounded-xl bg-card border-2 border-primary/35 border-b-[3px] border-b-primary/40 px-3.5 py-1"
+                          >
+                            <BadgeText className="text-primary text-[11px] font-extrabold">
                               START
                             </BadgeText>
                           </Badge>
@@ -243,33 +248,41 @@ export default function CourseRoadmapScreen() {
                               router.push(`/lesson/${lesson.id}` as never);
                             }
                           }}
-                          className="items-center gap-2 active:opacity-80"
+                          className="items-center gap-2 active:translate-y-[2px]"
                         >
                           <Box
-                            className={`p-1.5 rounded-full ${
-                              isCurrent ? 'border-2 border-primary/35 bg-card shadow-sm' : ''
+                            className={`p-2 rounded-full ${
+                              isCurrent
+                                ? 'border-[3px] border-primary/30 bg-accent/60'
+                                : ''
                             }`}
                           >
                             <Center
-                              className={`w-16 h-16 rounded-full ${
+                              className={`w-[72px] h-[72px] rounded-full border-b-[6px] relative overflow-hidden ${
                                 done
-                                  ? 'bg-emerald-500'
+                                  ? 'bg-success border-b-success-lip'
                                   : locked
-                                    ? 'bg-slate-200 border border-slate-300'
-                                    : 'bg-primary'
+                                    ? 'bg-slate-200 border-2 border-slate-300 border-b-[6px] border-b-slate-300'
+                                    : 'bg-primary border-b-primary-lip'
                               }`}
                             >
+                              {!locked ? (
+                                <Box
+                                  pointerEvents="none"
+                                  className="absolute top-1.5 w-9 h-2.5 rounded-full bg-white/25"
+                                />
+                              ) : null}
                               {done ? (
-                                <Check size={26} color="#FFFFFF" strokeWidth={3} />
+                                <Check size={28} color="#FFFFFF" strokeWidth={3.2} />
                               ) : locked ? (
-                                <Lock size={20} color="#64748B" strokeWidth={2.3} />
+                                <Lock size={22} color="#94A3B8" strokeWidth={2.4} />
                               ) : (
-                                <Play size={24} color="#FFFFFF" fill="#FFFFFF" />
+                                <Play size={26} color="#FFFFFF" fill="#FFFFFF" />
                               )}
                             </Center>
                             {done ? (
-                              <Center className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white absolute right-0.5 bottom-0.5">
-                                <Star size={11} color="#FFFFFF" fill="#FFFFFF" />
+                              <Center className="w-7 h-7 rounded-full bg-amber-400 border-2 border-white border-b-amber-600 absolute right-0 bottom-0">
+                                <Star size={13} color="#FFFFFF" fill="#FFFFFF" />
                               </Center>
                             ) : null}
                           </Box>
@@ -320,8 +333,14 @@ export default function CourseRoadmapScreen() {
 
           {lockedLesson ? (
             <VStack space="md" className="w-full items-center pt-3">
-              <Center className="w-14 h-14 rounded-2xl bg-slate-100">
-                <Lock size={26} color="#475569" />
+              <Center className="w-20 h-20 rounded-3xl bg-slate-100 border-2 border-border">
+                <Image
+                  source={GeneratedAssets.lockPadlock}
+                  alt="Locked lesson"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 62, height: 62 }}
+                />
               </Center>
               <VStack space="xs" className="items-center">
                 <Heading size="md" className="text-foreground text-center">
@@ -336,15 +355,16 @@ export default function CourseRoadmapScreen() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="flex-1 h-12 rounded-xl border-border"
+                  className="flex-1 px-3"
                   onPress={() => setLockedLesson(null)}
                 >
-                  <ButtonText className="text-foreground font-semibold">Close</ButtonText>
+                  <ButtonText className="text-sm" numberOfLines={1}>Close</ButtonText>
                 </Button>
                 {activeOpenLesson ? (
                   <Button
                     size="lg"
-                    className="flex-1 h-12 rounded-xl"
+                    variant="success"
+                    className="flex-1 px-3"
                     onPress={() => {
                       const targetId = activeOpenLesson.id;
                       setLockedLesson(null);
@@ -352,7 +372,7 @@ export default function CourseRoadmapScreen() {
                     }}
                   >
                     <ButtonIcon as={Play} className="text-white" />
-                    <ButtonText className="font-bold">Open Next</ButtonText>
+                    <ButtonText className="text-sm" numberOfLines={1}>Open Next</ButtonText>
                   </Button>
                 ) : null}
               </HStack>

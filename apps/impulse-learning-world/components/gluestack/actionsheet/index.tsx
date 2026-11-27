@@ -65,15 +65,15 @@ export const UIActionsheet = createActionsheet({
 const actionsheetStyle = tva({ base: 'w-full h-full web:pointer-events-none' });
 
 const actionsheetContentStyle = tva({
-  base: 'items-center rounded-t-lg p-4 bg-background web:pointer-events-auto web:select-none border-t border-border dark:border-border/10 max-h-[80vh] pb-safe',
+  base: 'items-center rounded-t-[28px] px-5 pt-3 pb-6 bg-card web:pointer-events-auto web:select-none border-2 border-b-0 border-border max-h-[80vh] pb-safe',
 });
 
 const actionsheetItemStyle = tva({
-  base: 'w-full flex-row items-center p-3 rounded-sm data-[disabled=true]:opacity-40 data-[disabled=true]:web:pointer-events-auto data-[disabled=true]:web:cursor-not-allowed data-[hover=true]:bg-accent data-[active=true]:bg-accent data-[focus=true]:bg-accent web:data-[focus-visible=true]:bg-accent gap-2',
+  base: 'w-full flex-row items-center p-3.5 rounded-2xl data-[disabled=true]:opacity-40 data-[disabled=true]:web:pointer-events-auto data-[disabled=true]:web:cursor-not-allowed data-[hover=true]:bg-accent data-[active=true]:bg-accent data-[focus=true]:bg-accent web:data-[focus-visible=true]:bg-accent gap-2',
 });
 
 const actionsheetItemTextStyle = tva({
-  base: 'text-foreground font-normal text-sm',
+  base: 'text-foreground font-bold text-base',
   variants: {
     isTruncated: {
       true: '',
@@ -91,7 +91,7 @@ const actionsheetItemTextStyle = tva({
 });
 
 const actionsheetDragIndicatorStyle = tva({
-  base: 'w-[100px] h-2 bg-muted rounded-full',
+  base: 'w-12 h-1.5 bg-lip rounded-full',
 });
 
 const actionsheetDragIndicatorWrapperStyle = tva({
@@ -119,7 +119,7 @@ const actionsheetSectionListStyle = tva({
 });
 
 const actionsheetSectionHeaderTextStyle = tva({
-  base: 'leading-5 font-semibold my-0 text-muted-foreground p-3 uppercase text-xs',
+  base: 'leading-5 font-extrabold tracking-wider my-0 text-muted-foreground p-3 uppercase text-xs',
   variants: {
     isTruncated: {
       true: '',

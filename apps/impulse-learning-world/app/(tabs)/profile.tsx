@@ -47,6 +47,7 @@ import { Center } from '@/components/gluestack/center';
 import { Divider } from '@/components/gluestack/divider';
 import { Heading } from '@/components/gluestack/heading';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import { Pressable } from '@/components/gluestack/pressable';
 import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
 import { Switch } from '@/components/gluestack/switch';
@@ -60,6 +61,7 @@ import {
 import { VStack } from '@/components/gluestack/vstack';
 import { LEO_ART } from '@/components/mascot/LeoMascot';
 import { Screen } from '@/components/ui';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { api } from '@/lib/api';
 import type { AppLocale } from '@/lib/api/types';
 import { AppConfig } from '@/lib/config';
@@ -140,7 +142,7 @@ export default function KidsProfileScreen() {
         <Button
           size="icon"
           variant="outline"
-          className="h-9 w-9 rounded-full bg-card border-border"
+          className="h-10 w-10 rounded-2xl"
           onPress={() => void refreshAll()}
           accessibilityLabel="Refresh live data"
         >
@@ -149,7 +151,7 @@ export default function KidsProfileScreen() {
       </HStack>
 
       {/* Unified Student Summary Card */}
-      <Card className="bg-card border border-border rounded-2xl p-4">
+      <Card className="p-4">
         <VStack space="md">
           <HStack className="items-center" space="md">
             <Avatar className="h-16 w-16 bg-accent border-2 border-primary/25">
@@ -189,37 +191,58 @@ export default function KidsProfileScreen() {
                 {levelInto} / {levelSpan} XP
               </Text>
             </HStack>
-            <Progress value={levelPct} className="h-2 bg-secondary rounded-full">
-              <ProgressFilledTrack className="bg-primary rounded-full" />
+            <Progress value={levelPct} className="h-3.5">
+              <ProgressFilledTrack className="bg-primary" />
             </Progress>
           </VStack>
 
           <Divider className="bg-border" />
 
           <HStack className="items-center">
-            <VStack className="flex-1 items-center">
+            <VStack className="flex-1 items-center" space="xs">
+              <Image
+                source={GeneratedAssets.xpBolt}
+                alt="Total XP"
+                size="none"
+                resizeMode="contain"
+                style={{ width: 28, height: 28 }}
+              />
               <Text size="lg" bold className="text-foreground">
                 {xp.toLocaleString()}
               </Text>
-              <Text size="xs" className="text-muted-foreground">
+              <Text size="xs" className="text-muted-foreground font-semibold">
                 Total XP
               </Text>
             </VStack>
-            <Divider orientation="vertical" className="h-7 bg-border" />
-            <VStack className="flex-1 items-center">
+            <Divider orientation="vertical" className="h-11 bg-border" />
+            <VStack className="flex-1 items-center" space="xs">
+              <Image
+                source={GeneratedAssets.coinPouch}
+                alt="Coins"
+                size="none"
+                resizeMode="contain"
+                style={{ width: 28, height: 28 }}
+              />
               <Text size="lg" bold className="text-foreground">
                 {coins.toLocaleString()}
               </Text>
-              <Text size="xs" className="text-muted-foreground">
+              <Text size="xs" className="text-muted-foreground font-semibold">
                 Coins
               </Text>
             </VStack>
-            <Divider orientation="vertical" className="h-7 bg-border" />
-            <VStack className="flex-1 items-center">
+            <Divider orientation="vertical" className="h-11 bg-border" />
+            <VStack className="flex-1 items-center" space="xs">
+              <Image
+                source={GeneratedAssets.streakFreeze}
+                alt="Freezes"
+                size="none"
+                resizeMode="contain"
+                style={{ width: 28, height: 28 }}
+              />
               <Text size="lg" bold className="text-foreground">
                 {freezes}
               </Text>
-              <Text size="xs" className="text-muted-foreground">
+              <Text size="xs" className="text-muted-foreground font-semibold">
                 Freezes
               </Text>
             </VStack>
@@ -232,11 +255,17 @@ export default function KidsProfileScreen() {
         <Heading size="md" className="text-foreground">
           Daily Streak
         </Heading>
-        <Card className="bg-card border border-border rounded-2xl p-4">
+        <Card className="p-4">
           <VStack space="md">
             <HStack className="items-center" space="md">
-              <Center className="w-10 h-10 rounded-xl bg-orange-50">
-                <Flame size={20} color="#EA580C" fill="#EA580C" />
+              <Center className="w-12 h-12 rounded-2xl bg-orange-50">
+                <Image
+                  source={GeneratedAssets.streakFlame}
+                  alt="Daily Streak"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 38, height: 38 }}
+                />
               </Center>
               <VStack className="flex-1">
                 <Text size="sm" bold className="text-foreground">
@@ -256,8 +285,10 @@ export default function KidsProfileScreen() {
                 return (
                   <VStack key={`${day}-${idx}`} className="flex-1 items-center" space="xs">
                     <Center
-                      className={`w-8 h-8 rounded-full ${
-                        done ? 'bg-orange-500' : 'bg-secondary'
+                      className={`w-9 h-9 rounded-full border-b-[3px] ${
+                        done
+                          ? 'bg-orange-500 border-b-orange-700'
+                          : 'bg-secondary border-b-lip'
                       }`}
                     >
                       {done ? (
@@ -280,7 +311,13 @@ export default function KidsProfileScreen() {
                 <Pressable onPress={() => void handleBuyFreeze()}>
                   <HStack className="items-center justify-between">
                     <HStack className="items-center" space="sm">
-                      <Snowflake size={17} color="#1055F8" />
+                      <Image
+                        source={GeneratedAssets.streakFreeze}
+                        alt="Streak Freeze"
+                        size="none"
+                        resizeMode="contain"
+                        style={{ width: 28, height: 28 }}
+                      />
                       <Text size="sm" bold className="text-foreground">
                         Buy Streak Freeze
                       </Text>
@@ -308,13 +345,19 @@ export default function KidsProfileScreen() {
           <Heading size="md" className="text-foreground">
             My Classes
           </Heading>
-          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+          <Card className="p-0 overflow-hidden">
             {enrollments.map((enr, idx) => (
               <Box key={enr.id}>
                 {idx > 0 ? <Divider className="bg-border" /> : null}
                 <HStack className="items-center p-3.5" space="md">
-                  <Center className="w-10 h-10 rounded-xl bg-accent">
-                    <GraduationCap size={18} color="#1055F8" />
+                  <Center className="w-11 h-11 rounded-2xl bg-accent/80">
+                    <Image
+                      source={GeneratedAssets.courseBook}
+                      alt="Class"
+                      size="none"
+                      resizeMode="contain"
+                      style={{ width: 36, height: 36 }}
+                    />
                   </Center>
                   <VStack className="flex-1 min-w-0">
                     <Text size="sm" bold className="text-foreground" numberOfLines={1}>
@@ -343,13 +386,19 @@ export default function KidsProfileScreen() {
           <Heading size="md" className="text-foreground">
             Badges
           </Heading>
-          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+          <Card className="p-0 overflow-hidden">
             {achievements.map((item, idx) => (
               <Box key={item.id}>
                 {idx > 0 ? <Divider className="bg-border" /> : null}
                 <HStack className="items-center p-3.5" space="md">
-                  <Center className="w-10 h-10 rounded-xl bg-amber-50">
-                    <Award size={18} color="#D97706" />
+                  <Center className="w-11 h-11 rounded-2xl bg-amber-50">
+                    <Image
+                      source={GeneratedAssets.badgeMedal}
+                      alt="Badge"
+                      size="none"
+                      resizeMode="contain"
+                      style={{ width: 36, height: 36 }}
+                    />
                   </Center>
                   <VStack className="flex-1 min-w-0">
                     <Text size="sm" bold className="text-foreground" numberOfLines={1}>
@@ -374,13 +423,19 @@ export default function KidsProfileScreen() {
           <Heading size="md" className="text-foreground">
             Recent Coins
           </Heading>
-          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+          <Card className="p-0 overflow-hidden">
             {transactions.map((tx, idx) => (
               <Box key={tx.id}>
                 {idx > 0 ? <Divider className="bg-border" /> : null}
                 <HStack className="items-center p-3.5" space="md">
-                  <Center className="w-9 h-9 rounded-xl bg-amber-50">
-                    <Coins size={16} color="#D97706" />
+                  <Center className="w-10 h-10 rounded-2xl bg-purple-50">
+                    <Image
+                      source={GeneratedAssets.coinPouch}
+                      alt="Coin activity"
+                      size="none"
+                      resizeMode="contain"
+                      style={{ width: 30, height: 30 }}
+                    />
                   </Center>
                   <VStack className="flex-1 min-w-0">
                     <Text size="sm" bold className="text-foreground" numberOfLines={1}>
@@ -409,7 +464,7 @@ export default function KidsProfileScreen() {
         <Heading size="md" className="text-foreground">
           Settings
         </Heading>
-        <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+        <Card className="p-0 overflow-hidden">
           <Pressable
             onPress={() => setLangSheetOpen(true)}
             className="p-3.5 active:bg-accent/50"
@@ -479,11 +534,11 @@ export default function KidsProfileScreen() {
       <Button
         variant="outline"
         size="lg"
-        className="h-12 rounded-xl border-red-200 bg-card w-full"
+        className="border-red-200 border-b-red-300 bg-card w-full"
         onPress={() => setSignOutDialogOpen(true)}
       >
         <ButtonIcon as={LogOut} className="text-destructive" />
-        <ButtonText className="text-destructive font-bold">Sign Out</ButtonText>
+        <ButtonText className="text-destructive">Sign Out</ButtonText>
       </Button>
 
       <Text size="xs" className="text-muted-foreground text-center mb-1">
@@ -566,7 +621,7 @@ export default function KidsProfileScreen() {
         onClose={() => setSignOutDialogOpen(false)}
       >
         <AlertDialogBackdrop />
-        <AlertDialogContent className="bg-card rounded-2xl p-5 border border-border">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <Heading size="md" className="text-foreground">
               Sign out of Impulse Kids?
@@ -581,22 +636,22 @@ export default function KidsProfileScreen() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-border flex-1 h-10"
+              className="flex-1"
               onPress={() => setSignOutDialogOpen(false)}
             >
-              <ButtonText className="text-foreground font-semibold">Cancel</ButtonText>
+              <ButtonText>Cancel</ButtonText>
             </Button>
             <Button
               variant="destructive"
               size="sm"
-              className="rounded-xl flex-1 h-10"
+              className="flex-1"
               onPress={async () => {
                 setSignOutDialogOpen(false);
                 await signOut();
                 router.replace('/auth');
               }}
             >
-              <ButtonText className="text-white font-bold">Sign Out</ButtonText>
+              <ButtonText>Sign Out</ButtonText>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

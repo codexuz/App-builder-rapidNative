@@ -16,12 +16,11 @@ const UITextarea = createTextarea({
 });
 
 const textareaStyle = tva({
-  base: 'w-full h-[100px] border border-border  dark:bg-input/30 rounded data-[hover=true]:border-border/80 data-[focus=true]:border-primary/80 data-[focus=true]:data-[hover=true]:border-primary/80 data-[disabled=true]:opacity-40 data-[disabled=true]:bg-background/90 data-[disabled=true]:data-[hover=true]:border-border/80',
+  base: 'w-full h-[120px] rounded-2xl border-2 border-border border-b-[3px] border-b-lip bg-muted/60 web:transition-colors data-[hover=true]:border-lip data-[focus=true]:bg-card data-[focus=true]:border-primary data-[focus=true]:border-b-primary-lip data-[invalid=true]:border-red-400 data-[invalid=true]:border-b-destructive-lip data-[invalid=true]:bg-red-50 data-[disabled=true]:opacity-50',
 
   variants: {
     variant: {
-      default:
-        'data-[focus=true]:border-primary/80 data-[focus=true]:web:ring-1 data-[focus=true]:web:ring-inset data-[focus=true]:web:ring-indicator-primary data-[invalid=true]:border-destructive data-[invalid=true]:web:ring-1 data-[invalid=true]:web:ring-inset data-[invalid=true]:web:ring-indicator-error data-[invalid=true]:data-[hover=true]:border-destructive data-[invalid=true]:data-[focus=true]:data-[hover=true]:border-primary/80 data-[invalid=true]:data-[focus=true]:data-[hover=true]:web:ring-1 data-[invalid=true]:data-[focus=true]:data-[hover=true]:web:ring-inset data-[invalid=true]:data-[focus=true]:data-[hover=true]:web:ring-indicator-primary data-[invalid=true]:data-[disabled=true]:data-[hover=true]:border-destructive data-[invalid=true]:data-[disabled=true]:data-[hover=true]:web:ring-1 data-[invalid=true]:data-[disabled=true]:data-[hover=true]:web:ring-inset data-[invalid=true]:data-[disabled=true]:data-[hover=true]:web:ring-indicator-error ',
+      default: '',
     },
     size: {
       sm: '',
@@ -33,7 +32,7 @@ const textareaStyle = tva({
 });
 
 const textareaInputStyle = tva({
-  base: 'p-2 web:outline-0 web:outline-none flex-1 text-foreground placeholder:text-foreground/60 web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
+  base: 'px-4 py-3 web:outline-0 web:outline-none flex-1 text-foreground font-semibold placeholder:text-muted-foreground placeholder:font-medium web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
   parentVariants: {
     size: {
       sm: 'text-sm',

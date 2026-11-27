@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  KeyboardAvoidingView,
   Platform,
   RefreshControl,
   ScrollView,
@@ -10,6 +9,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView } from '@/components/gluestack/keyboard-avoiding-view';
 import { DS } from '@/constants/DesignSystem';
 
 export interface ScreenProps {
@@ -42,6 +42,7 @@ export function Screen({
     <ScrollView
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="interactive"
       refreshControl={
         onRefresh ? (
           <RefreshControl
@@ -86,7 +87,10 @@ export function Screen({
     >
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        // Expo SDK 58 is edge-to-edge on Android, so adjustResize no longer applies:
+        // the avoiding view must handle the keyboard on both platforms.
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
       >
         {content}
       </KeyboardAvoidingView>

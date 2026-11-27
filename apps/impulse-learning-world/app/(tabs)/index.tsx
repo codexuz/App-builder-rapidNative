@@ -19,6 +19,7 @@ import { Center } from '@/components/gluestack/center';
 import { Divider } from '@/components/gluestack/divider';
 import { Heading } from '@/components/gluestack/heading';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import { Pressable } from '@/components/gluestack/pressable';
 import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
 import { Skeleton, SkeletonText } from '@/components/gluestack/skeleton';
@@ -27,6 +28,7 @@ import { VStack } from '@/components/gluestack/vstack';
 import { GameHud } from '@/components/game';
 import { LeoMascot, type LeoPose } from '@/components/mascot/LeoMascot';
 import { Screen } from '@/components/ui';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import type { Course, CourseLesson } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 
@@ -134,7 +136,7 @@ export default function KidsHomeScreen() {
       ) : null}
 
       {/* Leo Daily Check-In Card */}
-      <Card className="bg-card border border-border rounded-2xl p-3.5">
+      <Card className="p-3.5">
         <HStack className="items-center" space="md">
           <Center className="w-16 h-16 rounded-2xl bg-accent">
             <LeoMascot pose={leoNote.pose} size={58} />
@@ -152,7 +154,7 @@ export default function KidsHomeScreen() {
 
       {/* Primary Focus Card */}
       {currentCourse ? (
-        <Box className="rounded-3xl overflow-hidden shadow-xs">
+        <Box className="rounded-3xl overflow-hidden border-2 border-primary border-b-[5px] border-b-primary-lip">
           <LinearGradient
             colors={['#2563EB', '#1055F8']}
             start={{ x: 0, y: 0 }}
@@ -179,9 +181,9 @@ export default function KidsHomeScreen() {
               <Box className="flex-1">
                 <Progress
                   value={currentCourse.stats.pct}
-                  className="h-2 bg-white/25 rounded-full"
+                  className="h-3.5 bg-white/25"
                 >
-                  <ProgressFilledTrack className="bg-white rounded-full" />
+                  <ProgressFilledTrack className="bg-white" />
                 </Progress>
               </Box>
               <Text size="xs" bold className="text-white/90">
@@ -192,7 +194,7 @@ export default function KidsHomeScreen() {
             <Button
               size="lg"
               variant="secondary"
-              className="h-12 rounded-xl bg-white active:bg-slate-100 w-full"
+              className="bg-white border-white border-b-blue-200 active:bg-slate-100 w-full"
               onPress={() => {
                 if (currentCourse.stats.nextLesson) {
                   router.push(`/lesson/${currentCourse.stats.nextLesson.id}` as never);
@@ -202,7 +204,7 @@ export default function KidsHomeScreen() {
               }}
             >
               <ButtonIcon as={Play} className="text-primary" />
-              <ButtonText className="text-primary font-extrabold text-sm">
+              <ButtonText className="text-primary font-extrabold text-sm tracking-wide">
                 {currentCourse.stats.nextLesson
                   ? currentCourse.course.lessonRewardCoins > 0
                     ? `Continue Lesson  ·  +${currentCourse.course.lessonRewardCoins} Coins`
@@ -213,7 +215,7 @@ export default function KidsHomeScreen() {
           </LinearGradient>
         </Box>
       ) : loading ? (
-        <Card className="bg-card border border-border rounded-2xl p-5">
+        <Card className="p-5">
           <VStack space="md">
             <Skeleton variant="rounded" className="h-5 w-1/3" />
             <SkeletonText _lines={2} className="h-3" />
@@ -221,7 +223,7 @@ export default function KidsHomeScreen() {
           </VStack>
         </Card>
       ) : (
-        <Card className="bg-card border border-border rounded-2xl p-6">
+        <Card className="p-6">
           <VStack space="sm" className="items-center">
             <LeoMascot pose="wave" size={80} />
             <Heading size="md" className="text-foreground">
@@ -240,10 +242,16 @@ export default function KidsHomeScreen() {
           onPress={() => router.push('/words' as never)}
           className="flex-1 min-w-0"
         >
-          <Card className="bg-card border border-border rounded-2xl p-3.5">
+          <Card className="p-3.5">
             <HStack className="items-center" space="sm">
-              <Center className="w-10 h-10 rounded-xl bg-accent">
-                <BookOpen size={19} color="#1055F8" />
+              <Center className="w-12 h-12 rounded-2xl bg-accent/80">
+                <Image
+                  source={GeneratedAssets.wordCards}
+                  alt="Word Cards"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 40, height: 40 }}
+                />
               </Center>
               <VStack className="flex-1 min-w-0">
                 <Text size="sm" bold className="text-foreground" numberOfLines={1}>
@@ -261,10 +269,16 @@ export default function KidsHomeScreen() {
           onPress={() => router.push('/shop' as never)}
           className="flex-1 min-w-0"
         >
-          <Card className="bg-card border border-border rounded-2xl p-3.5">
+          <Card className="p-3.5">
             <HStack className="items-center" space="sm">
-              <Center className="w-10 h-10 rounded-xl bg-amber-50">
-                <Store size={19} color="#D97706" />
+              <Center className="w-12 h-12 rounded-2xl bg-purple-50">
+                <Image
+                  source={GeneratedAssets.coinPouch}
+                  alt="Coin Shop"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 40, height: 40 }}
+                />
               </Center>
               <VStack className="flex-1 min-w-0">
                 <Text size="sm" bold className="text-foreground" numberOfLines={1}>
@@ -301,10 +315,16 @@ export default function KidsHomeScreen() {
                   key={course.id}
                   onPress={() => router.push(`/course/${course.id}` as never)}
                 >
-                  <Card className="bg-card border border-border rounded-2xl p-4">
+                  <Card className="p-4">
                     <HStack className="items-center" space="md">
-                      <Center className="w-12 h-12 rounded-xl bg-accent">
-                        <GraduationCap size={22} color="#1055F8" />
+                      <Center className="w-14 h-14 rounded-2xl bg-accent/80">
+                        <Image
+                          source={GeneratedAssets.courseBook}
+                          alt={course.title}
+                          size="none"
+                          resizeMode="contain"
+                          style={{ width: 48, height: 48 }}
+                        />
                       </Center>
                       <VStack className="flex-1 min-w-0" space="xs">
                         <HStack className="items-center justify-between" space="xs">
@@ -326,9 +346,9 @@ export default function KidsHomeScreen() {
                           <Box className="flex-1">
                             <Progress
                               value={stats.pct}
-                              className="h-1.5 bg-secondary rounded-full"
+                              className="h-3"
                             >
-                              <ProgressFilledTrack className="bg-primary rounded-full" />
+                              <ProgressFilledTrack className="bg-success" />
                             </Progress>
                           </Box>
                           <Text size="xs" bold className="text-muted-foreground">
@@ -351,7 +371,7 @@ export default function KidsHomeScreen() {
           <Heading size="md" className="text-foreground">
             Earlier Levels
           </Heading>
-          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+          <Card className="p-0 overflow-hidden">
             {practiceCourses.map((course, idx) => {
               const stats = computeCourseStats(course);
               return (

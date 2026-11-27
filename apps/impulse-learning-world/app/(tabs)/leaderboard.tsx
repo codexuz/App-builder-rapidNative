@@ -13,12 +13,14 @@ import { Card } from '@/components/gluestack/card';
 import { Divider } from '@/components/gluestack/divider';
 import { Heading } from '@/components/gluestack/heading';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import { Tabs, TabsList, TabsTrigger, TabsTriggerText } from '@/components/gluestack/tabs';
 import { Text } from '@/components/gluestack/text';
 import { VStack } from '@/components/gluestack/vstack';
 import { GameHud } from '@/components/game';
 import { LEO_ART, LeoMascot } from '@/components/mascot/LeoMascot';
 import { Screen } from '@/components/ui';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { api } from '@/lib/api';
 import type { LeaderboardScope } from '@/lib/api/types';
 import { useKidsApp } from '@/providers/KidsAppProvider';
@@ -97,16 +99,18 @@ export default function KidsLeaderboardScreen() {
         value={boardMode}
         onValueChange={(v: string) => setBoardMode(v === 'coins' ? 'coins' : 'league')}
       >
-        <TabsList className="w-full bg-slate-200/75 p-1 rounded-xl">
+        <TabsList className="w-full">
           <TabsTrigger
             value="league"
-            className={`flex-1 rounded-lg py-2 items-center justify-center ${
-              boardMode === 'league' ? 'bg-card shadow-xs' : 'bg-transparent'
+            className={`flex-1 rounded-xl py-2 items-center justify-center border-2 border-b-4 ${
+              boardMode === 'league'
+                ? 'bg-card border-border border-b-lip'
+                : 'bg-transparent border-transparent'
             }`}
           >
             <TabsTriggerText
-              className={`text-sm font-bold ${
-                boardMode === 'league' ? 'text-foreground' : 'text-muted-foreground'
+              className={`text-sm font-extrabold ${
+                boardMode === 'league' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               Weekly League
@@ -114,13 +118,15 @@ export default function KidsLeaderboardScreen() {
           </TabsTrigger>
           <TabsTrigger
             value="coins"
-            className={`flex-1 rounded-lg py-2 items-center justify-center ${
-              boardMode === 'coins' ? 'bg-card shadow-xs' : 'bg-transparent'
+            className={`flex-1 rounded-xl py-2 items-center justify-center border-2 border-b-4 ${
+              boardMode === 'coins'
+                ? 'bg-card border-border border-b-lip'
+                : 'bg-transparent border-transparent'
             }`}
           >
             <TabsTriggerText
-              className={`text-sm font-bold ${
-                boardMode === 'coins' ? 'text-foreground' : 'text-muted-foreground'
+              className={`text-sm font-extrabold ${
+                boardMode === 'coins' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               Coin Leaders
@@ -138,9 +144,7 @@ export default function KidsLeaderboardScreen() {
                 key={s.key}
                 size="sm"
                 variant={active ? 'default' : 'outline'}
-                className={`rounded-full px-3.5 h-8 ${
-                  active ? '' : 'bg-card border-border'
-                }`}
+                className="rounded-full px-3.5 min-h-9 py-1"
                 onPress={() => void loadLeaderboardScope(s.key)}
               >
                 <ButtonText
@@ -157,12 +161,18 @@ export default function KidsLeaderboardScreen() {
       ) : null}
 
       {/* Podium Stage Card */}
-      <Card className="bg-slate-900 border-0 rounded-3xl pt-4 px-4 pb-0 overflow-hidden">
+      <Card className="bg-slate-900 border-2 border-slate-700 border-b-[5px] border-b-slate-950 rounded-3xl pt-4 px-4 pb-0 overflow-hidden">
         <VStack space="md">
           <HStack className="items-center justify-between" space="sm">
             <Badge className="rounded-full bg-white/10 border-0 px-3 py-1 gap-1.5">
-              <Trophy size={13} color="#FDE047" />
-              <BadgeText className="text-white font-bold normal-case">
+              <Image
+                source={GeneratedAssets.trophyGold}
+                alt="League trophy"
+                size="none"
+                resizeMode="contain"
+                style={{ width: 20, height: 20 }}
+              />
+              <BadgeText className="text-white font-extrabold normal-case">
                 {boardMode === 'league' ? `${tierName} League` : 'Top Coin Earners'}
               </BadgeText>
             </Badge>
@@ -259,7 +269,7 @@ export default function KidsLeaderboardScreen() {
         </HStack>
 
         {rows.length > 0 ? (
-          <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+          <Card className="p-0 overflow-hidden">
             {rows.map((entry, idx) => {
               const avatarUri = api.assetUrl(entry.avatarUrl);
               return (
@@ -324,11 +334,17 @@ export default function KidsLeaderboardScreen() {
                     </VStack>
 
                     <HStack className="items-center" space="xs">
-                      {boardMode === 'league' ? (
-                        <Zap size={14} color="#1055F8" fill="#1055F8" />
-                      ) : (
-                        <Coins size={14} color="#D97706" />
-                      )}
+                      <Image
+                        source={
+                          boardMode === 'league'
+                            ? GeneratedAssets.xpBolt
+                            : GeneratedAssets.coinPouch
+                        }
+                        alt={boardMode === 'league' ? 'XP' : 'Coins'}
+                        size="none"
+                        resizeMode="contain"
+                        style={{ width: 18, height: 18 }}
+                      />
                       <Text size="sm" bold className="text-foreground">
                         {entry.score}
                       </Text>
@@ -339,7 +355,7 @@ export default function KidsLeaderboardScreen() {
             })}
           </Card>
         ) : (
-          <Card className="bg-card border border-border rounded-2xl p-5 items-center">
+          <Card className="p-5 items-center">
             <Text size="xs" className="text-muted-foreground">
               No leaderboard entries yet.
             </Text>

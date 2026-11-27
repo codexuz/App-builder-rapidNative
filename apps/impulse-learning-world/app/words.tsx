@@ -10,12 +10,14 @@ import { Center } from '@/components/gluestack/center';
 import { Divider } from '@/components/gluestack/divider';
 import { Heading } from '@/components/gluestack/heading';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import { Pressable } from '@/components/gluestack/pressable';
 import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
 import { Text } from '@/components/gluestack/text';
 import { VStack } from '@/components/gluestack/vstack';
 import { ConfettiBurst, speakEnglishText } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 import { playCorrectFeedback, playTileTapSound } from '@/utils/soundFeedback';
 
@@ -78,8 +80,8 @@ export default function WordsReviewScreen() {
         </Badge>
       </HStack>
 
-      <Progress value={doneRatio} className="h-1 bg-border rounded-none">
-        <ProgressFilledTrack className="bg-primary rounded-none" />
+      <Progress value={doneRatio} className="h-2.5 bg-slate-200 rounded-none">
+        <ProgressFilledTrack className="bg-success rounded-r-full" />
       </Progress>
 
       <Center className="flex-1 px-5 py-5">
@@ -96,9 +98,8 @@ export default function WordsReviewScreen() {
               }}
             >
               <Card
-                className={`bg-card rounded-3xl p-5 min-h-[300px] border-2 shadow-sm ${
-                  flipped ? 'border-emerald-300' : 'border-primary/25'
-                }`}
+                variant={flipped ? 'success' : 'default'}
+                className="rounded-3xl p-5 min-h-[300px] border-b-[6px]"
               >
                 <HStack className="items-center justify-between">
                   <Badge className="rounded-full bg-accent border-0 px-3 py-1">
@@ -158,9 +159,15 @@ export default function WordsReviewScreen() {
             </Pressable>
           </VStack>
         ) : (
-          <Card className="bg-card border border-border rounded-3xl p-6 w-full max-w-[360px]">
+          <Card className="rounded-3xl p-6 w-full max-w-[360px]">
             <VStack space="md" className="items-center">
-              <LeoMascot pose="cheer" size={110} />
+              <Image
+                source={GeneratedAssets.wordCards}
+                alt="Word cards mastered"
+                size="none"
+                resizeMode="contain"
+                style={{ width: 92, height: 92 }}
+              />
               <Heading size="xl" className="text-foreground text-center">
                 All words reviewed!
               </Heading>
@@ -169,10 +176,11 @@ export default function WordsReviewScreen() {
               </Text>
               <Button
                 size="lg"
-                className="w-full h-12 rounded-xl mt-1"
+                variant="success"
+                className="w-full mt-1"
                 onPress={() => router.back()}
               >
-                <ButtonText className="font-bold">Back to Learn</ButtonText>
+                <ButtonText>Back to Learn</ButtonText>
               </Button>
             </VStack>
           </Card>
@@ -180,26 +188,27 @@ export default function WordsReviewScreen() {
       </Center>
 
       {current ? (
-        <Box className="px-4 py-3.5 bg-card border-t border-border">
+        <Box className="px-4 py-3.5 bg-card border-t-2 border-border">
           <HStack space="sm">
             <Button
-              variant="outline"
+              variant="destructive"
               size="lg"
-              className="flex-1 h-12 rounded-xl border-red-200 bg-red-50/40 px-3"
+              className="flex-1 px-3"
               onPress={() => void handleGrade('AGAIN')}
             >
-              <ButtonIcon as={RotateCcw} className="text-destructive" />
-              <ButtonText className="text-destructive font-bold text-sm" numberOfLines={1}>
-                Practice Again
+              <ButtonIcon as={RotateCcw} className="text-white" />
+              <ButtonText className="text-sm" numberOfLines={1}>
+                Again
               </ButtonText>
             </Button>
             <Button
+              variant="success"
               size="lg"
-              className="flex-1 h-12 rounded-xl bg-emerald-600 px-3"
+              className="flex-1 px-3"
               onPress={() => void handleGrade('GOOD')}
             >
               <ButtonIcon as={Check} className="text-white" />
-              <ButtonText className="text-white font-bold text-sm" numberOfLines={1}>
+              <ButtonText className="text-sm" numberOfLines={1}>
                 I Know It
               </ButtonText>
             </Button>

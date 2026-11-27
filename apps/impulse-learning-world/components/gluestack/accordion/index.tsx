@@ -19,16 +19,17 @@ const accordionStyle = tva({
   base: 'w-full',
 });
 
+// Each accordion row is a tactile Duolingo card (2px rim + 4px lip)
 const accordionItemStyle = tva({
-  base: '',
+  base: 'bg-card rounded-2xl border-2 border-border border-b-4 border-b-lip overflow-hidden mb-3',
 });
 
 const accordionTitleTextStyle = tva({
-  base: 'text-foreground font-medium flex-1 text-left text-sm',
+  base: 'text-foreground font-bold flex-1 text-left text-[15px]',
 });
 
 const accordionIconStyle = tva({
-  base: 'text-muted-foreground fill-none h-4 w-4',
+  base: 'text-muted-foreground fill-none h-5 w-5',
 });
 
 const accordionContentTextStyle = tva({
@@ -36,11 +37,11 @@ const accordionContentTextStyle = tva({
 });
 
 const accordionHeaderStyle = tva({
-  base: 'py-2.5 m-0',
+  base: 'p-0 m-0',
 });
 
 const accordionContentStyle = tva({
-  base: 'pb-4',
+  base: 'pb-4 px-4',
 });
 
 const accordionTriggerStyle = tva({

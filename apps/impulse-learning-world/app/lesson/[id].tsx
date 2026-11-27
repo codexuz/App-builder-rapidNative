@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { Platform, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   AlertCircle,
@@ -37,7 +37,9 @@ import { Center } from '@/components/gluestack/center';
 import { Divider } from '@/components/gluestack/divider';
 import { Heading } from '@/components/gluestack/heading';
 import { HStack } from '@/components/gluestack/hstack';
+import { Image } from '@/components/gluestack/image';
 import { Input, InputField } from '@/components/gluestack/input';
+import { KeyboardAvoidingView } from '@/components/gluestack/keyboard-avoiding-view';
 import { Pressable } from '@/components/gluestack/pressable';
 import { Progress, ProgressFilledTrack } from '@/components/gluestack/progress';
 import { Spinner } from '@/components/gluestack/spinner';
@@ -46,6 +48,7 @@ import { Textarea, TextareaInput } from '@/components/gluestack/textarea';
 import { VStack } from '@/components/gluestack/vstack';
 import { ConfettiBurst, speakEnglishText } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { api } from '@/lib/api';
 import type {
   AttemptResult,
@@ -322,16 +325,16 @@ export default function KidsLessonScreen() {
             <Text size="sm" className="text-muted-foreground text-center">
               {loadError ?? 'Lesson not found.'}
             </Text>
-            <Button size="lg" className="w-full h-12 rounded-xl" onPress={fetchLesson}>
-              <ButtonText className="font-bold">Try Again</ButtonText>
+            <Button size="lg" className="w-full" onPress={fetchLesson}>
+              <ButtonText>Try Again</ButtonText>
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="w-full h-12 rounded-xl border-border"
+              className="w-full"
               onPress={() => router.back()}
             >
-              <ButtonText className="text-foreground font-semibold">Go Back</ButtonText>
+              <ButtonText>Go Back</ButtonText>
             </Button>
           </VStack>
         </Center>
@@ -343,7 +346,7 @@ export default function KidsLessonScreen() {
   if (phase === 'review' && attemptResult) {
     return (
       <SafeAreaView className="flex-1 bg-background">
-        <HStack className="items-center px-4 py-2.5 bg-card border-b border-border" space="sm">
+        <HStack className="items-center px-4 py-2.5 bg-card border-b-2 border-border" space="sm">
           <Button
             size="icon"
             variant="secondary"
@@ -372,9 +375,8 @@ export default function KidsLessonScreen() {
             return (
               <Card
                 key={q.id}
-                className={`bg-card rounded-2xl p-4 border ${
-                  ok ? 'border-emerald-300' : 'border-red-300'
-                }`}
+                variant={ok ? 'success' : 'danger'}
+                className="p-4"
               >
                 <VStack space="sm">
                   <HStack className="items-center justify-between">
@@ -441,14 +443,18 @@ export default function KidsLessonScreen() {
           showsVerticalScrollIndicator={false}
         >
           <VStack space="sm" className="items-center">
-            <Center className="w-32 h-32 rounded-full bg-accent border border-primary/20">
+            <Center className="w-32 h-32 rounded-full bg-accent border-2 border-primary/20 border-b-4 border-b-primary/30">
               <LeoMascot pose="cheer" size={114} />
             </Center>
-            <Badge className="rounded-full bg-emerald-50 border-0 px-3 py-1 gap-1.5">
-              <Trophy size={13} color="#15803D" />
-              <BadgeText className="text-emerald-700 font-extrabold normal-case">
-                Lesson Complete
-              </BadgeText>
+            <Badge variant="success" className="px-3.5 py-1.5 gap-1.5">
+              <Image
+                source={GeneratedAssets.trophyGold}
+                alt="Trophy"
+                size="none"
+                resizeMode="contain"
+                style={{ width: 16, height: 16 }}
+              />
+              <BadgeText>Lesson Complete</BadgeText>
             </Badge>
             <Heading size="2xl" className="text-foreground text-center">
               Great Work!
@@ -458,41 +464,59 @@ export default function KidsLessonScreen() {
             </Text>
           </VStack>
 
-          <Card className="bg-card border border-border rounded-2xl p-4">
+          <Card className="p-4">
             <HStack className="items-center">
               <VStack className="flex-1 items-center" space="xs">
-                <Sparkles size={18} color="#15803D" />
+                <Image
+                  source={GeneratedAssets.badgeMedal}
+                  alt="Accuracy medal"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 36, height: 36 }}
+                />
                 <Text size="lg" bold className="text-foreground">
                   {victory.accuracyPercent}%
                 </Text>
-                <Text size="xs" className="text-muted-foreground">
+                <Text size="xs" className="text-muted-foreground font-semibold">
                   Accuracy
                 </Text>
               </VStack>
-              <Divider orientation="vertical" className="h-10 bg-border" />
+              <Divider orientation="vertical" className="h-12 bg-border" />
               <VStack className="flex-1 items-center" space="xs">
-                <Zap size={18} color="#1055F8" fill="#1055F8" />
+                <Image
+                  source={GeneratedAssets.xpBolt}
+                  alt="XP bolt"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 36, height: 36 }}
+                />
                 <Text size="lg" bold className="text-foreground">
                   +{victory.xpEarned}
                 </Text>
-                <Text size="xs" className="text-muted-foreground">
+                <Text size="xs" className="text-muted-foreground font-semibold">
                   XP Earned
                 </Text>
               </VStack>
-              <Divider orientation="vertical" className="h-10 bg-border" />
+              <Divider orientation="vertical" className="h-12 bg-border" />
               <VStack className="flex-1 items-center" space="xs">
-                <Coins size={18} color="#D97706" />
+                <Image
+                  source={GeneratedAssets.coinPouch}
+                  alt="Coins"
+                  size="none"
+                  resizeMode="contain"
+                  style={{ width: 36, height: 36 }}
+                />
                 <Text size="lg" bold className="text-foreground">
                   +{victory.coinsEarned}
                 </Text>
-                <Text size="xs" className="text-muted-foreground">
+                <Text size="xs" className="text-muted-foreground font-semibold">
                   Coins
                 </Text>
               </VStack>
             </HStack>
           </Card>
 
-          <Card className="bg-card border border-border rounded-2xl p-4">
+          <Card className="p-4">
             <VStack space="sm">
               <HStack className="items-center justify-between">
                 <Text size="sm" bold className="text-foreground">
@@ -502,12 +526,18 @@ export default function KidsLessonScreen() {
                   {completedCount}/{Math.max(1, allLessons.length)} lessons
                 </Text>
               </HStack>
-              <Progress value={coursePct} className="h-2 bg-secondary rounded-full">
-                <ProgressFilledTrack className="bg-primary rounded-full" />
+              <Progress value={coursePct} className="h-3.5">
+                <ProgressFilledTrack className="bg-success" />
               </Progress>
               {victory.streakDays > 0 ? (
                 <HStack className="items-center pt-1" space="xs">
-                  <Flame size={14} color="#EA580C" fill="#EA580C" />
+                  <Image
+                    source={GeneratedAssets.streakFlame}
+                    alt="Streak flame"
+                    size="none"
+                    resizeMode="contain"
+                    style={{ width: 20, height: 20 }}
+                  />
                   <Text size="xs" bold className="text-orange-700">
                     {victory.streakDays}-day learning streak active!
                   </Text>
@@ -519,16 +549,17 @@ export default function KidsLessonScreen() {
           <VStack space="sm" className="mt-2">
             <Button
               size="lg"
-              className="h-12 rounded-xl w-full"
+              variant="success"
+              className="w-full"
               onPress={() => router.back()}
             >
-              <ButtonText className="font-bold">Continue Learning</ButtonText>
+              <ButtonText>Continue Learning</ButtonText>
             </Button>
 
             <Button
               variant="outline"
               size="lg"
-              className="h-12 rounded-xl border-border bg-card w-full"
+              className="w-full"
               onPress={() => {
                 if (attemptResult?.answersShown) {
                   setPhase('review');
@@ -539,7 +570,7 @@ export default function KidsLessonScreen() {
                 }
               }}
             >
-              <ButtonText className="text-foreground font-semibold">
+              <ButtonText>
                 {attemptResult?.answersShown ? 'Review My Answers' : 'Practice Again'}
               </ButtonText>
             </Button>
@@ -592,7 +623,7 @@ export default function KidsLessonScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Leo Guide Card */}
-          <Card className="bg-card border border-border rounded-2xl p-3.5">
+          <Card className="p-3.5">
             <HStack className="items-center" space="md">
               <Center className="w-16 h-16 rounded-2xl bg-accent">
                 <LeoMascot pose={isLeoSpeaking ? 'cheer' : 'wave'} size={58} />
@@ -625,9 +656,8 @@ export default function KidsLessonScreen() {
             <Accordion
               type="multiple"
               defaultValue={['notes']}
-              className="bg-card border border-border rounded-2xl overflow-hidden"
             >
-              <AccordionItem value="notes" className="border-0">
+              <AccordionItem value="notes" className="mb-0">
                 <AccordionHeader>
                   <AccordionTrigger className="px-4 py-3.5">
                     {({ isExpanded }: { isExpanded: boolean }) => (
@@ -674,7 +704,7 @@ export default function KidsLessonScreen() {
                 </Badge>
               </HStack>
 
-              <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+              <Card className="p-0 overflow-hidden">
                 {vocabItems.map((w, idx) => (
                   <Box key={w.term}>
                     {idx > 0 ? <Divider className="bg-border" /> : null}
@@ -720,7 +750,7 @@ export default function KidsLessonScreen() {
               <Heading size="md" className="text-foreground">
                 Exercises
               </Heading>
-              <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+              <Card className="p-0 overflow-hidden">
                 {lesson.exercises.map((ex, idx) => (
                   <Box key={ex.id}>
                     {idx > 0 ? <Divider className="bg-border" /> : null}
@@ -747,16 +777,17 @@ export default function KidsLessonScreen() {
           ) : null}
         </ScrollView>
 
-        <Box className="px-4 py-3 bg-card border-t border-border">
+        <Box className="px-4 py-3 bg-card border-t-2 border-border">
           <Button
             size="lg"
-            className="h-12 rounded-xl w-full"
+            variant="success"
+            className="w-full"
             onPress={() => void handleStartQuiz(0)}
           >
             <ButtonIcon as={Play} className="text-white" />
-            <ButtonText className="font-bold">
+            <ButtonText>
               {activeExercise
-                ? `Start ${activeExercise.title} (${activeExercise.questions.length} Qs)`
+                ? `Start Quiz  ·  ${activeExercise.questions.length} Questions`
                 : 'Mark Lesson Complete'}
             </ButtonText>
           </Button>
@@ -765,7 +796,7 @@ export default function KidsLessonScreen() {
     );
   }
 
-  // PHASE 2: INTERACTIVE LIVE EXERCISE PLAYER (Clean Gluestack Components — ZERO 3D Duolingo borders)
+  // PHASE 2: INTERACTIVE LIVE EXERCISE PLAYER (Duolingo 3D Gluestack Parity + KeyboardAvoidingView)
   const orderItems = currentQuestion?.data.items ?? [];
   const orderTiles = orderItems.map((it) => it.text);
   const progressPct = Math.round(((qIdx + 1) / Math.max(1, questions.length)) * 100);
@@ -788,8 +819,8 @@ export default function KidsLessonScreen() {
         </Button>
 
         <Box className="flex-1">
-          <Progress value={progressPct} className="h-2.5 bg-secondary rounded-full">
-            <ProgressFilledTrack className="bg-primary rounded-full" />
+          <Progress value={progressPct} className="h-4">
+            <ProgressFilledTrack className="bg-success" />
           </Progress>
         </Box>
 
@@ -816,10 +847,18 @@ export default function KidsLessonScreen() {
         </Badge>
       </HStack>
 
-      <ScrollView
-        contentContainerStyle={{ padding: 16, paddingBottom: 28, gap: 16 }}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
+        className="flex-1"
       >
+        <ScrollView
+          contentContainerStyle={{ padding: 16, paddingBottom: 28, gap: 16 }}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
+          automaticallyAdjustKeyboardInsets
+          showsVerticalScrollIndicator={false}
+        >
         {submitError ? (
           <Alert variant="destructive" className="rounded-xl bg-red-50 border-red-200 p-3">
             <AlertIcon as={AlertCircle} className="text-destructive" />
@@ -832,7 +871,7 @@ export default function KidsLessonScreen() {
         {currentQuestion ? (
           <>
             {/* Question Prompt Card */}
-            <Card className="bg-card border border-border rounded-2xl p-4">
+            <Card className="p-4">
               <HStack className="items-start" space="md">
                 <Center className="w-16 h-16 rounded-2xl bg-accent">
                   <LeoMascot pose={canAdvance ? 'cheer' : 'think'} size={58} />
@@ -900,18 +939,15 @@ export default function KidsLessonScreen() {
                       }}
                     >
                       <Card
-                        className={`rounded-2xl p-3.5 border ${
-                          isSel
-                            ? 'bg-accent border-primary'
-                            : 'bg-card border-border'
-                        }`}
+                        variant={isSel ? 'selected' : 'default'}
+                        className="p-3.5"
                       >
                         <HStack className="items-center" space="md">
                           <Center
-                            className={`w-8 h-8 rounded-lg border ${
+                            className={`w-9 h-9 rounded-xl border-2 border-b-[3px] ${
                               isSel
-                                ? 'bg-primary border-primary'
-                                : 'bg-secondary border-border'
+                                ? 'bg-primary border-primary border-b-primary-lip'
+                                : 'bg-secondary border-border border-b-lip'
                             }`}
                           >
                             {isSel ? (
@@ -957,11 +993,8 @@ export default function KidsLessonScreen() {
                       }}
                     >
                       <Card
-                        className={`rounded-2xl py-6 items-center justify-center border ${
-                          isSel
-                            ? 'bg-accent border-primary'
-                            : 'bg-card border-border'
-                        }`}
+                        variant={isSel ? 'selected' : 'default'}
+                        className="py-6 items-center justify-center"
                       >
                         <Heading
                           size="lg"
@@ -979,7 +1012,7 @@ export default function KidsLessonScreen() {
             {/* ORDER — Clean Gluestack Sentence Builder */}
             {currentQuestion.type === 'ORDER' ? (
               <VStack space="md">
-                <Card className="bg-card border border-border rounded-2xl p-4 min-h-[112px]">
+                <Card className="p-4 min-h-[112px]">
                   <HStack className="items-center justify-between mb-3">
                     <Text size="xs" bold className="text-muted-foreground uppercase">
                       Your Sentence
@@ -1006,7 +1039,7 @@ export default function KidsLessonScreen() {
                           key={`picked-${tileIdx}`}
                           size="sm"
                           variant="default"
-                          className="rounded-xl h-9 px-3.5"
+                          className="min-h-10 px-4"
                           onPress={() => {
                             playTileTapSound(undefined, soundEnabled);
                             setSelectedOrderIndices((prev) =>
@@ -1014,7 +1047,7 @@ export default function KidsLessonScreen() {
                             );
                           }}
                         >
-                          <ButtonText className="text-white font-bold text-sm">
+                          <ButtonText className="normal-case text-sm font-bold">
                             {orderTiles[tileIdx]}
                           </ButtonText>
                         </Button>
@@ -1038,17 +1071,15 @@ export default function KidsLessonScreen() {
                         size="sm"
                         variant="outline"
                         isDisabled={used}
-                        className={`rounded-xl h-10 px-4 ${
-                          used
-                            ? 'bg-secondary border-dashed border-border opacity-40'
-                            : 'bg-card border-border'
+                        className={`min-h-11 px-4 ${
+                          used ? 'bg-secondary border-border border-b-2 opacity-35' : ''
                         }`}
                         onPress={() => {
                           playTileTapSound(word, soundEnabled);
                           setSelectedOrderIndices((prev) => [...prev, idx]);
                         }}
                       >
-                        <ButtonText className="text-foreground font-semibold text-sm">
+                        <ButtonText className="normal-case text-foreground font-bold text-sm">
                           {word}
                         </ButtonText>
                       </Button>
@@ -1063,18 +1094,17 @@ export default function KidsLessonScreen() {
             currentQuestion.type !== 'MULTI_CHOICE' &&
             currentQuestion.type !== 'TRUE_FALSE' &&
             currentQuestion.type !== 'ORDER' ? (
-              <Card className="bg-card border border-border rounded-2xl p-4">
+              <Card className="p-4">
                 {currentQuestion.type === 'ESSAY' ? (
-                  <Textarea className="rounded-xl border-border bg-background min-h-[120px]">
+                  <Textarea className="min-h-[132px]">
                     <TextareaInput
                       value={textAnswer}
                       onChangeText={setTextAnswer}
                       placeholder="Write your answer here..."
-                      className="text-foreground text-base"
                     />
                   </Textarea>
                 ) : (
-                  <Input className="h-12 rounded-xl border-border bg-background px-3">
+                  <Input>
                     <InputField
                       value={textAnswer}
                       onChangeText={setTextAnswer}
@@ -1082,7 +1112,6 @@ export default function KidsLessonScreen() {
                       keyboardType={
                         currentQuestion.type === 'NUMERIC' ? 'decimal-pad' : 'default'
                       }
-                      className="text-foreground text-base font-medium"
                     />
                   </Input>
                 )}
@@ -1090,27 +1119,27 @@ export default function KidsLessonScreen() {
             ) : null}
           </>
         ) : null}
-      </ScrollView>
+        </ScrollView>
 
-      <Box className="px-4 py-3 bg-card border-t border-border">
-        <Button
-          size="lg"
-          isDisabled={!canAdvance || submitting}
-          className={`h-12 rounded-xl w-full ${
-            qIdx + 1 === questions.length ? 'bg-emerald-600' : ''
-          }`}
-          onPress={() => void handleNextOrSubmit()}
-        >
-          {submitting ? <ButtonSpinner color="#FFFFFF" /> : null}
-          <ButtonText className="font-bold">
-            {submitting
-              ? 'Leo is checking your answers...'
-              : qIdx + 1 === questions.length
-                ? 'Submit & See Score'
-                : 'Next Question'}
-          </ButtonText>
-        </Button>
-      </Box>
+        <Box className="px-4 py-3 bg-card border-t-2 border-border">
+          <Button
+            size="lg"
+            variant={qIdx + 1 === questions.length ? 'success' : 'default'}
+            isDisabled={!canAdvance || submitting}
+            className="w-full"
+            onPress={() => void handleNextOrSubmit()}
+          >
+            {submitting ? <ButtonSpinner color="#FFFFFF" /> : null}
+            <ButtonText>
+              {submitting
+                ? 'Leo is checking...'
+                : qIdx + 1 === questions.length
+                  ? 'Submit & See Score'
+                  : 'Next Question'}
+            </ButtonText>
+          </Button>
+        </Box>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

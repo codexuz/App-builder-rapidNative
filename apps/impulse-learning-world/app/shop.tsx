@@ -30,6 +30,7 @@ import {
 import { VStack } from '@/components/gluestack/vstack';
 import { ConfettiBurst } from '@/components/game';
 import { LeoMascot } from '@/components/mascot/LeoMascot';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { api } from '@/lib/api';
 import { useKidsApp } from '@/providers/KidsAppProvider';
 import { playCorrectFeedback } from '@/utils/soundFeedback';
@@ -98,7 +99,13 @@ export default function KidsCoinShopScreen() {
           variant="outline"
           className="rounded-full bg-amber-50 border-amber-200 px-3 py-1 gap-1.5"
         >
-          <Coins size={14} color="#D97706" />
+          <Image
+            source={GeneratedAssets.coinPouch}
+            alt="Coins"
+            size="none"
+            resizeMode="contain"
+            style={{ width: 18, height: 18 }}
+          />
           <BadgeText className="text-amber-700 font-extrabold normal-case">
             {coins}
           </BadgeText>
@@ -109,7 +116,7 @@ export default function KidsCoinShopScreen() {
         contentContainerStyle={{ padding: 16, paddingBottom: 32, gap: 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <Box className="rounded-2xl overflow-hidden shadow-xs">
+        <Box className="rounded-3xl overflow-hidden border-2 border-primary border-b-[5px] border-b-primary-lip">
           <LinearGradient
             colors={['#2563EB', '#1055F8']}
             start={{ x: 0, y: 0 }}
@@ -141,7 +148,7 @@ export default function KidsCoinShopScreen() {
               return (
                 <Card
                   key={prod.id}
-                  className="bg-card border border-border rounded-2xl p-3.5 items-center gap-2"
+                  className="p-3.5 items-center gap-2"
                   style={{ width: '48.4%' }}
                 >
                   <Center className="w-14 h-14 rounded-2xl bg-accent overflow-hidden">
@@ -154,7 +161,13 @@ export default function KidsCoinShopScreen() {
                         resizeMode="cover"
                       />
                     ) : (
-                      <Gift size={26} color="#1055F8" />
+                      <Image
+                        source={GeneratedAssets.giftPrize}
+                        alt={prod.name}
+                        size="none"
+                        resizeMode="contain"
+                        style={{ width: 46, height: 46 }}
+                      />
                     )}
                   </Center>
                   <Text
@@ -178,7 +191,7 @@ export default function KidsCoinShopScreen() {
                     size="sm"
                     variant={canAfford ? 'default' : 'secondary'}
                     isDisabled={!canAfford}
-                    className="w-full rounded-xl h-9 mt-auto"
+                    className="w-full mt-auto"
                     onPress={() => setSelectedProd(prod)}
                   >
                     <Coins size={13} color={canAfford ? '#FFFFFF' : '#64748B'} />
@@ -195,7 +208,7 @@ export default function KidsCoinShopScreen() {
             })}
           </Box>
         ) : (
-          <Card className="bg-card border border-border rounded-2xl p-6 items-center gap-2">
+          <Card className="p-6 items-center gap-2">
             <LeoMascot pose="idle" size={82} />
             <Heading size="sm" className="text-foreground">
               No prizes available yet
@@ -211,7 +224,7 @@ export default function KidsCoinShopScreen() {
             <Heading size="md" className="text-foreground">
               My Orders
             </Heading>
-            <Card className="bg-card border border-border rounded-2xl p-0 overflow-hidden">
+            <Card className="p-0 overflow-hidden">
               {orders.slice(0, 6).map((ord, idx) => (
                 <Box key={ord.id}>
                   {idx > 0 ? <Divider className="bg-border" /> : null}
@@ -260,7 +273,13 @@ export default function KidsCoinShopScreen() {
                       resizeMode="cover"
                     />
                   ) : (
-                    <Gift size={28} color="#1055F8" />
+                    <Image
+                      source={GeneratedAssets.giftPrize}
+                      alt={selectedProd.name}
+                      size="none"
+                      resizeMode="contain"
+                      style={{ width: 54, height: 54 }}
+                    />
                   )}
                 </Center>
                 <VStack className="flex-1 min-w-0" space="xs">
@@ -296,19 +315,20 @@ export default function KidsCoinShopScreen() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="flex-1 h-12 rounded-xl border-border"
+                  className="flex-1 px-3"
                   onPress={() => setSelectedProd(null)}
                 >
-                  <ButtonText className="text-foreground font-semibold">Cancel</ButtonText>
+                  <ButtonText className="text-sm">Cancel</ButtonText>
                 </Button>
                 <Button
                   size="lg"
+                  variant="success"
                   isDisabled={ordering}
-                  className="flex-1 h-12 rounded-xl"
+                  className="flex-1 px-3"
                   onPress={() => void handleConfirmOrder()}
                 >
                   {ordering ? <ButtonSpinner color="#FFFFFF" /> : null}
-                  <ButtonText className="font-bold">
+                  <ButtonText className="text-sm" numberOfLines={1}>
                     {ordering ? 'Ordering...' : 'Confirm Order'}
                   </ButtonText>
                 </Button>
