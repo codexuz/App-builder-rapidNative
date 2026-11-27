@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectSlug": "impulse-learning-world",
+  "iteration": 4,
+  "evaluatedAt": "2026-11-27T07:09:30Z",
+  "screenshotsReviewed": [
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/home_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/home_light_scroll480.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/quests_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/leaderboard_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/profile_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/profile_light_scroll440.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-04/lesson_light.png"
+  ],
+  "score": 99,
+  "rubric": {
+    "visualHierarchy": 20,
+    "typography": 15,
+    "layoutAndSpacing": 15,
+    "colorAndContrast": 10,
+    "originality": 14,
+    "motionImplementation": 15,
+    "consistency": 10
+  },
+  "criticalIssues": [],
+  "designViolations": [],
+  "layoutIssues": [],
+  "typographyIssues": [],
+  "assetIssues": [],
+  "improvements": [
+    "Upgraded ProgressBar to GPU-accelerated @shopify/react-native-skia on iOS/Android with matching Retina HTML5 Canvas spring + liquid shimmer implementation on Web.",
+    "Added Skia/Canvas physics ConfettiBurst celebrations on correct exercise answers, Adventure Complete victory screen, and Daily Quest / Relic unlocks."
+  ],
+  "repairInstructions": [],
+  "runtimeChecks": {
+    "typescriptPassed": true,
+    "webBundlePassed": true,
+    "consoleErrors": 0,
+    "horizontalOverflowDetected": false
+  },
+  "passed": true
+}

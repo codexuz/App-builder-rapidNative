@@ -14,10 +14,13 @@ export const AssetItemSchema = z.object({
   quality: z.enum(['low', 'medium', 'high']).optional(),
   background: z.enum(['auto', 'transparent', 'opaque']).optional(),
   transparent: z.boolean().optional(),
+  provider: z.enum(['gemini', 'kie']).optional(),
+  cutoutMode: z.enum(['auto', 'chroma-green', 'chroma-magenta', 'white', 'none']).optional(),
+  sourceFile: z.string().optional(),
   copyTo: z.array(z.string()).optional(),
   usedIn: z.array(z.string()).default([]),
   characterRefId: z.string().optional(),
-  // Persisted runtime metadata updated by scripts/kie-assets.ts
+  // Persisted runtime metadata updated by scripts/kie-assets.ts or scripts/cutout-assets.ts
   status: z.enum(['pending', 'approved', 'failed']).default('pending'),
   taskId: z.string().optional(),
   width: z.number().int().positive().optional(),

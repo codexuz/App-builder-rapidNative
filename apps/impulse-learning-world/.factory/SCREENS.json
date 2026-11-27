@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "navigation": {
+    "type": "capsule-tabs",
+    "tabs": [
+      { "name": "World", "route": "/", "icon": "Compass" },
+      { "name": "Quests", "route": "/quests", "icon": "Gift" },
+      { "name": "Ranks", "route": "/leaderboard", "icon": "Trophy" },
+      { "name": "Profile", "route": "/profile", "icon": "UserRound" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "route": "/",
+      "title": "Impulse World",
+      "purpose": "Playful companion-led learning journey map with Pip mascot, progress ring, pastel KPI bubbles, and illustrated A1-B2 city trails.",
+      "layout": "mascot-hero-plus-journey-map",
+      "isTab": true,
+      "components": ["Screen", "CapsuleTabBar", "ProgressRing", "Chip", "BottomSheet", "StaggeredEntrance", "GameHud", "GameButton", "WorldCitySection"],
+      "assets": ["mascotPip", "cityA1Brighthaven", "cityA2LondonSkyrail", "cityB1KyotoNeon", "cityB2SummitObservatory"],
+      "interactions": ["Launch expedition", "Filter CEFR level", "Inspect lesson stop sheet"],
+      "states": {
+        "loading": "SkeletonShimmer",
+        "empty": "All cities visible by default",
+        "error": "Fallback local mock curriculum"
+      },
+      "captureInQa": true,
+      "scrollOffsets": [0, 480]
+    },
+    {
+      "id": "quests",
+      "route": "/quests",
+      "title": "Quests & Stickers",
+      "purpose": "Daily treasure chest milestone, claimable missions, and colorful 2-column stickerbook relic vault.",
+      "layout": "treasure-hero-plus-sticker-grid",
+      "isTab": true,
+      "components": ["Screen", "Card", "Badge", "SectionHeader", "StaggeredEntrance", "GameHud", "GameButton", "ProgressBar"],
+      "assets": ["treasureChest"],
+      "interactions": ["Claim mission treasure", "Collect rare world relics with coins/gems"],
+      "states": {
+        "loading": "SkeletonShimmer",
+        "empty": "Encouraging mission refresh state",
+        "error": "Inline wallet hint banner"
+      },
+      "captureInQa": true,
+      "scrollOffsets": [0]
+    },
+    {
+      "id": "leaderboard",
+      "route": "/leaderboard",
+      "title": "Explorer League",
+      "purpose": "High-contrast dark stepped 3D podium leaderboard, weekly standings, and trophy achievements.",
+      "layout": "stepped-podium-plus-standings",
+      "isTab": true,
+      "components": ["Screen", "Card", "Badge", "SectionHeader", "AnimatedCounter", "GameHud", "ProgressBar"],
+      "assets": ["avatarKai", "avatarMaya", "avatarNova"],
+      "interactions": ["View live rank update after earning XP"],
+      "states": {
+        "loading": "SkeletonShimmer",
+        "empty": "Seeded division explorers",
+        "error": "Cached division standings"
+      },
+      "captureInQa": true,
+      "scrollOffsets": [0]
+    },
+    {
+      "id": "profile",
+      "route": "/profile",
+      "title": "Explorer Profile",
+      "purpose": "Animated XP counter, weekly streak flame, activity bar chart with segmented switcher, 2x2 skill bento grid, and avatar wardrobe.",
+      "layout": "explorer-dashboard-plus-bento",
+      "isTab": true,
+      "components": ["Screen", "Card", "AnimatedCounter", "SegmentedControl", "BarChart", "SkillBentoTile", "SectionHeader", "Button"],
+      "assets": ["avatarKai", "avatarMaya", "avatarNova"],
+      "interactions": ["Switch or unlock explorer avatars", "Inspect bar chart days", "Toggle weekly/monthly chart"],
+      "states": {
+        "loading": "SkeletonShimmer",
+        "empty": "Starter explorer metrics",
+        "error": "Local persistence fallback"
+      },
+      "captureInQa": true,
+      "scrollOffsets": [0, 440]
+    },
+    {
+      "id": "lesson",
+      "route": "/lesson/a1-lighthouse-directions",
+      "title": "Lesson Expedition",
+      "purpose": "Interactive 6-stage adventure with Pip mascot encouragement bubble, audio playback, speaking meter, word tiles, and treasure chest victory.",
+      "layout": "focused-expedition-runner",
+      "isTab": false,
+      "components": ["Card", "Badge", "GameButton", "ProgressBar", "SoundWaveVisualizer"],
+      "assets": ["mascotPip", "treasureChest"],
+      "interactions": ["Listen to pronunciation", "Check multiple choice", "Record speaking phrase", "Assemble sentence tiles"],
+      "states": {
+        "loading": "Instant local lesson data",
+        "empty": "Lesson not found fallback",
+        "error": "Encouraging hint feedback"
+      },
+      "captureInQa": true,
+      "scrollOffsets": [0]
+    }
+  ]
+}

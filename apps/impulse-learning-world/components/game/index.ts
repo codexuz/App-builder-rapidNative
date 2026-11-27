@@ -1,5 +1,11 @@
+export { ConfettiBurst, type ConfettiBurstProps } from './ConfettiBurst';
+export { FeedbackBottomSheet, type FeedbackBottomSheetProps } from './FeedbackBottomSheet';
 export { GameButton, type GameButtonProps } from './GameButton';
 export { GameHud, type GameHudProps } from './GameHud';
+export { Coin3D, Gem3D, Star3D, Target3D, XpBolt3D, type Icon3DProps } from './GameIcons3D';
+export { MascotChatBubble, type MascotChatBubbleProps } from './MascotChatBubble';
 export { ProgressBar, type ProgressBarProps } from './ProgressBar';
+export { SentenceBuilderStage, type SentenceBuilderStageProps } from './SentenceBuilderStage';
 export { SoundWaveVisualizer, speakEnglishText } from './SoundWaveVisualizer';
+export { VictoryCelebration, type VictoryCelebrationProps } from './VictoryCelebration';
 export { WorldCitySection } from './WorldJourneyMap';

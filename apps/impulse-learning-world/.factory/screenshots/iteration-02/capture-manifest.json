@@ -1,0 +1,74 @@
+{
+  "slug": "impulse-learning-world",
+  "iteration": 2,
+  "viewport": "390x844",
+  "capturedAt": "2026-11-27T06:40:12.769Z",
+  "totalCaptures": 7,
+  "totalRuntimeErrors": 0,
+  "maxHorizontalOverflowPx": 0,
+  "captures": [
+    {
+      "id": "home",
+      "route": "/",
+      "theme": "light",
+      "file": "home_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "home",
+      "route": "/",
+      "theme": "light",
+      "file": "home_light_scroll480.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "quests",
+      "route": "/quests",
+      "theme": "light",
+      "file": "quests_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "leaderboard",
+      "route": "/leaderboard",
+      "theme": "light",
+      "file": "leaderboard_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "profile",
+      "route": "/profile",
+      "theme": "light",
+      "file": "profile_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "profile",
+      "route": "/profile",
+      "theme": "light",
+      "file": "profile_light_scroll440.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    },
+    {
+      "id": "lesson",
+      "route": "/lesson/a1-lighthouse-directions",
+      "theme": "light",
+      "file": "lesson_light.png",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "horizontalOverflowPx": 0
+    }
+  ]
+}

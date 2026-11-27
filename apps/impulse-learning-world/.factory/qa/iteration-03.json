@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectSlug": "impulse-learning-world",
+  "iteration": 3,
+  "evaluatedAt": "2026-11-27T06:54:30Z",
+  "screenshotsReviewed": [
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/home_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/home_light_scroll480.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/quests_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/leaderboard_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/profile_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/profile_light_scroll440.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-03/lesson_light.png"
+  ],
+  "score": 98,
+  "rubric": {
+    "visualHierarchy": 20,
+    "typography": 15,
+    "layoutAndSpacing": 15,
+    "colorAndContrast": 10,
+    "originality": 14,
+    "motionImplementation": 14,
+    "consistency": 10
+  },
+  "criticalIssues": [],
+  "designViolations": [],
+  "layoutIssues": [],
+  "typographyIssues": [],
+  "assetIssues": [],
+  "improvements": [
+    "All 4 Gemini-generated hero & badge assets (mascot-pip.png, treasure-chest.png, trophy-gold.png, streak-flame.png) extracted cleanly to transparent 512x512 RGBA PNGs with zero halo across blue, orange, midnight, and white backgrounds.",
+    "Shortened Profile Weekly Streak Flame subtitle to prevent ellipsis truncation beside the 3D flame cutout."
+  ],
+  "repairInstructions": [],
+  "runtimeChecks": {
+    "typescriptPassed": true,
+    "webBundlePassed": true,
+    "consoleErrors": 0,
+    "horizontalOverflowDetected": false
+  },
+  "passed": true
+}

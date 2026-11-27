@@ -2,44 +2,52 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
-  ArrowRight,
   BookOpen,
-  CheckCircle2,
-  Coins,
-  Gem,
+  Check,
   Headphones,
   Mic,
-  Puzzle,
-  RotateCcw,
-  Sparkles,
-  Trophy,
   Volume2,
+  VolumeX,
   X,
-  XCircle,
-  Zap,
 } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { GameButton, ProgressBar, SoundWaveVisualizer, speakEnglishText } from '@/components/game';
+import {
+  ConfettiBurst,
+  FeedbackBottomSheet,
+  GameButton,
+  MascotChatBubble,
+  ProgressBar,
+  SentenceBuilderStage,
+  SoundWaveVisualizer,
+  VictoryCelebration,
+  speakEnglishText,
+} from '@/components/game';
 import { AnimatedPressable, Badge, Card } from '@/components/ui';
 import { RegionPalette, useAppTheme } from '@/constants/Theme';
 import { getCityById, getLessonById } from '@/data/worldData';
 import { useGame, type LessonCompletionSummary } from '@/store/GameContext';
 import type { LessonStageType } from '@/types/game';
+import {
+  playCorrectFeedback,
+  playTileTapSound,
+  playVictoryFeedback,
+  playWrongFeedback,
+} from '@/utils/soundFeedback';
 
-const STAGE_META: Record<LessonStageType, { label: string }> = {
-  vocabulary: { label: 'Vocabulary' },
-  grammar: { label: 'Grammar' },
-  listening: { label: 'Listening' },
-  reading: { label: 'Reading' },
-  speaking: { label: 'Speaking' },
-  interactive: { label: 'Sentence Builder' },
+const STAGE_META: Record<LessonStageType, { label: string; pipHint: string }> = {
+  vocabulary: { label: 'Vocabulary', pipHint: 'Tap the speaker to hear each new word!' },
+  grammar: { label: 'Grammar', pipHint: 'Spot the pattern and unlock the rule!' },
+  listening: { label: 'Listening', pipHint: 'Listen closely to our local guide!' },
+  reading: { label: 'Reading', pipHint: 'Read the clue card to find the answer!' },
+  speaking: { label: 'Speaking', pipHint: 'Say it loud and proud — you have got this!' },
+  interactive: { label: 'Sentence Builder', pipHint: 'Tap the word tiles in order!' },
 };
 
 export default function LessonExpeditionScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
   const { colors, typography, radii } = useAppTheme();
-  const { completeLesson } = useGame();
+  const { player, completeLesson } = useGame();
 
   const lesson = useMemo(
     () => getLessonById(typeof params.id === 'string' ? params.id : ''),
@@ -66,8 +74,17 @@ export default function LessonExpeditionScreen() {
   // Interactive tile builder state
   const [selectedTileIndices, setSelectedTileIndices] = useState<number[]>([]);
 
-  // Completion state
+  // Completion & celebration state
   const [summary, setSummary] = useState<LessonCompletionSummary | null>(null);
+  const [confettiKey, setConfettiKey] = useState(0);
+  const [confettiIntensity, setConfettiIntensity] = useState<'small' | 'grand'>('small');
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [isPipSpeaking, setIsPipSpeaking] = useState(false);
+
+  const triggerConfetti = (intensity: 'small' | 'grand') => {
+    setConfettiIntensity(intensity);
+    setConfettiKey((k) => k + 1);
+  };
 
   useEffect(() => {
     return () => {
@@ -97,6 +114,7 @@ export default function LessonExpeditionScreen() {
     setChecked(false);
     setIsCorrect(false);
     setIsPlayingAudio(false);
+    setIsPipSpeaking(false);
     setShowTranscript(false);
     setIsRecording(false);
     setSpeakingScore(null);
@@ -109,13 +127,26 @@ export default function LessonExpeditionScreen() {
     stopAudioRef.current = speakEnglishText(text, () => setIsPlayingAudio(false));
   };
 
+  const speakAsPip = (text: string) => {
+    if (!soundEnabled) return;
+    stopAudioRef.current?.();
+    setIsPipSpeaking(true);
+    stopAudioRef.current = speakEnglishText(text, () => setIsPipSpeaking(false));
+  };
+
   const handleCheck = () => {
     if (stage.type === 'vocabulary' || stage.type === 'grammar' || stage.type === 'listening' || stage.type === 'reading') {
       if (selectedOption === null) return;
       const right = selectedOption === stage.correctIndex;
       setChecked(true);
       setIsCorrect(right);
-      if (right) setCorrectCount((c) => c + 1);
+      if (right) {
+        setCorrectCount((c) => c + 1);
+        triggerConfetti('small');
+        playCorrectFeedback(soundEnabled);
+      } else {
+        playWrongFeedback(soundEnabled);
+      }
       return;
     }
 
@@ -124,7 +155,13 @@ export default function LessonExpeditionScreen() {
       const right = built.toLowerCase() === stage.correctSentence.toLowerCase();
       setChecked(true);
       setIsCorrect(right);
-      if (right) setCorrectCount((c) => c + 1);
+      if (right) {
+        setCorrectCount((c) => c + 1);
+        triggerConfetti('small');
+        playCorrectFeedback(soundEnabled);
+      } else {
+        playWrongFeedback(soundEnabled);
+      }
     }
   };
 
@@ -139,6 +176,8 @@ export default function LessonExpeditionScreen() {
       setChecked(true);
       setIsCorrect(true);
       setCorrectCount((c) => c + 1);
+      triggerConfetti('small');
+      playCorrectFeedback(soundEnabled);
     }, 1700);
   };
 
@@ -150,71 +189,47 @@ export default function LessonExpeditionScreen() {
       const accuracy = Math.round((correctCount / totalStages) * 100);
       const result = completeLesson(lesson.id, Math.max(60, Math.min(100, accuracy)));
       setSummary(result);
+      triggerConfetti('grand');
+      playVictoryFeedback(soundEnabled);
     }
   };
 
   const toggleTile = (tileIdx: number) => {
     if (checked) return;
+    const isAdding = !selectedTileIndices.includes(tileIdx);
+    if (stage.type === 'interactive') {
+      playTileTapSound(isAdding ? stage.tiles[tileIdx] : undefined, soundEnabled);
+    }
     setSelectedTileIndices((prev) =>
       prev.includes(tileIdx) ? prev.filter((i) => i !== tileIdx) : [...prev, tileIdx]
     );
   };
 
   if (summary) {
+    const cityLessonIds = city?.lessons.map((l) => l.id) ?? [lesson.id];
+    const cityCompletedCount = cityLessonIds.filter(
+      (lid) => lid === lesson.id || player.completedLessonIds.includes(lid)
+    ).length;
+
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-        <ScrollView contentContainerStyle={styles.victoryScroll}>
-          <View style={[styles.trophyCircle, { backgroundColor: colors.coinMuted }]}>
-            <Trophy size={48} color={colors.coin} />
-          </View>
-
-          <Text style={[typography.display, { color: colors.textPrimary, textAlign: 'center' }]}>
-            Expedition Complete!
-          </Text>
-          <Text style={[typography.body, { color: colors.textSecondary, textAlign: 'center' }]}>
-            You cleared "{lesson.title}" in {city?.name} with {summary.accuracyPercent}% accuracy.
-          </Text>
-
-          <View style={styles.victoryStats}>
-            <Card style={styles.victoryTile}>
-              <Zap size={22} color={colors.xp} />
-              <Text style={[typography.metric, { color: colors.textPrimary }]}>
-                +{summary.xpEarned}
-              </Text>
-              <Text style={[typography.caption, { color: colors.textSecondary }]}>XP Earned</Text>
-            </Card>
-            <Card style={styles.victoryTile}>
-              <Coins size={22} color={colors.coin} />
-              <Text style={[typography.metric, { color: colors.textPrimary }]}>
-                +{summary.coinsEarned}
-              </Text>
-              <Text style={[typography.caption, { color: colors.textSecondary }]}>Coins</Text>
-            </Card>
-            <Card style={styles.victoryTile}>
-              <Gem size={22} color={colors.gem} />
-              <Text style={[typography.metric, { color: colors.textPrimary }]}>
-                +{summary.gemsEarned}
-              </Text>
-              <Text style={[typography.caption, { color: colors.textSecondary }]}>Gems</Text>
-            </Card>
-          </View>
-
-          {summary.unlockedNextLessonTitle ? (
-            <Card variant="muted" style={styles.unlockCallout}>
-              <Sparkles size={18} color={palette.primary} />
-              <Text style={[typography.callout, { color: colors.textPrimary, flex: 1 }]}>
-                Unlocked next stop: {summary.unlockedNextLessonTitle}
-              </Text>
-            </Card>
-          ) : null}
-
-          <GameButton
-            label="Return to World Map"
-            color={palette.primary}
-            depthColor={palette.deep}
-            onPress={() => router.back()}
-          />
-        </ScrollView>
+        <VictoryCelebration
+          lessonTitle={lesson.title}
+          cityName={city?.name ?? 'Impulse World'}
+          cityCompletedCount={cityCompletedCount}
+          cityTotalCount={cityLessonIds.length}
+          summary={summary}
+          accentColor={palette.primary}
+          deepColor={palette.deep}
+          confettiKey={confettiKey}
+          onClaimAndExit={() => router.back()}
+          onPracticeAgain={() => {
+            setSummary(null);
+            setStageIndex(0);
+            setCorrectCount(0);
+            resetStageInputs();
+          }}
+        />
       </SafeAreaView>
     );
   }
@@ -226,8 +241,26 @@ export default function LessonExpeditionScreen() {
         ? selectedTileIndices.length > 0
         : selectedOption !== null;
 
+  const pipBubbleMessage =
+    stage.type === 'interactive'
+      ? stage.instruction
+      : stage.type === 'speaking'
+        ? stage.context
+        : STAGE_META[stage.type].pipHint;
+
+  const pipBubbleHint =
+    stage.type === 'interactive' ? stage.promptHint : undefined;
+
+  const pipSpeechText =
+    stage.type === 'interactive'
+      ? `${stage.instruction}. ${stage.promptHint}`
+      : stage.type === 'speaking'
+        ? `${stage.context}. ${stage.targetPhrase}`
+        : `${stage.title}. ${STAGE_META[stage.type].pipHint}`;
+
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
+      <ConfettiBurst triggerKey={confettiKey} intensity={confettiIntensity} />
       {/* Top Expedition Progress Header */}
       <View style={styles.topBar}>
         <Pressable
@@ -247,20 +280,48 @@ export default function LessonExpeditionScreen() {
           <ProgressBar
             progress={(stageIndex + (checked ? 1 : 0.35)) / totalStages}
             color={palette.primary}
-            height={10}
+            height={14}
           />
         </View>
+
+        <Pressable
+          onPress={() => {
+            if (soundEnabled) stopAudioRef.current?.();
+            setSoundEnabled((v) => !v);
+          }}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={soundEnabled ? 'Mute voice and sound effects' : 'Unmute voice and sound effects'}
+          style={[styles.soundToggleBtn, { backgroundColor: colors.surfaceMuted }]}
+        >
+          {soundEnabled ? (
+            <Volume2 size={17} color={palette.primary} />
+          ) : (
+            <VolumeX size={17} color={colors.textTertiary} />
+          )}
+        </Pressable>
 
         <Badge label={`${stageIndex + 1}/${totalStages}`} tone="accent" />
       </View>
 
       <ScrollView
-        contentContainerStyle={styles.stageScroll}
+        contentContainerStyle={[
+          styles.stageScroll,
+          checked ? styles.stageScrollWithSheet : null,
+        ]}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.stageHeader}>
-          <Badge label={`${lesson.level} · ${STAGE_META[stage.type].label}`} tone="neutral" />
           <Text style={[typography.title1, { color: colors.textPrimary }]}>{stage.title}</Text>
+          <MascotChatBubble
+            eyebrow={`${lesson.level} · ${STAGE_META[stage.type].label}`}
+            message={pipBubbleMessage}
+            subHint={pipBubbleHint}
+            accentColor={palette.primary}
+            softAccentColor={palette.soft}
+            isSpeaking={isPipSpeaking}
+            onSpeakPress={() => speakAsPip(pipSpeechText)}
+          />
         </View>
 
         {/* 1. VOCABULARY STAGE */}
@@ -470,177 +531,94 @@ export default function LessonExpeditionScreen() {
           </View>
         ) : null}
 
-        {/* 6. INTERACTIVE SENTENCE BUILDER STAGE */}
+        {/* 6. INTERACTIVE SENTENCE BUILDER STAGE (Duolingo notebook lines + 3D word buttons) */}
         {stage.type === 'interactive' ? (
-          <View style={styles.stageBody}>
-            <View style={styles.builderHintRow}>
-              <Puzzle size={16} color={palette.primary} />
-              <Text style={[typography.body, { color: colors.textSecondary, flex: 1 }]}>
-                {stage.instruction} ({stage.promptHint})
-              </Text>
-            </View>
-
-            {/* Answer Construction Tray */}
-            <Card
-              variant="outlined"
-              style={[
-                styles.sentenceTray,
-                {
-                  borderColor: checked
-                    ? isCorrect
-                      ? colors.success
-                      : colors.danger
-                    : colors.borderStrong,
-                },
-              ]}
-            >
-              {selectedTileIndices.length === 0 ? (
-                <Text style={[typography.body, { color: colors.textTertiary }]}>
-                  Tap tiles below in order to build the sentence...
-                </Text>
-              ) : (
-                <View style={styles.tilesWrap}>
-                  {selectedTileIndices.map((tileIdx) => (
-                    <AnimatedPressable
-                      key={`tray-${tileIdx}`}
-                      onPress={() => toggleTile(tileIdx)}
-                      style={[
-                        styles.wordTile,
-                        {
-                          backgroundColor: palette.primary,
-                          borderColor: palette.deep,
-                          borderRadius: radii.sm,
-                        },
-                      ]}
-                    >
-                      <Text style={styles.wordTileSelectedText}>{stage.tiles[tileIdx]}</Text>
-                    </AnimatedPressable>
-                  ))}
-                </View>
-              )}
-            </Card>
-
-            {selectedTileIndices.length > 0 && !checked ? (
-              <Pressable
-                onPress={() => setSelectedTileIndices([])}
-                style={styles.clearRow}
-              >
-                <RotateCcw size={13} color={colors.textSecondary} />
-                <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                  Clear tiles
-                </Text>
-              </Pressable>
-            ) : null}
-
-            {/* Word Bank */}
-            <View style={styles.tilesWrap}>
-              {stage.tiles.map((word, idx) => {
-                const used = selectedTileIndices.includes(idx);
-                return (
-                  <AnimatedPressable
-                    key={`bank-${idx}`}
-                    disabled={used || checked}
-                    onPress={() => toggleTile(idx)}
-                    style={[
-                      styles.wordTile,
-                      {
-                        backgroundColor: used ? colors.surfaceMuted : colors.surface,
-                        borderColor: used ? colors.border : colors.borderStrong,
-                        borderRadius: radii.sm,
-                        opacity: used ? 0.35 : 1,
-                      },
-                    ]}
-                  >
-                    <Text style={[typography.callout, { color: colors.textPrimary }]}>{word}</Text>
-                  </AnimatedPressable>
-                );
-              })}
-            </View>
-          </View>
-        ) : null}
-
-        {/* Instant Feedback Banner */}
-        {checked ? (
-          <Card
-            style={[
-              styles.feedbackBanner,
-              {
-                backgroundColor: isCorrect ? colors.successMuted : colors.dangerMuted,
-                borderColor: isCorrect ? colors.success : colors.danger,
-              },
-            ]}
-          >
-            <View style={styles.feedbackTitleRow}>
-              {isCorrect ? (
-                <CheckCircle2 size={20} color={colors.success} />
-              ) : (
-                <XCircle size={20} color={colors.danger} />
-              )}
-              <Text
-                style={[
-                  typography.headline,
-                  { color: isCorrect ? colors.success : colors.danger },
-                ]}
-              >
-                {stage.type === 'speaking'
-                  ? `Great pacing! Fluency score: ${speakingScore}%`
-                  : isCorrect
-                    ? 'Spot on!'
-                    : 'Good try — review the tip'}
-              </Text>
-            </View>
-            {'explanation' in stage ? (
-              <Text style={[typography.body, { color: colors.textPrimary }]}>
-                {stage.explanation}
-              </Text>
-            ) : null}
-            {stage.type === 'interactive' && !isCorrect ? (
-              <Text style={[typography.callout, { color: colors.textPrimary }]}>
-                Target: "{stage.correctSentence}"
-              </Text>
-            ) : null}
-          </Card>
+          <SentenceBuilderStage
+            tiles={stage.tiles}
+            selectedTileIndices={selectedTileIndices}
+            checked={checked}
+            isCorrect={isCorrect}
+            accentColor={palette.primary}
+            deepColor={palette.deep}
+            onToggleTile={toggleTile}
+            onClear={() => setSelectedTileIndices([])}
+          />
         ) : null}
       </ScrollView>
 
-      {/* Bottom Sticky Action Footer */}
-      <View
-        style={[
-          styles.footer,
-          { backgroundColor: colors.surface, borderTopColor: colors.border },
-        ]}
-      >
-        {checked ? (
-          <GameButton
-            label={stageIndex + 1 === totalStages ? 'Finish Expedition' : 'Continue'}
-            color={isCorrect ? colors.success : palette.primary}
-            depthColor={isCorrect ? '#166534' : palette.deep}
-            rightIcon={<ArrowRight size={18} color="#FFFFFF" />}
-            onPress={handleNext}
-          />
-        ) : stage.type === 'speaking' ? (
-          <GameButton
-            label="Skip Speaking for Now"
-            color={colors.surfaceMuted}
-            depthColor={colors.borderStrong}
-            textColor={colors.textPrimary}
-            onPress={() => {
-              setSpeakingScore(80);
-              setChecked(true);
-              setIsCorrect(true);
-              setCorrectCount((c) => c + 1);
-            }}
-          />
-        ) : (
-          <GameButton
-            label="Check Answer"
-            disabled={!canCheck}
-            color={palette.primary}
-            depthColor={palette.deep}
-            onPress={handleCheck}
-          />
-        )}
-      </View>
+      {/* Bottom Sticky Action Footer (hidden while Duolingo FeedbackBottomSheet is open) */}
+      {!checked ? (
+        <View
+          style={[
+            styles.footer,
+            { backgroundColor: colors.surface, borderTopColor: colors.border },
+          ]}
+        >
+          {stage.type === 'speaking' ? (
+            <GameButton
+              label="Skip Speaking for Now"
+              color={colors.surfaceMuted}
+              depthColor={colors.borderStrong}
+              textColor={colors.textPrimary}
+              onPress={() => {
+                setSpeakingScore(80);
+                setChecked(true);
+                setIsCorrect(true);
+                setCorrectCount((c) => c + 1);
+                playCorrectFeedback(soundEnabled);
+              }}
+            />
+          ) : (
+            <GameButton
+              label="Check Answer"
+              disabled={!canCheck}
+              color={palette.primary}
+              depthColor={palette.deep}
+              onPress={handleCheck}
+            />
+          )}
+        </View>
+      ) : null}
+
+      {/* Duolingo-Style Sliding Feedback Bottom Sheet (includes Continue / Finish button) */}
+      <FeedbackBottomSheet
+        visible={checked}
+        isCorrect={isCorrect}
+        headline={
+          stage.type === 'speaking'
+            ? `Great pacing! Fluency ${speakingScore}%`
+            : isCorrect
+              ? 'Spot on!'
+              : 'Not quite — try this!'
+        }
+        correctSolution={
+          !isCorrect
+            ? stage.type === 'interactive'
+              ? stage.correctSentence
+              : 'options' in stage && 'correctIndex' in stage
+                ? stage.options[stage.correctIndex]
+                : undefined
+            : undefined
+        }
+        detail={'explanation' in stage ? stage.explanation : undefined}
+        buttonLabel={
+          stageIndex + 1 === totalStages
+            ? 'Finish Expedition'
+            : isCorrect
+              ? 'Continue'
+              : 'Got It'
+        }
+        onContinue={handleNext}
+        onReplayVoice={
+          stage.type === 'interactive'
+            ? () => speakAsPip(stage.correctSentence)
+            : stage.type === 'speaking'
+              ? () => speakAsPip(stage.targetPhrase)
+              : 'explanation' in stage
+                ? () => speakAsPip(stage.explanation)
+                : undefined
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -660,7 +638,7 @@ function OptionList({
   accent: string;
   onSelect: (index: number) => void;
 }) {
-  const { colors, radii, typography } = useAppTheme();
+  const { colors, typography } = useAppTheme();
 
   return (
     <View style={styles.optionsCol}>
@@ -669,34 +647,69 @@ function OptionList({
         const isRight = checked && idx === correctIndex;
         const isWrong = checked && isSelected && idx !== correctIndex;
 
-        const borderColor = isRight
-          ? colors.success
-          : isWrong
-            ? colors.danger
-            : isSelected
-              ? accent
-              : colors.border;
-
         const bg = isRight
-          ? colors.successMuted
+          ? '#D7FFB8'
           : isWrong
-            ? colors.dangerMuted
+            ? '#FFDFE0'
             : isSelected
-              ? colors.accentMuted
+              ? '#DDF4FF'
               : colors.surface;
+
+        const borderColor = isRight
+          ? '#58CC02'
+          : isWrong
+            ? '#FF4B4B'
+            : isSelected
+              ? '#1CB0F6'
+              : '#CBD5E1';
+
+        const lipColor = isRight
+          ? '#46A302'
+          : isWrong
+            ? '#EA2B2B'
+            : isSelected
+              ? '#1899D6'
+              : '#94A3B8';
+
+        const keycapBg = isRight
+          ? '#58CC02'
+          : isWrong
+            ? '#FF4B4B'
+            : isSelected
+              ? '#1CB0F6'
+              : '#F8FAFC';
+
+        const keycapBorder = isRight
+          ? '#46A302'
+          : isWrong
+            ? '#EA2B2B'
+            : isSelected
+              ? '#1899D6'
+              : '#CBD5E1';
+
+        const labelColor = isRight
+          ? '#2E6B00'
+          : isWrong
+            ? '#CC1D1D'
+            : isSelected
+              ? '#0369A1'
+              : colors.textPrimary;
 
         return (
           <AnimatedPressable
             key={opt}
             disabled={checked}
-            onPress={() => onSelect(idx)}
+            onPress={() => {
+              playTileTapSound(undefined, true);
+              onSelect(idx);
+            }}
             haptic="selection"
             style={[
               styles.optionBtn,
               {
                 backgroundColor: bg,
                 borderColor,
-                borderRadius: radii.md,
+                borderBottomColor: lipColor,
               },
             ]}
           >
@@ -704,21 +717,40 @@ function OptionList({
               style={[
                 styles.optionIndex,
                 {
-                  backgroundColor: isSelected ? accent : colors.surfaceMuted,
+                  backgroundColor: keycapBg,
+                  borderColor: keycapBorder,
+                  borderBottomColor: keycapBorder,
                 },
               ]}
             >
-              <Text
-                style={{
-                  color: isSelected ? '#FFFFFF' : colors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: '800',
-                }}
-              >
-                {String.fromCharCode(65 + idx)}
-              </Text>
+              {isRight ? (
+                <Check size={15} color="#FFFFFF" strokeWidth={3} />
+              ) : isWrong ? (
+                <X size={15} color="#FFFFFF" strokeWidth={3} />
+              ) : (
+                <Text
+                  style={{
+                    color: isSelected ? '#FFFFFF' : '#64748B',
+                    fontSize: 12.5,
+                    fontWeight: '900',
+                  }}
+                >
+                  {String.fromCharCode(65 + idx)}
+                </Text>
+              )}
             </View>
-            <Text style={[typography.body, { color: colors.textPrimary, flex: 1 }]}>{opt}</Text>
+            <Text
+              style={[
+                typography.body,
+                {
+                  color: labelColor,
+                  fontWeight: isRight || isWrong || isSelected ? '800' : '600',
+                  flex: 1,
+                },
+              ]}
+            >
+              {opt}
+            </Text>
           </AnimatedPressable>
         );
       })}
@@ -750,6 +782,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  soundToggleBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   progressWrap: {
     flex: 1,
   },
@@ -758,8 +797,33 @@ const styles = StyleSheet.create({
     paddingBottom: 28,
     gap: 16,
   },
+  stageScrollWithSheet: {
+    paddingBottom: 230,
+  },
   stageHeader: {
-    gap: 8,
+    gap: 12,
+  },
+  pipBubbleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  pipCutoutWrap: {
+    width: 56,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pipAvatar: {
+    width: 56,
+    height: 56,
+  },
+  pipSpeech: {
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderWidth: 1.25,
+    gap: 2,
   },
   stageBody: {
     gap: 14,
@@ -862,19 +926,29 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   optionsCol: {
-    gap: 10,
+    gap: 12,
   },
   optionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
-    borderWidth: 1.5,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderBottomWidth: 5,
     gap: 12,
+    shadowColor: '#0F172A',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
   optionIndex: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderBottomWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -901,11 +975,16 @@ const styles = StyleSheet.create({
     gap: 18,
   },
   trophyCircle: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
+    width: 132,
+    height: 132,
+    borderRadius: 36,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  victoryChestImg: {
+    width: '100%',
+    height: '100%',
   },
   victoryStats: {
     flexDirection: 'row',

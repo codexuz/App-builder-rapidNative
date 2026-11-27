@@ -18,6 +18,7 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
   const activeAvatar =
     EXPLORER_AVATARS.find((a) => a.id === player.activeAvatarId) ?? EXPLORER_AVATARS[0];
   const levelColors = RegionPalette[player.currentLevel];
+  const firstName = player.displayName.split(' ')[0];
 
   return (
     <View style={styles.row}>
@@ -37,8 +38,13 @@ export function GameHud({ onAvatarPress }: GameHudProps) {
         ]}
       >
         <Image source={GeneratedAssets[activeAvatar.imageKey]} style={styles.avatarImg} />
-        <View style={[styles.cefrChip, { backgroundColor: levelColors.primary }]}>
-          <Text style={styles.cefrText}>{player.currentLevel}</Text>
+        <View style={styles.nameWrap}>
+          <Text style={[styles.greeting, { color: colors.textPrimary }]} numberOfLines={1}>
+            Hi, {firstName}
+          </Text>
+          <View style={[styles.cefrChip, { backgroundColor: levelColors.primary }]}>
+            <Text style={styles.cefrText}>Level {player.currentLevel}</Text>
+          </View>
         </View>
       </AnimatedPressable>
 
@@ -82,47 +88,56 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 10,
+    gap: 8,
     paddingTop: 4,
   },
   avatarPill: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 4,
-    paddingRight: 10,
-    borderWidth: 1,
+    paddingRight: 12,
+    borderWidth: 1.5,
     gap: 8,
   },
   avatarImg: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+  },
+  nameWrap: {
+    gap: 2,
+  },
+  greeting: {
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: -0.2,
   },
   cefrChip: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 7,
+    paddingVertical: 1.5,
     borderRadius: 999,
   },
   cefrText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '800',
-    letterSpacing: 0.4,
+    letterSpacing: 0.3,
   },
   statsGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
   },
   statPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 7,
-    gap: 5,
+    gap: 4,
   },
   statVal: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '800',
     fontVariant: ['tabular-nums'],
   },

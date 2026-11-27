@@ -15,13 +15,16 @@ import {
 } from 'lucide-react-native';
 import { ProgressBar } from '@/components/game';
 import {
+  AnimatedCounter,
   AnimatedPressable,
   Badge,
+  BarChart,
   Button,
   Card,
   Screen,
   SectionHeader,
-  StatTile,
+  SegmentedControl,
+  SkillBentoTile,
 } from '@/components/ui';
 import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { RegionPalette, useAppTheme } from '@/constants/Theme';
@@ -33,21 +36,31 @@ import type { CEFRLevel } from '@/types/game';
 const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const CEFR_LEVELS: CEFRLevel[] = ['A1', 'A2', 'B1', 'B2'];
 
+const WEEKLY_XP_DATA = [
+  { label: 'Mon', value: 110 },
+  { label: 'Tue', value: 145 },
+  { label: 'Wed', value: 95 },
+  { label: 'Thu', value: 190 },
+  { label: 'Fri', value: 165 },
+  { label: 'Sat', value: 155 },
+  { label: 'Sun', value: 90 },
+];
+
+const MONTHLY_XP_DATA = [
+  { label: 'Wk 1', value: 420 },
+  { label: 'Wk 2', value: 680 },
+  { label: 'Wk 3', value: 540 },
+  { label: 'Wk 4', value: 860 },
+];
+
 export default function ProfileScreen() {
   const { colors, typography, radii } = useAppTheme();
   const { player, backendMode, selectOrBuyAvatar, resetDemoProgress } = useGame();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [timeframe, setTimeframe] = useState<'week' | 'month'>('week');
 
   const activeAvatar =
     EXPLORER_AVATARS.find((a) => a.id === player.activeAvatarId) ?? EXPLORER_AVATARS[0];
-
-  const skillRows = [
-    { key: 'vocabulary', label: 'Vocabulary', value: player.skillMastery.vocabulary, Icon: BookOpen, color: '#0D9488' },
-    { key: 'grammar', label: 'Grammar', value: player.skillMastery.grammar, Icon: Sparkles, color: '#2563EB' },
-    { key: 'listening', label: 'Listening', value: player.skillMastery.listening, Icon: Headphones, color: '#DB2777' },
-    { key: 'reading', label: 'Reading', value: player.skillMastery.reading, Icon: BookOpen, color: '#D97706' },
-    { key: 'speaking', label: 'Speaking', value: player.skillMastery.speaking, Icon: Mic, color: '#4F46E5' },
-  ];
 
   const handleAvatarPress = (avatarId: string) => {
     const res = selectOrBuyAvatar(avatarId);
@@ -56,10 +69,10 @@ export default function ProfileScreen() {
 
   return (
     <Screen hasTabBar>
-      {/* Explorer Hero Card */}
+      {/* Joyful Explorer Hero Card */}
       <Card style={styles.heroCard}>
         <View style={styles.heroRow}>
-          <View style={[styles.avatarFrame, { borderColor: activeAvatar.accentColor }]}>
+          <View style={[styles.avatarFrame, { borderColor: colors.accent }]}>
             <Image
               source={GeneratedAssets[activeAvatar.imageKey]}
               style={styles.heroAvatar}
@@ -73,7 +86,7 @@ export default function ProfileScreen() {
               {player.explorerTitle}
             </Text>
             <View style={styles.heroBadges}>
-              <Badge label={`CEFR ${player.currentLevel}`} tone="accent" dot />
+              <Badge label={`Level ${player.currentLevel}`} tone="accent" dot />
               <Badge
                 label={`${player.ownedRelicIds.length} ${player.ownedRelicIds.length === 1 ? 'Relic' : 'Relics'}`}
                 tone="warning"
@@ -81,32 +94,41 @@ export default function ProfileScreen() {
             </View>
           </View>
         </View>
+
+        <View style={styles.counterRow}>
+          <View style={[styles.counterBox, { backgroundColor: colors.xpMuted, borderRadius: radii.md }]}>
+            <Zap size={16} color={colors.xp} />
+            <AnimatedCounter value={player.xp} style={[styles.counterVal, { color: colors.textPrimary }]} />
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>Total XP</Text>
+          </View>
+          <View style={[styles.counterBox, { backgroundColor: colors.streakMuted, borderRadius: radii.md }]}>
+            <Flame size={16} color={colors.streak} fill={colors.streak} />
+            <AnimatedCounter value={player.streakDays} suffix="d" style={[styles.counterVal, { color: colors.textPrimary }]} />
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>Day Streak</Text>
+          </View>
+          <View style={[styles.counterBox, { backgroundColor: colors.coinMuted, borderRadius: radii.md }]}>
+            <Coins size={16} color={colors.coin} />
+            <AnimatedCounter value={player.coins} style={[styles.counterVal, { color: colors.textPrimary }]} />
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>Coins</Text>
+          </View>
+        </View>
       </Card>
 
-      {/* Key Progression Metrics */}
-      <View style={styles.statsRow}>
-        <StatTile
-          label="Total XP"
-          value={player.xp.toLocaleString()}
-          trend={`+${player.weeklyXp} wk`}
-          trendTone="success"
-          icon={<Zap size={16} color={colors.xp} />}
-        />
-        <StatTile
-          label="Day Streak"
-          value={`${player.streakDays}d`}
-          trend="Active"
-          trendTone="warning"
-          icon={<Flame size={16} color={colors.streak} />}
-        />
-      </View>
-
-      {/* Weekly Streak Tracker */}
+      {/* Weekly Expedition Flame */}
       <Card style={styles.streakCard}>
-        <SectionHeader
-          title="Weekly Expedition Flame"
-          subtitle="Complete 1 stop daily to keep your streak burning"
-        />
+        <View style={styles.streakHeaderRow}>
+          <Image
+            source={GeneratedAssets.streakFlame}
+            style={styles.streakFlameImg}
+            resizeMode="contain"
+          />
+          <View style={{ flex: 1 }}>
+            <SectionHeader
+              title="Weekly Streak Flame"
+              subtitle="Play daily to keep your streak alive!"
+            />
+          </View>
+        </View>
         <View style={styles.weekRow}>
           {WEEKDAYS.map((day, idx) => {
             const done = player.weekActivity[idx];
@@ -132,6 +154,62 @@ export default function ProfileScreen() {
           })}
         </View>
       </Card>
+
+      {/* Activity Bar Chart with SegmentedControl (inspired by LanguageLeaningApps/Dashboard.png) */}
+      <Card style={styles.chartCard}>
+        <SectionHeader
+          title="Learning Activity"
+          subtitle="Tap any bar to inspect XP earned"
+        />
+        <SegmentedControl
+          value={timeframe}
+          onChange={setTimeframe}
+          options={[
+            { label: 'This Week', value: 'week' },
+            { label: 'Monthly', value: 'month' },
+          ]}
+        />
+        <BarChart
+          data={timeframe === 'week' ? WEEKLY_XP_DATA : MONTHLY_XP_DATA}
+          unit="XP"
+          barColor="#FDBA74"
+          activeColor="#F97316"
+        />
+      </Card>
+
+      {/* 2x2 English Skill Bento Grid (inspired by modern language app references) */}
+      <SectionHeader
+        title="English Skill Powers"
+        subtitle="Level up every skill across city adventures"
+      />
+      <View style={styles.bentoRow}>
+        <SkillBentoTile
+          title="Vocabulary"
+          percent={player.skillMastery.vocabulary}
+          accentColor="#0EA5E9"
+          icon={<BookOpen size={18} color="#0EA5E9" />}
+        />
+        <SkillBentoTile
+          title="Grammar"
+          percent={player.skillMastery.grammar}
+          accentColor="#7C3AED"
+          icon={<Sparkles size={18} color="#7C3AED" />}
+        />
+      </View>
+      <View style={styles.bentoRow}>
+        <SkillBentoTile
+          title="Listening"
+          percent={player.skillMastery.listening}
+          accentColor="#EC4899"
+          icon={<Headphones size={18} color="#EC4899" />}
+        />
+        <SkillBentoTile
+          title="Speaking"
+          percent={player.skillMastery.speaking}
+          accentColor="#10B981"
+          icon={<Mic size={18} color="#10B981" />}
+        />
+      </View>
 
       {/* Explorer Avatar Wardrobe */}
       <SectionHeader
@@ -161,7 +239,7 @@ export default function ProfileScreen() {
                 {
                   backgroundColor: colors.surface,
                   borderColor: isActive ? avatar.accentColor : colors.border,
-                  borderWidth: isActive ? 2 : 1,
+                  borderWidth: isActive ? 2 : 1.25,
                   borderRadius: radii.lg,
                 },
               ]}
@@ -209,9 +287,9 @@ export default function ProfileScreen() {
         })}
       </View>
 
-      {/* CEFR Level Journey Ladder */}
+      {/* CEFR Level Progress */}
       <SectionHeader
-        title="CEFR Level Progress"
+        title="CEFR World Roadmap"
         subtitle="Master each destination from A1 through B2"
       />
       <Card style={styles.cefrCard}>
@@ -235,7 +313,7 @@ export default function ProfileScreen() {
                   </Text>
                 </View>
                 <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                  {done}/{total} lessons
+                  {done}/{total} stops
                 </Text>
               </View>
               <ProgressBar progress={done / total} color={palette.primary} height={8} />
@@ -244,35 +322,18 @@ export default function ProfileScreen() {
         })}
       </Card>
 
-      {/* 5-Skill Mastery Breakdown */}
-      <SectionHeader title="English Skill Mastery" subtitle="Updated after every expedition" />
-      <Card style={styles.skillsCard}>
-        {skillRows.map(({ key, label, value, Icon, color }) => (
-          <View key={key} style={styles.skillRow}>
-            <View style={styles.skillHeader}>
-              <View style={styles.skillNameRow}>
-                <Icon size={15} color={color} />
-                <Text style={[typography.callout, { color: colors.textPrimary }]}>{label}</Text>
-              </View>
-              <Text style={[typography.callout, { color: colors.textSecondary }]}>{value}%</Text>
-            </View>
-            <ProgressBar progress={value / 100} color={color} height={8} />
-          </View>
-        ))}
-      </Card>
-
-      {/* Relic Vault Summary & Supabase Sync Card */}
+      {/* Cloud Sync Architecture Card */}
       <Card variant="outlined" style={styles.syncCard}>
         <View style={styles.syncTop}>
           <Database size={18} color={colors.accent} />
           <View style={styles.syncText}>
             <Text style={[typography.headline, { color: colors.textPrimary }]}>
-              Cloud Sync Architecture
+              Cloud Sync Ready
             </Text>
             <Text style={[typography.caption, { color: colors.textSecondary }]}>
               {backendMode === 'supabase'
                 ? 'Connected to live Supabase Postgres'
-                : `Local demo mode · ${player.ownedRelicIds.length}/${COLLECTIBLE_RELICS.length} relics saved locally. Add EXPO_PUBLIC_SUPABASE_URL to enable cloud sync.`}
+                : `Local demo mode · ${player.ownedRelicIds.length}/${COLLECTIBLE_RELICS.length} relics saved locally.`}
             </Text>
           </View>
         </View>
@@ -283,7 +344,7 @@ export default function ProfileScreen() {
           icon={<RotateCcw size={14} color={colors.textPrimary} />}
           onPress={() => {
             resetDemoProgress();
-            setFeedback('Progress reset to starter expedition state.');
+            setFeedback('Progress reset to starter adventure state.');
           }}
         />
       </Card>
@@ -293,12 +354,13 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   heroCard: {
+    gap: 16,
     paddingVertical: 18,
   },
   heroRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 14,
   },
   avatarFrame: {
     borderWidth: 3,
@@ -306,25 +368,45 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   heroAvatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
   },
   heroText: {
     flex: 1,
-    gap: 4,
+    gap: 3,
   },
   heroBadges: {
     flexDirection: 'row',
     gap: 6,
     marginTop: 4,
   },
-  statsRow: {
+  counterRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 8,
+  },
+  counterBox: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    gap: 3,
+  },
+  counterVal: {
+    fontSize: 19,
+    fontWeight: '800',
   },
   streakCard: {
     gap: 14,
+  },
+  streakHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  streakFlameImg: {
+    width: 44,
+    height: 44,
   },
   weekRow: {
     flexDirection: 'row',
@@ -348,6 +430,13 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
   },
+  chartCard: {
+    gap: 14,
+  },
+  bentoRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
   feedbackCard: {
     paddingVertical: 10,
   },
@@ -362,9 +451,9 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   optionImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     marginBottom: 2,
   },
   equippedTag: {
@@ -417,22 +506,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 11,
     fontWeight: '800',
-  },
-  skillsCard: {
-    gap: 14,
-  },
-  skillRow: {
-    gap: 6,
-  },
-  skillHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  skillNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
   },
   syncCard: {
     gap: 12,

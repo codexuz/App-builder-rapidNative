@@ -14,7 +14,14 @@ import {
   Zap,
 } from 'lucide-react-native';
 import { GameHud, ProgressBar } from '@/components/game';
-import { Badge, Card, Screen, SectionHeader } from '@/components/ui';
+import {
+  AnimatedCounter,
+  Badge,
+  Card,
+  Screen,
+  SectionHeader,
+  StaggeredEntrance,
+} from '@/components/ui';
 import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { RegionPalette, useAppTheme } from '@/constants/Theme';
 import { useGame } from '@/store/GameContext';
@@ -52,59 +59,92 @@ export default function LeaderboardScreen() {
 
       <View style={styles.headerBlock}>
         <Text style={[typography.display, { color: colors.textPrimary }]}>
-          Compass League
+          Explorer League
         </Text>
         <Text style={[typography.body, { color: colors.textSecondary }]}>
-          Top 3 explorers advance to Astral Division at the end of the week.
+          Top 3 explorers advance to Astral Division this week!
         </Text>
       </View>
 
-      {/* Top 3 Illustrated Podium */}
-      <Card variant="gradient" gradientColors={['#1E293B', '#312E81']} style={styles.podiumCard}>
-        <View style={styles.leagueTopRow}>
-          <View style={styles.leaguePill}>
-            <Trophy size={14} color="#FDE047" />
-            <Text style={styles.leaguePillText}>Crystal Division · 3d left</Text>
+      {/* Dark Contrast 3D Stepped Podium Stadium Card (inspired by modern kids leaderboards) */}
+      <StaggeredEntrance index={0}>
+        <View style={[styles.stadiumCard, { borderRadius: radii.xl }]}>
+          <View style={styles.stadiumKpiRow}>
+            <View style={[styles.kpiPill, { backgroundColor: '#7C3AED' }]}>
+              <Text style={styles.kpiValue}>{player.weeklyXp} XP</Text>
+              <Text style={styles.kpiLabel}>Your Weekly XP</Text>
+            </View>
+            <View style={[styles.kpiPill, { backgroundColor: '#F59E0B' }]}>
+              <Text style={styles.kpiValue}>#{myRank || 4}</Text>
+              <Text style={styles.kpiLabel}>Crystal Division</Text>
+            </View>
           </View>
-          {myRank > 0 ? (
-            <Text style={styles.myRankText}>Your Rank #{myRank}</Text>
-          ) : null}
-        </View>
 
-        <View style={styles.podiumRow}>
-          {podiumOrder.map((entry) => {
-            const rank = leaderboard.findIndex((e) => e.id === entry.id) + 1;
-            const isFirst = rank === 1;
-            const ringColor =
-              rank === 1 ? '#FACC15' : rank === 2 ? '#CBD5E1' : '#FB923C';
+          <View style={styles.totalScoreCenter}>
+            <View style={styles.trophyScoreRow}>
+              <Image
+                source={GeneratedAssets.trophyGold}
+                style={styles.stadiumTrophyImg}
+                resizeMode="contain"
+              />
+              <View style={styles.trophyScoreTextCol}>
+                <AnimatedCounter
+                  value={player.xp}
+                  suffix=" XP"
+                  style={styles.totalScoreNumber}
+                />
+                <View style={styles.divisionChip}>
+                  <Trophy size={12} color="#FFFFFF" />
+                  <Text style={styles.divisionChipText}>3 days left in season</Text>
+                </View>
+              </View>
+            </View>
+          </View>
 
-            return (
-              <View
-                key={entry.id}
-                style={[styles.podiumCol, isFirst && styles.podiumFirst]}
-              >
-                {isFirst ? <Crown size={20} color="#FACC15" fill="#FACC15" /> : null}
-                <View style={[styles.podiumAvatarWrap, { borderColor: ringColor }]}>
-                  <Image
-                    source={GeneratedAssets[entry.avatarKey]}
-                    style={isFirst ? styles.podiumAvatarLg : styles.podiumAvatarSm}
-                  />
-                  <View style={[styles.rankPin, { backgroundColor: ringColor }]}>
-                    <Text style={styles.rankPinText}>{rank}</Text>
+          <View style={styles.podiumRow}>
+            {podiumOrder.map((entry) => {
+              const rank = leaderboard.findIndex((e) => e.id === entry.id) + 1;
+              const isFirst = rank === 1;
+              const pillarHeight = rank === 1 ? 104 : rank === 2 ? 76 : 62;
+              const pillarColor =
+                rank === 1 ? '#F59E0B' : rank === 2 ? '#2563EB' : '#6366F1';
+              const ringColor =
+                rank === 1 ? '#FDE047' : rank === 2 ? '#93C5FD' : '#C4B5FD';
+
+              return (
+                <View key={entry.id} style={styles.podiumCol}>
+                  {isFirst ? <Crown size={22} color="#FDE047" fill="#FDE047" /> : null}
+                  <View style={[styles.podiumAvatarWrap, { borderColor: ringColor }]}>
+                    <Image
+                      source={GeneratedAssets[entry.avatarKey]}
+                      style={isFirst ? styles.podiumAvatarLg : styles.podiumAvatarSm}
+                    />
+                  </View>
+                  <Text style={styles.podiumName} numberOfLines={1}>
+                    {entry.isCurrentUser ? 'You' : entry.name.split(' ')[0]}
+                  </Text>
+                  <Text style={styles.podiumXp}>{entry.weeklyXp} XP</Text>
+
+                  <View
+                    style={[
+                      styles.pillar,
+                      {
+                        height: pillarHeight,
+                        backgroundColor: pillarColor,
+                      },
+                    ]}
+                  >
+                    <Text style={styles.pillarNum}>{rank}</Text>
                   </View>
                 </View>
-                <Text style={styles.podiumName} numberOfLines={1}>
-                  {entry.isCurrentUser ? 'You' : entry.name.split(' ')[0]}
-                </Text>
-                <Text style={styles.podiumXp}>{entry.weeklyXp} XP</Text>
-              </View>
-            );
-          })}
+              );
+            })}
+          </View>
         </View>
-      </Card>
+      </StaggeredEntrance>
 
-      {/* Full Weekly Standings */}
-      <SectionHeader title="Weekly Standings" subtitle="Live XP from expeditions & quests" />
+      {/* Weekly Standings */}
+      <SectionHeader title="Weekly Standings" subtitle="Earn XP in any city to climb" />
 
       <View style={styles.listStack}>
         {leaderboard.map((entry, idx) => {
@@ -128,12 +168,13 @@ export default function LeaderboardScreen() {
               ) : null}
 
               <Card
-                variant={entry.isCurrentUser ? 'elevated' : 'outlined'}
+                variant="elevated"
                 style={[
                   styles.rankRowCard,
                   entry.isCurrentUser && {
                     borderColor: colors.accent,
-                    borderWidth: 1.75,
+                    borderWidth: 2,
+                    backgroundColor: colors.accentMuted,
                   },
                 ]}
               >
@@ -161,7 +202,7 @@ export default function LeaderboardScreen() {
                   </View>
                   <View style={styles.subLine}>
                     <Text style={[typography.caption, { color: levelColor }]}>
-                      CEFR {entry.level}
+                      Level {entry.level}
                     </Text>
                     <Text style={[typography.caption, { color: colors.textTertiary }]}>·</Text>
                     <Flame size={12} color={colors.streak} />
@@ -170,7 +211,12 @@ export default function LeaderboardScreen() {
                     </Text>
                   </View>
                 </View>
-                <View style={[styles.xpBadge, { backgroundColor: colors.xpMuted, borderRadius: radii.pill }]}>
+                <View
+                  style={[
+                    styles.xpBadge,
+                    { backgroundColor: colors.surface, borderRadius: radii.pill },
+                  ]}
+                >
                   <Zap size={12} color={colors.xp} />
                   <Text style={[styles.xpText, { color: colors.xp }]}>{entry.weeklyXp}</Text>
                 </View>
@@ -182,7 +228,7 @@ export default function LeaderboardScreen() {
 
       {/* Achievements Shelf */}
       <SectionHeader
-        title="Achievements"
+        title="Trophy Badges"
         subtitle={`${player.achievements.filter((a) => a.unlocked).length}/${player.achievements.length} unlocked`}
       />
 
@@ -224,7 +270,7 @@ export default function LeaderboardScreen() {
             <ProgressBar
               progress={ach.progress / ach.target}
               color={ach.unlocked ? colors.coin : colors.accent}
-              height={7}
+              height={8}
             />
           </Card>
         ))}
@@ -237,89 +283,122 @@ const styles = StyleSheet.create({
   headerBlock: {
     gap: 4,
   },
-  podiumCard: {
-    gap: 16,
+  stadiumCard: {
+    backgroundColor: '#111827',
+    paddingTop: 16,
+    paddingHorizontal: 14,
+    overflow: 'hidden',
+    gap: 14,
   },
-  leagueTopRow: {
+  stadiumKpiRow: {
     flexDirection: 'row',
+    gap: 10,
+  },
+  kpiPill: {
+    flex: 1,
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 2,
   },
-  leaguePill: {
-    flexDirection: 'row',
+  kpiValue: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
+  },
+  kpiLabel: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  totalScoreCenter: {
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    paddingHorizontal: 10,
+  },
+  trophyScoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  stadiumTrophyImg: {
+    width: 58,
+    height: 58,
+  },
+  trophyScoreTextCol: {
+    alignItems: 'flex-start',
+    gap: 5,
+  },
+  totalScoreNumber: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    fontWeight: '900',
+  },
+  divisionChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: '#2563EB',
+    paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 999,
   },
-  leaguePillText: {
+  divisionChipText: {
     color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  myRankText: {
-    color: '#FDE047',
-    fontSize: 13,
+    fontSize: 11.5,
     fontWeight: '800',
   },
   podiumRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'space-around',
-    paddingTop: 6,
+    justifyContent: 'space-between',
+    gap: 8,
+    paddingTop: 4,
   },
   podiumCol: {
-    alignItems: 'center',
-    gap: 6,
     flex: 1,
-  },
-  podiumFirst: {
-    marginBottom: 10,
+    alignItems: 'center',
+    gap: 5,
   },
   podiumAvatarWrap: {
     borderWidth: 3,
     borderRadius: 999,
     padding: 2,
-    position: 'relative',
   },
   podiumAvatarLg: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   podiumAvatarSm: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-  },
-  rankPin: {
-    position: 'absolute',
-    bottom: -6,
-    alignSelf: 'center',
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rankPinText: {
-    color: '#0F172A',
-    fontSize: 11,
-    fontWeight: '900',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
   },
   podiumName: {
     color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '700',
-    marginTop: 4,
+    fontWeight: '800',
   },
   podiumXp: {
-    color: 'rgba(255,255,255,0.78)',
-    fontSize: 12,
-    fontWeight: '600',
+    color: '#9CA3AF',
+    fontSize: 11.5,
+    fontWeight: '700',
     fontVariant: ['tabular-nums'],
+    marginBottom: 4,
+  },
+  pillar: {
+    width: '100%',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pillarNum: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 32,
+    fontWeight: '900',
   },
   listStack: {
     gap: 10,

@@ -8,7 +8,7 @@ type TabBarRenderFn = NonNullable<ComponentProps<typeof Tabs>['tabBar']>;
 export type FloatingTabBarProps = Parameters<TabBarRenderFn>[0];
 
 /**
- * Modern floating pill bottom tab bar for Expo Router `<Tabs tabBar={(p) => <FloatingTabBar {...p} />} />`.
+ * Balanced floating pill bottom tab bar for Expo Router `<Tabs tabBar={(p) => <FloatingTabBar {...p} />} />`.
  */
 export function FloatingTabBar({
   state,

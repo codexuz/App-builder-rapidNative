@@ -27,9 +27,18 @@ pnpm app:compile <slug>
 ```
 This validates every JSON artifact against `schemas/`, checks component references against `knowledge/component-catalog.json`, checks screen asset references against `ASSETS.json`, and emits `apps/<slug>/constants/CompiledTokens.ts` + `.factory/IMPLEMENTATION_BRIEF.md`.
 
-### Stage 3 — Visual Asset Generation (Kie.ai)
-- If `KIE_API_KEY` is configured in `.env`, run `pnpm assets:gen <slug>` (supports `stylePrefix`, `characterReferences`, retries, image header/dimension verification, and typed `constants/GeneratedAssets.ts`).
-- If `KIE_API_KEY` is not yet set, run `pnpm assets:gen <slug> --dry-run` to validate the manifest (or use built-in image generation during design prototyping and keep `ASSETS.json` ready for Kie.ai regeneration).
+### Stage 3 — Visual Asset Generation (Gemini + Clean Cutouts / Kie.ai)
+- **Default Zero-Key Path (Gemini `generate_image` + Clean Cutout Extraction):**
+  - For **floating assets** (mascots, badges, trophies, chests, stickers, 3D icons): prompt on a **flat uniform solid `#00FF00` chroma-key green background** (or `#FF00FF` magenta / `#FFFFFF` white if the subject is green) with neutral white studio lighting, no floor, no cast shadow, and no floating particles.
+  - Extract a razor-sharp, spill-decontaminated, tightly auto-cropped RGBA `.png` via:
+    ```bash
+    pnpm assets:cutout <raw_image> apps/<slug>/assets/generated/<name>.png --preview <qa_sheet.png>
+    ```
+    Always visually inspect the 2×2 QA sheet (blue, orange, midnight dark, cloud white) to guarantee zero halo or fringe, and render floating assets with `resizeMode="contain"` without boxy white borders.
+  - For **full-bleed scenes** (city banners, onboarding heroes): generate edge-to-edge (`background: "opaque"`) with `resizeMode="cover"`.
+- **Optional Batch CLI Path (Kie.ai):**
+  - If `KIE_API_KEY` is configured in `.env`, run `pnpm assets:gen <slug>` (supports `stylePrefix`, `characterReferences`, retries, image header/dimension verification, and typed `constants/GeneratedAssets.ts`).
+  - Run `pnpm assets:cutout --app <slug>` to batch-extract any transparent assets declared in `ASSETS.json`.
 
 ### Stage 4 — Expo Implementation & Technical QA
 - Build screens following `IMPLEMENTATION_BRIEF.md` and `CompiledTokens.ts`.

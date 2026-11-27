@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   BookOpen,
+  CheckCircle2,
   Coins,
   Compass,
+  Flame,
   Gem,
   Headphones,
   Lock,
@@ -14,8 +16,18 @@ import {
   Sparkles,
   Zap,
 } from 'lucide-react-native';
-import { GameButton, GameHud, ProgressBar, WorldCitySection } from '@/components/game';
-import { Badge, BottomSheet, Card, Chip, Screen } from '@/components/ui';
+import { GameButton, GameHud, WorldCitySection } from '@/components/game';
+import {
+  Badge,
+  BottomSheet,
+  Card,
+  Chip,
+  ProgressRing,
+  Screen,
+  SectionHeader,
+  StaggeredEntrance,
+} from '@/components/ui';
+import { GeneratedAssets } from '@/constants/GeneratedAssets';
 import { RegionPalette, useAppTheme } from '@/constants/Theme';
 import { ALL_LESSONS, WORLD_CITIES, getCityById } from '@/data/worldData';
 import { useGame } from '@/store/GameContext';
@@ -70,60 +82,99 @@ export default function WorldMapScreen() {
     <Screen hasTabBar>
       <GameHud onAvatarPress={() => router.push('/(tabs)/profile')} />
 
-      {/* Header & Overall World Progress */}
-      <View style={styles.titleBlock}>
-        <Text style={[typography.display, { color: colors.textPrimary }]}>
-          Impulse World
-        </Text>
-        <Text style={[typography.body, { color: colors.textSecondary }]}>
-          Unlock cities from A1 to B2 through live English expeditions.
-        </Text>
-      </View>
+      {/* Playful Pip Companion Hero Card */}
+      <StaggeredEntrance index={0}>
+        <Card variant="gradient" gradientColors={nextPalette.gradient} style={styles.heroCard}>
+          <View style={styles.heroTopRow}>
+            <View style={styles.mascotRow}>
+              <View style={styles.mascotStage}>
+                <Image
+                  source={GeneratedAssets.mascotPip}
+                  style={styles.mascotImg}
+                  resizeMode="contain"
+                />
+              </View>
+              <View style={styles.heroTitleCol}>
+                <View style={styles.nextLevelPill}>
+                  <Text style={styles.nextLevelText}>
+                    {nextLesson.level} · {nextCity?.name}
+                  </Text>
+                </View>
+                <Text style={[typography.title1, { color: '#FFFFFF' }]} numberOfLines={2}>
+                  {nextLesson.title}
+                </Text>
+              </View>
+            </View>
 
-      {/* Active Expedition Banner */}
-      <Card variant="gradient" gradientColors={nextPalette.gradient} style={styles.nextCard}>
-        <View style={styles.nextCardTop}>
-          <View style={styles.nextLevelPill}>
-            <Text style={styles.nextLevelText}>
-              {nextLesson.level} · {nextCity?.name}
-            </Text>
+            <ProgressRing
+              progress={totalProgress}
+              size={66}
+              strokeWidth={7}
+              color="#FDE047"
+              trackColor="rgba(255,255,255,0.25)"
+            >
+              <Text style={styles.ringText}>
+                {player.completedLessonIds.length}/{ALL_LESSONS.length}
+              </Text>
+            </ProgressRing>
           </View>
-          <View style={styles.xpChip}>
-            <Zap size={13} color="#FEF08A" fill="#FEF08A" />
-            <Text style={styles.xpChipText}>+{nextLesson.xpReward} XP</Text>
-          </View>
-        </View>
 
-        <Text style={[typography.title1, { color: '#FFFFFF' }]}>
-          {nextLesson.title}
-        </Text>
-        <Text style={styles.nextSub} numberOfLines={2}>
-          {nextLesson.subtitle}
-        </Text>
-
-        <View style={styles.worldMeterRow}>
-          <Text style={styles.worldMeterLabel}>
-            World Atlas · {player.completedLessonIds.length}/{ALL_LESSONS.length} Stops Cleared
+          <Text style={styles.heroSub} numberOfLines={2}>
+            Pip says: "{nextLesson.subtitle}"
           </Text>
-          <ProgressBar
-            progress={totalProgress}
+
+          <GameButton
+            label={`Start Adventure (+${nextLesson.xpReward} XP)`}
             color="#FFFFFF"
-            trackColor="rgba(255,255,255,0.28)"
-            height={7}
+            depthColor="rgba(15, 23, 42, 0.35)"
+            textColor={nextPalette.deep}
+            icon={<Play size={17} color={nextPalette.deep} fill={nextPalette.deep} />}
+            onPress={() => launchLesson(nextLesson.id)}
           />
+        </Card>
+      </StaggeredEntrance>
+
+      {/* Joyful 3-Column Pastel Stat Bubbles */}
+      <StaggeredEntrance index={1}>
+        <View style={styles.pastelStatsRow}>
+          <View style={[styles.pastelBubble, { backgroundColor: colors.xpMuted, borderRadius: radii.lg }]}>
+            <View style={[styles.bubbleIcon, { backgroundColor: colors.xp }]}>
+              <CheckCircle2 size={16} color="#FFFFFF" />
+            </View>
+            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>
+              {player.completedLessonIds.length}
+            </Text>
+            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Cleared</Text>
+          </View>
+
+          <View style={[styles.pastelBubble, { backgroundColor: colors.streakMuted, borderRadius: radii.lg }]}>
+            <View style={[styles.bubbleIcon, { backgroundColor: colors.streak }]}>
+              <Flame size={16} color="#FFFFFF" fill="#FFFFFF" />
+            </View>
+            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>
+              {player.streakDays}d
+            </Text>
+            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Streak</Text>
+          </View>
+
+          <View style={[styles.pastelBubble, { backgroundColor: colors.accentMuted, borderRadius: radii.lg }]}>
+            <View style={[styles.bubbleIcon, { backgroundColor: colors.accent }]}>
+              <Zap size={16} color="#FFFFFF" fill="#FFFFFF" />
+            </View>
+            <Text style={[styles.bubbleValue, { color: colors.textPrimary }]}>
+              {player.xp}
+            </Text>
+            <Text style={[styles.bubbleLabel, { color: colors.textSecondary }]}>Total XP</Text>
+          </View>
         </View>
+      </StaggeredEntrance>
 
-        <GameButton
-          label="Continue Expedition"
-          color="#FFFFFF"
-          depthColor="rgba(15, 23, 42, 0.35)"
-          textColor={nextPalette.deep}
-          icon={<Play size={17} color={nextPalette.deep} fill={nextPalette.deep} />}
-          onPress={() => launchLesson(nextLesson.id)}
-        />
-      </Card>
+      {/* World Map Section & CEFR Filter Chips */}
+      <SectionHeader
+        title="World Adventure Map"
+        subtitle="Explore cities & unlock A1 to B2 badges"
+      />
 
-      {/* CEFR Region Filter Bar */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -132,7 +183,7 @@ export default function WorldMapScreen() {
         {LEVEL_FILTERS.map((level) => (
           <Chip
             key={level}
-            label={level === 'All' ? 'All Worlds' : `CEFR ${level}`}
+            label={level === 'All' ? 'All Worlds' : `Level ${level}`}
             selected={levelFilter === level}
             onPress={() => setLevelFilter(level)}
           />
@@ -171,7 +222,6 @@ export default function WorldMapScreen() {
               {selectedLesson.subtitle}
             </Text>
 
-            {/* 6 Expedition Stages Preview */}
             <View style={styles.stageGrid}>
               {STAGE_PILLS.map(({ label, Icon }) => (
                 <View
@@ -192,7 +242,6 @@ export default function WorldMapScreen() {
               ))}
             </View>
 
-            {/* Rewards Bar */}
             <View
               style={[
                 styles.rewardRow,
@@ -225,7 +274,7 @@ export default function WorldMapScreen() {
 
             {selectedUnlocked ? (
               <GameButton
-                label={selectedCompleted ? 'Replay Expedition' : 'Launch Expedition'}
+                label={selectedCompleted ? 'Play Again!' : 'Start Adventure!'}
                 color={RegionPalette[selectedLesson.level].primary}
                 depthColor={RegionPalette[selectedLesson.level].deep}
                 icon={<Play size={17} color="#FFFFFF" fill="#FFFFFF" />}
@@ -235,7 +284,7 @@ export default function WorldMapScreen() {
               <View style={styles.lockedNotice}>
                 <Badge label="Locked Stop" tone="warning" dot />
                 <Text style={[typography.callout, { color: colors.textSecondary }]}>
-                  Clear the previous stop along the trail to unlock this expedition.
+                  Finish the stop before this one to unlock this adventure.
                 </Text>
                 <GameButton
                   label="Locked"
@@ -252,55 +301,86 @@ export default function WorldMapScreen() {
 }
 
 const styles = StyleSheet.create({
-  titleBlock: {
-    gap: 4,
+  heroCard: {
+    gap: 14,
   },
-  nextCard: {
-    gap: 12,
-  },
-  nextCardTop: {
+  heroTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 8,
+    gap: 10,
+  },
+  mascotRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  mascotStage: {
+    width: 82,
+    height: 82,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: -4,
+  },
+  mascotImg: {
+    width: 84,
+    height: 84,
+  },
+  heroTitleCol: {
+    flex: 1,
+    gap: 5,
   },
   nextLevelPill: {
-    backgroundColor: 'rgba(15, 23, 42, 0.28)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(15, 23, 42, 0.25)',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
     borderRadius: 999,
   },
   nextLevelText: {
     color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  xpChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(15, 23, 42, 0.34)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  xpChipText: {
-    color: '#FEF08A',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '800',
   },
-  nextSub: {
-    color: 'rgba(255,255,255,0.88)',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  worldMeterRow: {
-    gap: 6,
-    marginTop: 2,
-  },
-  worldMeterLabel: {
-    color: 'rgba(255,255,255,0.9)',
+  ringText: {
+    color: '#FFFFFF',
     fontSize: 12,
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
+  },
+  heroSub: {
+    color: 'rgba(255,255,255,0.92)',
+    fontSize: 13.5,
+    lineHeight: 19,
+    fontWeight: '600',
+  },
+  pastelStatsRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  pastelBubble: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+    gap: 5,
+  },
+  bubbleIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 2,
+  },
+  bubbleValue: {
+    fontSize: 19,
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
+  },
+  bubbleLabel: {
+    fontSize: 11.5,
     fontWeight: '700',
   },
   filterRow: {

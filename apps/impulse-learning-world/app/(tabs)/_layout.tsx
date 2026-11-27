@@ -1,12 +1,12 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Compass, ScrollText, Trophy, UserRound } from 'lucide-react-native';
-import { FloatingTabBar } from '@/components/ui';
+import { Compass, Gift, Trophy, UserRound } from 'lucide-react-native';
+import { CapsuleTabBar } from '@/components/ui';
 
 export default function TabLayout() {
   return (
     <Tabs
-      tabBar={(props) => <FloatingTabBar {...props} />}
+      tabBar={(props) => <CapsuleTabBar {...props} />}
       screenOptions={{
         headerShown: false,
       }}
@@ -22,7 +22,7 @@ export default function TabLayout() {
         name="quests"
         options={{
           title: 'Quests',
-          tabBarIcon: ({ color, size }) => <ScrollText size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Gift size={size} color={color} />,
         }}
       />
       <Tabs.Screen

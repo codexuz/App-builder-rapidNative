@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "engine": "reanimated",
+  "hapticsEnabled": true,
+  "respectReducedMotion": true,
+  "duration": {
+    "instant": 100,
+    "fast": 180,
+    "normal": 300,
+    "slow": 480
+  },
+  "springs": {
+    "gentle": { "damping": 20, "stiffness": 140, "mass": 1 },
+    "snappy": { "damping": 16, "stiffness": 310, "mass": 0.75 },
+    "bouncy": { "damping": 12, "stiffness": 200, "mass": 0.85 }
+  },
+  "interactions": [
+    {
+      "target": "ProgressRing",
+      "trigger": "mount",
+      "behavior": "Smooth radial fill on the Pip mascot hero card",
+      "reducedMotionFallback": "instant filled ring"
+    },
+    {
+      "target": "GameButton",
+      "trigger": "press",
+      "behavior": "Tactile 3D scale spring with medium native haptic",
+      "reducedMotionFallback": "opacity press highlight"
+    },
+    {
+      "target": "BarChart",
+      "trigger": "mount",
+      "behavior": "Staggered rounded bars rising smoothly on dashboard mount",
+      "reducedMotionFallback": "instant full bar heights"
+    }
+  ]
+}

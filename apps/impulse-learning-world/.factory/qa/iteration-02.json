@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectSlug": "impulse-learning-world",
+  "iteration": 2,
+  "evaluatedAt": "2026-11-27T06:43:00Z",
+  "screenshotsReviewed": [
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/home_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/home_light_scroll480.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/quests_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/leaderboard_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/profile_light.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/profile_light_scroll440.png",
+    "apps/impulse-learning-world/.factory/screenshots/iteration-02/lesson_light.png"
+  ],
+  "score": 96,
+  "rubric": {
+    "visualHierarchy": 19,
+    "typography": 14,
+    "layoutAndSpacing": 15,
+    "colorAndContrast": 10,
+    "originality": 14,
+    "motionImplementation": 14,
+    "consistency": 10
+  },
+  "criticalIssues": [],
+  "designViolations": [],
+  "layoutIssues": [],
+  "typographyIssues": [],
+  "assetIssues": [],
+  "improvements": [
+    "Once KIE_API_KEY is available in the VM environment, re-run pnpm assets:gen impulse-learning-world --force to regenerate mascotPip and treasureChest directly via Kie.ai using the updated .factory/ASSETS.json prompts.",
+    "Add optional haptic feedback hooks on native builds when claiming daily quest rewards or completing lesson stages."
+  ],
+  "repairInstructions": [],
+  "runtimeChecks": {
+    "typescriptPassed": true,
+    "webBundlePassed": true,
+    "consoleErrors": 0,
+    "horizontalOverflowDetected": false
+  },
+  "passed": true
+}
