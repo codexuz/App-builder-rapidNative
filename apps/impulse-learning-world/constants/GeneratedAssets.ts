@@ -13,6 +13,7 @@ export const GeneratedAssets = {
   giftPrize: require('../assets/generated/gift-prize-3d.png'),
   lockPadlock: require('../assets/generated/lock-padlock-3d.png'),
   xpBolt: require('../assets/generated/xp-bolt-3d.png'),
+  gem: require('../assets/generated/gem-3d.png'),
 } as const;
 
 export type GeneratedAssetKey = keyof typeof GeneratedAssets;

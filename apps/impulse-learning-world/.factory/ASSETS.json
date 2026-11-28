@@ -154,6 +154,23 @@
       "outputFormat": "jpg",
       "usedIn": ["leaderboard", "profile"],
       "status": "approved"
+    },
+    {
+      "key": "gem",
+      "filename": "gem-3d.png",
+      "type": "badge",
+      "provider": "kie",
+      "model": "gpt-image-2-6/flare-text-to-image",
+      "background": "transparent",
+      "transparent": true,
+      "cutoutMode": "chroma-green",
+      "prompt": "Vibrant stylized 3D glossy faceted electric sky-blue crystal diamond gem icon, joyful Nintendo indie mobile game UI polish, subtle white specular highlights, isolated on completely flat uniform solid chroma key green (#00FF00) background, no floor, no cast shadow, crisp clean edges",
+      "aspectRatio": "1:1",
+      "outputFormat": "png",
+      "width": 512,
+      "height": 512,
+      "usedIn": ["shop", "quests"],
+      "status": "approved"
     }
   ]
 }

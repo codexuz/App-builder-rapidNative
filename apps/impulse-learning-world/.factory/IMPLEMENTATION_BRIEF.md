@@ -1,6 +1,6 @@
 # Compiled Implementation Brief
 
-_Generated automatically by `scripts/design-compiler.ts` at 2026-11-27T06:52:32.888Z_
+_Generated automatically by `scripts/design-compiler.ts` at 2026-11-28T06:56:51.335Z_
 
 ## 1. Visual Direction & Tokens
 - **App:** Impulse Learning World (`impulse-learning-world`) — gamified-kids-education
@@ -63,7 +63,7 @@ _Generated automatically by `scripts/design-compiler.ts` at 2026-11-27T06:52:32.
 
 ## 4. Asset Manifest
 - **Model:** `gpt-image-2-6/flare-text-to-image`
-- **Total Assets:** 12
+- **Total Assets:** 13
 
 - `appIcon` (icon, 1:1) -> `assets/generated/app-icon.jpg` [approved]
 - `mascotPip` (character, 1:1) -> `assets/generated/mascot-pip.png` [approved]
@@ -77,6 +77,7 @@ _Generated automatically by `scripts/design-compiler.ts` at 2026-11-27T06:52:32.
 - `avatarKai` (character, 1:1) -> `assets/generated/avatar-kai.jpg` [approved]
 - `avatarMaya` (character, 1:1) -> `assets/generated/avatar-maya.jpg` [approved]
 - `avatarNova` (character, 1:1) -> `assets/generated/avatar-nova.jpg` [approved]
+- `gem` (badge, 1:1) -> `assets/generated/gem-3d.png` [approved]
 
 ## Validation Notes
 - App-specific custom components to implement: GameHud, GameButton, WorldCitySection, ProgressBar, SoundWaveVisualizer
