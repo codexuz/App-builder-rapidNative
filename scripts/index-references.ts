@@ -23,6 +23,26 @@ interface ArchiveRef {
   allScreens: string[];
 }
 
+interface FlowKeyframeRef {
+  frame: number;
+  path: string;
+  deltaFromPrevKeyframe?: number;
+  stepDelta?: number;
+}
+
+interface FlowSequenceRef {
+  flowId: string;
+  path: string;
+  category: string;
+  frameCount: number;
+  format: string;
+  width: number;
+  height: number;
+  tags: string[];
+  keyframeCount: number;
+  keyframes: FlowKeyframeRef[];
+}
+
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.jfif']);
 
 function inferTags(input: string): string[] {
@@ -31,19 +51,20 @@ function inferTags(input: string): string[] {
 
   const rules: Array<[RegExp, string]> = [
     [/bottom-tab|tab\s*bar|bnb-/, 'navigation-tabbar'],
-    [/onboard|welcome|get-started|splash/, 'onboarding'],
-    [/auth|sign\s*in|login|password|verif|otp|phone/, 'auth'],
-    [/home|dashboard/, 'home-dashboard'],
-    [/quiz|test|lesson|practice|review|vocab|listening/, 'learning-exercise'],
-    [/talk|voice|speak|record|tutor/, 'voice-ai'],
-    [/leaderboard|rank|streak|goal|progress|widget|fito/, 'gamification'],
-    [/payment|paywall|subscri|paypal|checkout/, 'monetization'],
+    [/onboard|welcome|get-started|splash|fluency\s*level|choose-language/, 'onboarding'],
+    [/auth|sign\s*in|login|register|password|verif|otp|phone|create\s*new\s*account/, 'auth'],
+    [/home|dashboard|asosiy/, 'home-dashboard'],
+    [/quiz|test|lesson|practice|review|vocab|listening|reading|writing|course|learna|speak\s*up|bahasaku|duolingo|dolingo|ibrat|missiya|ielts|englify|jolingo|phrasebook|word\s*cards|darslar/, 'learning-exercise'],
+    [/talk|voice|speak|record|tutor|vaysaqi/, 'voice-ai'],
+    [/leaderboard|rank|streak|goal|progress|widget|fito|achievement|certificate|kunlik|o'yin|yuzma|jang|medallar/, 'gamification'],
+    [/payment|paywall|subscri|paypal|checkout|apple\s*pay|confirm\s*plan/, 'monetization'],
     [/pos|scan|product|commerce|cart/, 'commerce-pos'],
     [/chat|message|telegram|thread|social|reply|forward/, 'social-chat'],
     [/weather|forecast/, 'weather-telemetry'],
     [/empty|connectivity|not\s*found|error|no\s*network/, 'empty-error-state'],
-    [/setting|profile|account|privacy|terms/, 'profile-settings'],
-    [/search|explore|filter/, 'discovery-search'],
+    [/setting|profile|account|privacy|terms|logout/, 'profile-settings'],
+    [/search|explore|filter|country/, 'discovery-search'],
+    [/flow-/, 'flow-sequence'],
   ];
 
   for (const [regex, tag] of rules) {
@@ -82,9 +103,74 @@ function main(): void {
 
   const images: LooseImageRef[] = [];
   const archives: ArchiveRef[] = [];
-  const categoryCounts: Record<string, { images: number; archives: number; archiveScreens: number }> = {};
+  const flows: FlowSequenceRef[] = [];
+  const skipFlowDirs = new Set<string>();
+  const categoryCounts: Record<
+    string,
+    { images: number; archives: number; archiveScreens: number; flowSequences: number; flowFrames: number }
+  > = {};
+
+  function ensureCategory(category: string): void {
+    if (!categoryCounts[category]) {
+      categoryCounts[category] = {
+        images: 0,
+        archives: 0,
+        archiveScreens: 0,
+        flowSequences: 0,
+        flowFrames: 0,
+      };
+    }
+  }
+
+  function registerManifestFlows(dir: string): void {
+    const manifestPath = path.join(dir, 'flow-manifest.json');
+    if (!fs.existsSync(manifestPath)) return;
+    try {
+      const parsed = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
+        flows?: Array<{
+          flowId: string;
+          frameCount: number;
+          format?: string;
+          width?: number;
+          height?: number;
+          keyframeCount?: number;
+          keyframes?: FlowKeyframeRef[];
+        }>;
+      };
+      const relDir = path.relative(refsRoot, dir).replace(/\\/g, '/');
+      const category = relDir.includes('/') ? relDir.split('/')[0] : relDir || 'general';
+      ensureCategory(category);
+
+      for (const f of parsed.flows ?? []) {
+        const flowDir = path.join(dir, f.flowId);
+        if (!fs.existsSync(flowDir)) continue;
+        skipFlowDirs.add(flowDir);
+        const relFlowPath = path.relative(rootDir, flowDir).replace(/\\/g, '/');
+        const keyframes = f.keyframes ?? [];
+        flows.push({
+          flowId: f.flowId,
+          path: relFlowPath,
+          category,
+          frameCount: f.frameCount,
+          format: f.format ?? 'webp',
+          width: f.width ?? 0,
+          height: f.height ?? 0,
+          tags: Array.from(new Set([...inferTags(relDir), ...inferTags(f.flowId), 'flow-sequence'])),
+          keyframeCount: f.keyframeCount ?? keyframes.length,
+          keyframes,
+        });
+        categoryCounts[category].flowSequences += 1;
+        categoryCounts[category].flowFrames += f.frameCount;
+      }
+    } catch {
+      // Fall back to regular file walk if manifest cannot be parsed.
+    }
+  }
 
   function walk(dir: string): void {
+    if (skipFlowDirs.has(dir)) return;
+    registerManifestFlows(dir);
+
     const entries = fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) =>
       a.name.localeCompare(b.name)
     );
@@ -100,9 +186,7 @@ function main(): void {
       const category = relFromRefs.includes('/') ? relFromRefs.split('/')[0] : 'general';
       const ext = path.extname(entry.name).toLowerCase();
 
-      if (!categoryCounts[category]) {
-        categoryCounts[category] = { images: 0, archives: 0, archiveScreens: 0 };
-      }
+      ensureCategory(category);
 
       if (IMAGE_EXTS.has(ext)) {
         const meta = inspectImageFile(fullPath);
@@ -140,6 +224,8 @@ function main(): void {
   walk(refsRoot);
 
   const totalArchiveScreens = archives.reduce((sum, a) => sum + a.screenCount, 0);
+  const totalFlowFrames = flows.reduce((sum, f) => sum + f.frameCount, 0);
+  const totalFlowKeyframes = flows.reduce((sum, f) => sum + f.keyframeCount, 0);
   const outPath = path.join(rootDir, 'knowledge', 'design-references', 'index.json');
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(
@@ -153,10 +239,14 @@ function main(): void {
           looseImages: images.length,
           zipArchives: archives.length,
           archivedScreens: totalArchiveScreens,
-          totalIndexedScreens: images.length + totalArchiveScreens,
+          flowSequences: flows.length,
+          flowFrames: totalFlowFrames,
+          flowKeyframes: totalFlowKeyframes,
+          totalIndexedScreens: images.length + totalArchiveScreens + totalFlowFrames,
           categories: categoryCounts,
         },
         images,
+        flows,
         archives,
       },
       null,
@@ -166,7 +256,7 @@ function main(): void {
   );
 
   console.log(
-    `Indexed ${images.length} loose images + ${totalArchiveScreens} archived screens (${archives.length} zips) -> ${path.relative(rootDir, outPath)}`
+    `Indexed ${images.length} loose images + ${totalFlowFrames} flow frames (${flows.length} sequences, ${totalFlowKeyframes} keyframes) + ${totalArchiveScreens} archived screens (${archives.length} zips) -> ${path.relative(rootDir, outPath)}`
   );
 }
 

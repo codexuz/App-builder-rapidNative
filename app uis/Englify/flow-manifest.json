@@ -1,0 +1,2579 @@
+{
+  "flows": [
+    {
+      "flowId": "flow-01",
+      "sourceVideoId": "englify-1..5",
+      "frameCount": 1495,
+      "width": 590,
+      "height": 1280,
+      "format": "webp",
+      "beforeZipMB": 305.65,
+      "afterWebpMB": 35.8,
+      "keyframeCount": 427,
+      "keyframes": [
+        {
+          "frame": 1,
+          "path": "app uis/Englify/flow-01/frame-0001.webp",
+          "deltaFromPrevKeyframe": 999.0,
+          "stepDelta": 999.0
+        },
+        {
+          "frame": 12,
+          "path": "app uis/Englify/flow-01/frame-0012.webp",
+          "deltaFromPrevKeyframe": 13.59,
+          "stepDelta": 13.48
+        },
+        {
+          "frame": 13,
+          "path": "app uis/Englify/flow-01/frame-0013.webp",
+          "deltaFromPrevKeyframe": 26.19,
+          "stepDelta": 26.19
+        },
+        {
+          "frame": 14,
+          "path": "app uis/Englify/flow-01/frame-0014.webp",
+          "deltaFromPrevKeyframe": 49.14,
+          "stepDelta": 49.14
+        },
+        {
+          "frame": 15,
+          "path": "app uis/Englify/flow-01/frame-0015.webp",
+          "deltaFromPrevKeyframe": 14.19,
+          "stepDelta": 14.19
+        },
+        {
+          "frame": 22,
+          "path": "app uis/Englify/flow-01/frame-0022.webp",
+          "deltaFromPrevKeyframe": 62.3,
+          "stepDelta": 62.48
+        },
+        {
+          "frame": 23,
+          "path": "app uis/Englify/flow-01/frame-0023.webp",
+          "deltaFromPrevKeyframe": 27.31,
+          "stepDelta": 27.31
+        },
+        {
+          "frame": 25,
+          "path": "app uis/Englify/flow-01/frame-0025.webp",
+          "deltaFromPrevKeyframe": 11.31,
+          "stepDelta": 13.44
+        },
+        {
+          "frame": 26,
+          "path": "app uis/Englify/flow-01/frame-0026.webp",
+          "deltaFromPrevKeyframe": 59.35,
+          "stepDelta": 59.35
+        },
+        {
+          "frame": 27,
+          "path": "app uis/Englify/flow-01/frame-0027.webp",
+          "deltaFromPrevKeyframe": 10.77,
+          "stepDelta": 10.77
+        },
+        {
+          "frame": 30,
+          "path": "app uis/Englify/flow-01/frame-0030.webp",
+          "deltaFromPrevKeyframe": 7.88,
+          "stepDelta": 4.69
+        },
+        {
+          "frame": 36,
+          "path": "app uis/Englify/flow-01/frame-0036.webp",
+          "deltaFromPrevKeyframe": 37.13,
+          "stepDelta": 33.85
+        },
+        {
+          "frame": 37,
+          "path": "app uis/Englify/flow-01/frame-0037.webp",
+          "deltaFromPrevKeyframe": 41.5,
+          "stepDelta": 41.5
+        },
+        {
+          "frame": 38,
+          "path": "app uis/Englify/flow-01/frame-0038.webp",
+          "deltaFromPrevKeyframe": 9.18,
+          "stepDelta": 9.18
+        },
+        {
+          "frame": 40,
+          "path": "app uis/Englify/flow-01/frame-0040.webp",
+          "deltaFromPrevKeyframe": 31.12,
+          "stepDelta": 31.12
+        },
+        {
+          "frame": 41,
+          "path": "app uis/Englify/flow-01/frame-0041.webp",
+          "deltaFromPrevKeyframe": 32.75,
+          "stepDelta": 32.75
+        },
+        {
+          "frame": 43,
+          "path": "app uis/Englify/flow-01/frame-0043.webp",
+          "deltaFromPrevKeyframe": 26.5,
+          "stepDelta": 22.22
+        },
+        {
+          "frame": 44,
+          "path": "app uis/Englify/flow-01/frame-0044.webp",
+          "deltaFromPrevKeyframe": 9.06,
+          "stepDelta": 9.06
+        },
+        {
+          "frame": 57,
+          "path": "app uis/Englify/flow-01/frame-0057.webp",
+          "deltaFromPrevKeyframe": 7.71,
+          "stepDelta": 3.81
+        },
+        {
+          "frame": 58,
+          "path": "app uis/Englify/flow-01/frame-0058.webp",
+          "deltaFromPrevKeyframe": 30.18,
+          "stepDelta": 30.18
+        },
+        {
+          "frame": 59,
+          "path": "app uis/Englify/flow-01/frame-0059.webp",
+          "deltaFromPrevKeyframe": 64.14,
+          "stepDelta": 64.14
+        },
+        {
+          "frame": 60,
+          "path": "app uis/Englify/flow-01/frame-0060.webp",
+          "deltaFromPrevKeyframe": 44.94,
+          "stepDelta": 44.94
+        },
+        {
+          "frame": 65,
+          "path": "app uis/Englify/flow-01/frame-0065.webp",
+          "deltaFromPrevKeyframe": 41.03,
+          "stepDelta": 39.86
+        },
+        {
+          "frame": 66,
+          "path": "app uis/Englify/flow-01/frame-0066.webp",
+          "deltaFromPrevKeyframe": 49.74,
+          "stepDelta": 49.74
+        },
+        {
+          "frame": 67,
+          "path": "app uis/Englify/flow-01/frame-0067.webp",
+          "deltaFromPrevKeyframe": 78.98,
+          "stepDelta": 78.98
+        },
+        {
+          "frame": 69,
+          "path": "app uis/Englify/flow-01/frame-0069.webp",
+          "deltaFromPrevKeyframe": 32.11,
+          "stepDelta": 31.91
+        },
+        {
+          "frame": 70,
+          "path": "app uis/Englify/flow-01/frame-0070.webp",
+          "deltaFromPrevKeyframe": 66.29,
+          "stepDelta": 66.29
+        },
+        {
+          "frame": 71,
+          "path": "app uis/Englify/flow-01/frame-0071.webp",
+          "deltaFromPrevKeyframe": 48.01,
+          "stepDelta": 48.01
+        },
+        {
+          "frame": 75,
+          "path": "app uis/Englify/flow-01/frame-0075.webp",
+          "deltaFromPrevKeyframe": 49.61,
+          "stepDelta": 49.85
+        },
+        {
+          "frame": 76,
+          "path": "app uis/Englify/flow-01/frame-0076.webp",
+          "deltaFromPrevKeyframe": 54.64,
+          "stepDelta": 54.64
+        },
+        {
+          "frame": 77,
+          "path": "app uis/Englify/flow-01/frame-0077.webp",
+          "deltaFromPrevKeyframe": 49.97,
+          "stepDelta": 49.97
+        },
+        {
+          "frame": 78,
+          "path": "app uis/Englify/flow-01/frame-0078.webp",
+          "deltaFromPrevKeyframe": 24.65,
+          "stepDelta": 24.65
+        },
+        {
+          "frame": 84,
+          "path": "app uis/Englify/flow-01/frame-0084.webp",
+          "deltaFromPrevKeyframe": 14.26,
+          "stepDelta": 13.07
+        },
+        {
+          "frame": 87,
+          "path": "app uis/Englify/flow-01/frame-0087.webp",
+          "deltaFromPrevKeyframe": 23.24,
+          "stepDelta": 23.24
+        },
+        {
+          "frame": 88,
+          "path": "app uis/Englify/flow-01/frame-0088.webp",
+          "deltaFromPrevKeyframe": 21.58,
+          "stepDelta": 21.58
+        },
+        {
+          "frame": 89,
+          "path": "app uis/Englify/flow-01/frame-0089.webp",
+          "deltaFromPrevKeyframe": 31.16,
+          "stepDelta": 31.16
+        },
+        {
+          "frame": 90,
+          "path": "app uis/Englify/flow-01/frame-0090.webp",
+          "deltaFromPrevKeyframe": 24.22,
+          "stepDelta": 24.22
+        },
+        {
+          "frame": 92,
+          "path": "app uis/Englify/flow-01/frame-0092.webp",
+          "deltaFromPrevKeyframe": 25.14,
+          "stepDelta": 24.66
+        },
+        {
+          "frame": 93,
+          "path": "app uis/Englify/flow-01/frame-0093.webp",
+          "deltaFromPrevKeyframe": 22.36,
+          "stepDelta": 22.36
+        },
+        {
+          "frame": 94,
+          "path": "app uis/Englify/flow-01/frame-0094.webp",
+          "deltaFromPrevKeyframe": 21.67,
+          "stepDelta": 21.67
+        },
+        {
+          "frame": 95,
+          "path": "app uis/Englify/flow-01/frame-0095.webp",
+          "deltaFromPrevKeyframe": 22.32,
+          "stepDelta": 22.32
+        },
+        {
+          "frame": 104,
+          "path": "app uis/Englify/flow-01/frame-0104.webp",
+          "deltaFromPrevKeyframe": 40.47,
+          "stepDelta": 39.38
+        },
+        {
+          "frame": 105,
+          "path": "app uis/Englify/flow-01/frame-0105.webp",
+          "deltaFromPrevKeyframe": 38.08,
+          "stepDelta": 38.08
+        },
+        {
+          "frame": 106,
+          "path": "app uis/Englify/flow-01/frame-0106.webp",
+          "deltaFromPrevKeyframe": 32.15,
+          "stepDelta": 32.15
+        },
+        {
+          "frame": 114,
+          "path": "app uis/Englify/flow-01/frame-0114.webp",
+          "deltaFromPrevKeyframe": 47.44,
+          "stepDelta": 44.14
+        },
+        {
+          "frame": 115,
+          "path": "app uis/Englify/flow-01/frame-0115.webp",
+          "deltaFromPrevKeyframe": 62.76,
+          "stepDelta": 62.76
+        },
+        {
+          "frame": 117,
+          "path": "app uis/Englify/flow-01/frame-0117.webp",
+          "deltaFromPrevKeyframe": 20.72,
+          "stepDelta": 20.72
+        },
+        {
+          "frame": 118,
+          "path": "app uis/Englify/flow-01/frame-0118.webp",
+          "deltaFromPrevKeyframe": 30.37,
+          "stepDelta": 30.37
+        },
+        {
+          "frame": 119,
+          "path": "app uis/Englify/flow-01/frame-0119.webp",
+          "deltaFromPrevKeyframe": 31.8,
+          "stepDelta": 31.8
+        },
+        {
+          "frame": 120,
+          "path": "app uis/Englify/flow-01/frame-0120.webp",
+          "deltaFromPrevKeyframe": 6.7,
+          "stepDelta": 6.7
+        },
+        {
+          "frame": 124,
+          "path": "app uis/Englify/flow-01/frame-0124.webp",
+          "deltaFromPrevKeyframe": 33.23,
+          "stepDelta": 33.26
+        },
+        {
+          "frame": 125,
+          "path": "app uis/Englify/flow-01/frame-0125.webp",
+          "deltaFromPrevKeyframe": 40.57,
+          "stepDelta": 40.57
+        },
+        {
+          "frame": 126,
+          "path": "app uis/Englify/flow-01/frame-0126.webp",
+          "deltaFromPrevKeyframe": 10.46,
+          "stepDelta": 10.46
+        },
+        {
+          "frame": 127,
+          "path": "app uis/Englify/flow-01/frame-0127.webp",
+          "deltaFromPrevKeyframe": 9.94,
+          "stepDelta": 9.94
+        },
+        {
+          "frame": 128,
+          "path": "app uis/Englify/flow-01/frame-0128.webp",
+          "deltaFromPrevKeyframe": 16.68,
+          "stepDelta": 16.68
+        },
+        {
+          "frame": 129,
+          "path": "app uis/Englify/flow-01/frame-0129.webp",
+          "deltaFromPrevKeyframe": 19.38,
+          "stepDelta": 19.38
+        },
+        {
+          "frame": 130,
+          "path": "app uis/Englify/flow-01/frame-0130.webp",
+          "deltaFromPrevKeyframe": 20.69,
+          "stepDelta": 20.69
+        },
+        {
+          "frame": 131,
+          "path": "app uis/Englify/flow-01/frame-0131.webp",
+          "deltaFromPrevKeyframe": 12.57,
+          "stepDelta": 12.57
+        },
+        {
+          "frame": 137,
+          "path": "app uis/Englify/flow-01/frame-0137.webp",
+          "deltaFromPrevKeyframe": 23.88,
+          "stepDelta": 23.41
+        },
+        {
+          "frame": 138,
+          "path": "app uis/Englify/flow-01/frame-0138.webp",
+          "deltaFromPrevKeyframe": 24.0,
+          "stepDelta": 24.0
+        },
+        {
+          "frame": 139,
+          "path": "app uis/Englify/flow-01/frame-0139.webp",
+          "deltaFromPrevKeyframe": 38.17,
+          "stepDelta": 38.17
+        },
+        {
+          "frame": 140,
+          "path": "app uis/Englify/flow-01/frame-0140.webp",
+          "deltaFromPrevKeyframe": 33.11,
+          "stepDelta": 33.11
+        },
+        {
+          "frame": 145,
+          "path": "app uis/Englify/flow-01/frame-0145.webp",
+          "deltaFromPrevKeyframe": 17.41,
+          "stepDelta": 16.16
+        },
+        {
+          "frame": 146,
+          "path": "app uis/Englify/flow-01/frame-0146.webp",
+          "deltaFromPrevKeyframe": 56.5,
+          "stepDelta": 56.5
+        },
+        {
+          "frame": 147,
+          "path": "app uis/Englify/flow-01/frame-0147.webp",
+          "deltaFromPrevKeyframe": 6.9,
+          "stepDelta": 6.9
+        },
+        {
+          "frame": 151,
+          "path": "app uis/Englify/flow-01/frame-0151.webp",
+          "deltaFromPrevKeyframe": 19.34,
+          "stepDelta": 18.91
+        },
+        {
+          "frame": 153,
+          "path": "app uis/Englify/flow-01/frame-0153.webp",
+          "deltaFromPrevKeyframe": 10.96,
+          "stepDelta": 7.5
+        },
+        {
+          "frame": 156,
+          "path": "app uis/Englify/flow-01/frame-0156.webp",
+          "deltaFromPrevKeyframe": 17.23,
+          "stepDelta": 17.38
+        },
+        {
+          "frame": 158,
+          "path": "app uis/Englify/flow-01/frame-0158.webp",
+          "deltaFromPrevKeyframe": 20.34,
+          "stepDelta": 20.34
+        },
+        {
+          "frame": 161,
+          "path": "app uis/Englify/flow-01/frame-0161.webp",
+          "deltaFromPrevKeyframe": 10.42,
+          "stepDelta": 5.4
+        },
+        {
+          "frame": 163,
+          "path": "app uis/Englify/flow-01/frame-0163.webp",
+          "deltaFromPrevKeyframe": 10.51,
+          "stepDelta": 8.88
+        },
+        {
+          "frame": 165,
+          "path": "app uis/Englify/flow-01/frame-0165.webp",
+          "deltaFromPrevKeyframe": 8.19,
+          "stepDelta": 7.77
+        },
+        {
+          "frame": 169,
+          "path": "app uis/Englify/flow-01/frame-0169.webp",
+          "deltaFromPrevKeyframe": 11.64,
+          "stepDelta": 7.05
+        },
+        {
+          "frame": 174,
+          "path": "app uis/Englify/flow-01/frame-0174.webp",
+          "deltaFromPrevKeyframe": 9.57,
+          "stepDelta": 5.33
+        },
+        {
+          "frame": 186,
+          "path": "app uis/Englify/flow-01/frame-0186.webp",
+          "deltaFromPrevKeyframe": 27.96,
+          "stepDelta": 29.13
+        },
+        {
+          "frame": 187,
+          "path": "app uis/Englify/flow-01/frame-0187.webp",
+          "deltaFromPrevKeyframe": 29.41,
+          "stepDelta": 29.41
+        },
+        {
+          "frame": 236,
+          "path": "app uis/Englify/flow-01/frame-0236.webp",
+          "deltaFromPrevKeyframe": 7.85,
+          "stepDelta": 11.27
+        },
+        {
+          "frame": 237,
+          "path": "app uis/Englify/flow-01/frame-0237.webp",
+          "deltaFromPrevKeyframe": 14.11,
+          "stepDelta": 14.11
+        },
+        {
+          "frame": 238,
+          "path": "app uis/Englify/flow-01/frame-0238.webp",
+          "deltaFromPrevKeyframe": 33.98,
+          "stepDelta": 33.98
+        },
+        {
+          "frame": 239,
+          "path": "app uis/Englify/flow-01/frame-0239.webp",
+          "deltaFromPrevKeyframe": 12.42,
+          "stepDelta": 12.42
+        },
+        {
+          "frame": 253,
+          "path": "app uis/Englify/flow-01/frame-0253.webp",
+          "deltaFromPrevKeyframe": 34.97,
+          "stepDelta": 35.57
+        },
+        {
+          "frame": 254,
+          "path": "app uis/Englify/flow-01/frame-0254.webp",
+          "deltaFromPrevKeyframe": 7.69,
+          "stepDelta": 7.69
+        },
+        {
+          "frame": 263,
+          "path": "app uis/Englify/flow-01/frame-0263.webp",
+          "deltaFromPrevKeyframe": 7.82,
+          "stepDelta": 6.61
+        },
+        {
+          "frame": 284,
+          "path": "app uis/Englify/flow-01/frame-0284.webp",
+          "deltaFromPrevKeyframe": 72.02,
+          "stepDelta": 71.1
+        },
+        {
+          "frame": 285,
+          "path": "app uis/Englify/flow-01/frame-0285.webp",
+          "deltaFromPrevKeyframe": 45.88,
+          "stepDelta": 45.88
+        },
+        {
+          "frame": 291,
+          "path": "app uis/Englify/flow-01/frame-0291.webp",
+          "deltaFromPrevKeyframe": 55.72,
+          "stepDelta": 56.29
+        },
+        {
+          "frame": 292,
+          "path": "app uis/Englify/flow-01/frame-0292.webp",
+          "deltaFromPrevKeyframe": 102.54,
+          "stepDelta": 102.54
+        },
+        {
+          "frame": 293,
+          "path": "app uis/Englify/flow-01/frame-0293.webp",
+          "deltaFromPrevKeyframe": 20.92,
+          "stepDelta": 20.92
+        },
+        {
+          "frame": 337,
+          "path": "app uis/Englify/flow-01/frame-0337.webp",
+          "deltaFromPrevKeyframe": 11.63,
+          "stepDelta": 10.64
+        },
+        {
+          "frame": 338,
+          "path": "app uis/Englify/flow-01/frame-0338.webp",
+          "deltaFromPrevKeyframe": 7.75,
+          "stepDelta": 7.75
+        },
+        {
+          "frame": 359,
+          "path": "app uis/Englify/flow-01/frame-0359.webp",
+          "deltaFromPrevKeyframe": 17.14,
+          "stepDelta": 13.57
+        },
+        {
+          "frame": 360,
+          "path": "app uis/Englify/flow-01/frame-0360.webp",
+          "deltaFromPrevKeyframe": 27.2,
+          "stepDelta": 27.2
+        },
+        {
+          "frame": 361,
+          "path": "app uis/Englify/flow-01/frame-0361.webp",
+          "deltaFromPrevKeyframe": 17.57,
+          "stepDelta": 17.57
+        },
+        {
+          "frame": 372,
+          "path": "app uis/Englify/flow-01/frame-0372.webp",
+          "deltaFromPrevKeyframe": 6.85,
+          "stepDelta": 6.29
+        },
+        {
+          "frame": 396,
+          "path": "app uis/Englify/flow-01/frame-0396.webp",
+          "deltaFromPrevKeyframe": 84.59,
+          "stepDelta": 83.96
+        },
+        {
+          "frame": 397,
+          "path": "app uis/Englify/flow-01/frame-0397.webp",
+          "deltaFromPrevKeyframe": 30.16,
+          "stepDelta": 30.16
+        },
+        {
+          "frame": 400,
+          "path": "app uis/Englify/flow-01/frame-0400.webp",
+          "deltaFromPrevKeyframe": 25.75,
+          "stepDelta": 25.63
+        },
+        {
+          "frame": 401,
+          "path": "app uis/Englify/flow-01/frame-0401.webp",
+          "deltaFromPrevKeyframe": 68.64,
+          "stepDelta": 68.64
+        },
+        {
+          "frame": 402,
+          "path": "app uis/Englify/flow-01/frame-0402.webp",
+          "deltaFromPrevKeyframe": 48.94,
+          "stepDelta": 48.94
+        },
+        {
+          "frame": 403,
+          "path": "app uis/Englify/flow-01/frame-0403.webp",
+          "deltaFromPrevKeyframe": 12.38,
+          "stepDelta": 12.38
+        },
+        {
+          "frame": 422,
+          "path": "app uis/Englify/flow-01/frame-0422.webp",
+          "deltaFromPrevKeyframe": 25.22,
+          "stepDelta": 25.12
+        },
+        {
+          "frame": 423,
+          "path": "app uis/Englify/flow-01/frame-0423.webp",
+          "deltaFromPrevKeyframe": 8.68,
+          "stepDelta": 8.68
+        },
+        {
+          "frame": 426,
+          "path": "app uis/Englify/flow-01/frame-0426.webp",
+          "deltaFromPrevKeyframe": 7.7,
+          "stepDelta": 8.44
+        },
+        {
+          "frame": 427,
+          "path": "app uis/Englify/flow-01/frame-0427.webp",
+          "deltaFromPrevKeyframe": 85.17,
+          "stepDelta": 85.17
+        },
+        {
+          "frame": 428,
+          "path": "app uis/Englify/flow-01/frame-0428.webp",
+          "deltaFromPrevKeyframe": 7.37,
+          "stepDelta": 7.37
+        },
+        {
+          "frame": 432,
+          "path": "app uis/Englify/flow-01/frame-0432.webp",
+          "deltaFromPrevKeyframe": 55.1,
+          "stepDelta": 55.64
+        },
+        {
+          "frame": 433,
+          "path": "app uis/Englify/flow-01/frame-0433.webp",
+          "deltaFromPrevKeyframe": 105.31,
+          "stepDelta": 105.31
+        },
+        {
+          "frame": 434,
+          "path": "app uis/Englify/flow-01/frame-0434.webp",
+          "deltaFromPrevKeyframe": 22.49,
+          "stepDelta": 22.49
+        },
+        {
+          "frame": 445,
+          "path": "app uis/Englify/flow-01/frame-0445.webp",
+          "deltaFromPrevKeyframe": 17.26,
+          "stepDelta": 18.84
+        },
+        {
+          "frame": 446,
+          "path": "app uis/Englify/flow-01/frame-0446.webp",
+          "deltaFromPrevKeyframe": 19.99,
+          "stepDelta": 19.99
+        },
+        {
+          "frame": 450,
+          "path": "app uis/Englify/flow-01/frame-0450.webp",
+          "deltaFromPrevKeyframe": 43.9,
+          "stepDelta": 44.53
+        },
+        {
+          "frame": 451,
+          "path": "app uis/Englify/flow-01/frame-0451.webp",
+          "deltaFromPrevKeyframe": 68.37,
+          "stepDelta": 68.37
+        },
+        {
+          "frame": 455,
+          "path": "app uis/Englify/flow-01/frame-0455.webp",
+          "deltaFromPrevKeyframe": 41.75,
+          "stepDelta": 42.14
+        },
+        {
+          "frame": 456,
+          "path": "app uis/Englify/flow-01/frame-0456.webp",
+          "deltaFromPrevKeyframe": 93.04,
+          "stepDelta": 93.04
+        },
+        {
+          "frame": 457,
+          "path": "app uis/Englify/flow-01/frame-0457.webp",
+          "deltaFromPrevKeyframe": 10.86,
+          "stepDelta": 10.86
+        },
+        {
+          "frame": 458,
+          "path": "app uis/Englify/flow-01/frame-0458.webp",
+          "deltaFromPrevKeyframe": 8.19,
+          "stepDelta": 8.19
+        },
+        {
+          "frame": 467,
+          "path": "app uis/Englify/flow-01/frame-0467.webp",
+          "deltaFromPrevKeyframe": 23.78,
+          "stepDelta": 21.23
+        },
+        {
+          "frame": 468,
+          "path": "app uis/Englify/flow-01/frame-0468.webp",
+          "deltaFromPrevKeyframe": 13.34,
+          "stepDelta": 13.34
+        },
+        {
+          "frame": 471,
+          "path": "app uis/Englify/flow-01/frame-0471.webp",
+          "deltaFromPrevKeyframe": 60.7,
+          "stepDelta": 61.27
+        },
+        {
+          "frame": 472,
+          "path": "app uis/Englify/flow-01/frame-0472.webp",
+          "deltaFromPrevKeyframe": 50.57,
+          "stepDelta": 50.57
+        },
+        {
+          "frame": 478,
+          "path": "app uis/Englify/flow-01/frame-0478.webp",
+          "deltaFromPrevKeyframe": 26.78,
+          "stepDelta": 26.79
+        },
+        {
+          "frame": 479,
+          "path": "app uis/Englify/flow-01/frame-0479.webp",
+          "deltaFromPrevKeyframe": 68.4,
+          "stepDelta": 68.4
+        },
+        {
+          "frame": 480,
+          "path": "app uis/Englify/flow-01/frame-0480.webp",
+          "deltaFromPrevKeyframe": 61.09,
+          "stepDelta": 61.09
+        },
+        {
+          "frame": 490,
+          "path": "app uis/Englify/flow-01/frame-0490.webp",
+          "deltaFromPrevKeyframe": 7.65,
+          "stepDelta": 7.2
+        },
+        {
+          "frame": 498,
+          "path": "app uis/Englify/flow-01/frame-0498.webp",
+          "deltaFromPrevKeyframe": 71.13,
+          "stepDelta": 70.27
+        },
+        {
+          "frame": 499,
+          "path": "app uis/Englify/flow-01/frame-0499.webp",
+          "deltaFromPrevKeyframe": 45.81,
+          "stepDelta": 45.81
+        },
+        {
+          "frame": 502,
+          "path": "app uis/Englify/flow-01/frame-0502.webp",
+          "deltaFromPrevKeyframe": 34.15,
+          "stepDelta": 34.09
+        },
+        {
+          "frame": 503,
+          "path": "app uis/Englify/flow-01/frame-0503.webp",
+          "deltaFromPrevKeyframe": 83.5,
+          "stepDelta": 83.5
+        },
+        {
+          "frame": 504,
+          "path": "app uis/Englify/flow-01/frame-0504.webp",
+          "deltaFromPrevKeyframe": 28.92,
+          "stepDelta": 28.92
+        },
+        {
+          "frame": 509,
+          "path": "app uis/Englify/flow-01/frame-0509.webp",
+          "deltaFromPrevKeyframe": 7.51,
+          "stepDelta": 6.73
+        },
+        {
+          "frame": 577,
+          "path": "app uis/Englify/flow-01/frame-0577.webp",
+          "deltaFromPrevKeyframe": 12.43,
+          "stepDelta": 12.79
+        },
+        {
+          "frame": 589,
+          "path": "app uis/Englify/flow-01/frame-0589.webp",
+          "deltaFromPrevKeyframe": 6.99,
+          "stepDelta": 6.62
+        },
+        {
+          "frame": 630,
+          "path": "app uis/Englify/flow-01/frame-0630.webp",
+          "deltaFromPrevKeyframe": 11.19,
+          "stepDelta": 8.33
+        },
+        {
+          "frame": 631,
+          "path": "app uis/Englify/flow-01/frame-0631.webp",
+          "deltaFromPrevKeyframe": 84.37,
+          "stepDelta": 84.37
+        },
+        {
+          "frame": 632,
+          "path": "app uis/Englify/flow-01/frame-0632.webp",
+          "deltaFromPrevKeyframe": 16.71,
+          "stepDelta": 16.71
+        },
+        {
+          "frame": 635,
+          "path": "app uis/Englify/flow-01/frame-0635.webp",
+          "deltaFromPrevKeyframe": 25.85,
+          "stepDelta": 25.77
+        },
+        {
+          "frame": 636,
+          "path": "app uis/Englify/flow-01/frame-0636.webp",
+          "deltaFromPrevKeyframe": 68.27,
+          "stepDelta": 68.27
+        },
+        {
+          "frame": 637,
+          "path": "app uis/Englify/flow-01/frame-0637.webp",
+          "deltaFromPrevKeyframe": 60.91,
+          "stepDelta": 60.91
+        },
+        {
+          "frame": 646,
+          "path": "app uis/Englify/flow-01/frame-0646.webp",
+          "deltaFromPrevKeyframe": 7.02,
+          "stepDelta": 6.44
+        },
+        {
+          "frame": 655,
+          "path": "app uis/Englify/flow-01/frame-0655.webp",
+          "deltaFromPrevKeyframe": 45.75,
+          "stepDelta": 44.34
+        },
+        {
+          "frame": 656,
+          "path": "app uis/Englify/flow-01/frame-0656.webp",
+          "deltaFromPrevKeyframe": 66.62,
+          "stepDelta": 66.62
+        },
+        {
+          "frame": 659,
+          "path": "app uis/Englify/flow-01/frame-0659.webp",
+          "deltaFromPrevKeyframe": 67.61,
+          "stepDelta": 68.62
+        },
+        {
+          "frame": 660,
+          "path": "app uis/Englify/flow-01/frame-0660.webp",
+          "deltaFromPrevKeyframe": 64.12,
+          "stepDelta": 64.12
+        },
+        {
+          "frame": 661,
+          "path": "app uis/Englify/flow-01/frame-0661.webp",
+          "deltaFromPrevKeyframe": 25.84,
+          "stepDelta": 25.84
+        },
+        {
+          "frame": 675,
+          "path": "app uis/Englify/flow-01/frame-0675.webp",
+          "deltaFromPrevKeyframe": 24.38,
+          "stepDelta": 24.35
+        },
+        {
+          "frame": 676,
+          "path": "app uis/Englify/flow-01/frame-0676.webp",
+          "deltaFromPrevKeyframe": 29.05,
+          "stepDelta": 29.05
+        },
+        {
+          "frame": 677,
+          "path": "app uis/Englify/flow-01/frame-0677.webp",
+          "deltaFromPrevKeyframe": 21.55,
+          "stepDelta": 21.55
+        },
+        {
+          "frame": 678,
+          "path": "app uis/Englify/flow-01/frame-0678.webp",
+          "deltaFromPrevKeyframe": 10.05,
+          "stepDelta": 10.05
+        },
+        {
+          "frame": 679,
+          "path": "app uis/Englify/flow-01/frame-0679.webp",
+          "deltaFromPrevKeyframe": 9.95,
+          "stepDelta": 9.95
+        },
+        {
+          "frame": 680,
+          "path": "app uis/Englify/flow-01/frame-0680.webp",
+          "deltaFromPrevKeyframe": 25.63,
+          "stepDelta": 25.63
+        },
+        {
+          "frame": 681,
+          "path": "app uis/Englify/flow-01/frame-0681.webp",
+          "deltaFromPrevKeyframe": 25.92,
+          "stepDelta": 25.92
+        },
+        {
+          "frame": 682,
+          "path": "app uis/Englify/flow-01/frame-0682.webp",
+          "deltaFromPrevKeyframe": 26.74,
+          "stepDelta": 26.74
+        },
+        {
+          "frame": 683,
+          "path": "app uis/Englify/flow-01/frame-0683.webp",
+          "deltaFromPrevKeyframe": 28.48,
+          "stepDelta": 28.48
+        },
+        {
+          "frame": 684,
+          "path": "app uis/Englify/flow-01/frame-0684.webp",
+          "deltaFromPrevKeyframe": 9.79,
+          "stepDelta": 9.79
+        },
+        {
+          "frame": 689,
+          "path": "app uis/Englify/flow-01/frame-0689.webp",
+          "deltaFromPrevKeyframe": 60.94,
+          "stepDelta": 61.01
+        },
+        {
+          "frame": 690,
+          "path": "app uis/Englify/flow-01/frame-0690.webp",
+          "deltaFromPrevKeyframe": 10.19,
+          "stepDelta": 10.19
+        },
+        {
+          "frame": 692,
+          "path": "app uis/Englify/flow-01/frame-0692.webp",
+          "deltaFromPrevKeyframe": 8.79,
+          "stepDelta": 8.47
+        },
+        {
+          "frame": 696,
+          "path": "app uis/Englify/flow-01/frame-0696.webp",
+          "deltaFromPrevKeyframe": 30.66,
+          "stepDelta": 30.66
+        },
+        {
+          "frame": 697,
+          "path": "app uis/Englify/flow-01/frame-0697.webp",
+          "deltaFromPrevKeyframe": 30.23,
+          "stepDelta": 30.23
+        },
+        {
+          "frame": 698,
+          "path": "app uis/Englify/flow-01/frame-0698.webp",
+          "deltaFromPrevKeyframe": 28.06,
+          "stepDelta": 28.06
+        },
+        {
+          "frame": 699,
+          "path": "app uis/Englify/flow-01/frame-0699.webp",
+          "deltaFromPrevKeyframe": 37.44,
+          "stepDelta": 37.44
+        },
+        {
+          "frame": 700,
+          "path": "app uis/Englify/flow-01/frame-0700.webp",
+          "deltaFromPrevKeyframe": 16.85,
+          "stepDelta": 16.85
+        },
+        {
+          "frame": 701,
+          "path": "app uis/Englify/flow-01/frame-0701.webp",
+          "deltaFromPrevKeyframe": 24.12,
+          "stepDelta": 24.12
+        },
+        {
+          "frame": 702,
+          "path": "app uis/Englify/flow-01/frame-0702.webp",
+          "deltaFromPrevKeyframe": 23.22,
+          "stepDelta": 23.22
+        },
+        {
+          "frame": 703,
+          "path": "app uis/Englify/flow-01/frame-0703.webp",
+          "deltaFromPrevKeyframe": 32.37,
+          "stepDelta": 32.37
+        },
+        {
+          "frame": 704,
+          "path": "app uis/Englify/flow-01/frame-0704.webp",
+          "deltaFromPrevKeyframe": 8.03,
+          "stepDelta": 8.03
+        },
+        {
+          "frame": 706,
+          "path": "app uis/Englify/flow-01/frame-0706.webp",
+          "deltaFromPrevKeyframe": 37.68,
+          "stepDelta": 37.39
+        },
+        {
+          "frame": 709,
+          "path": "app uis/Englify/flow-01/frame-0709.webp",
+          "deltaFromPrevKeyframe": 16.79,
+          "stepDelta": 16.79
+        },
+        {
+          "frame": 710,
+          "path": "app uis/Englify/flow-01/frame-0710.webp",
+          "deltaFromPrevKeyframe": 19.3,
+          "stepDelta": 19.3
+        },
+        {
+          "frame": 711,
+          "path": "app uis/Englify/flow-01/frame-0711.webp",
+          "deltaFromPrevKeyframe": 25.22,
+          "stepDelta": 25.22
+        },
+        {
+          "frame": 712,
+          "path": "app uis/Englify/flow-01/frame-0712.webp",
+          "deltaFromPrevKeyframe": 17.32,
+          "stepDelta": 17.32
+        },
+        {
+          "frame": 713,
+          "path": "app uis/Englify/flow-01/frame-0713.webp",
+          "deltaFromPrevKeyframe": 12.58,
+          "stepDelta": 12.58
+        },
+        {
+          "frame": 715,
+          "path": "app uis/Englify/flow-01/frame-0715.webp",
+          "deltaFromPrevKeyframe": 15.23,
+          "stepDelta": 14.8
+        },
+        {
+          "frame": 716,
+          "path": "app uis/Englify/flow-01/frame-0716.webp",
+          "deltaFromPrevKeyframe": 30.78,
+          "stepDelta": 30.78
+        },
+        {
+          "frame": 717,
+          "path": "app uis/Englify/flow-01/frame-0717.webp",
+          "deltaFromPrevKeyframe": 12.81,
+          "stepDelta": 12.81
+        },
+        {
+          "frame": 718,
+          "path": "app uis/Englify/flow-01/frame-0718.webp",
+          "deltaFromPrevKeyframe": 11.3,
+          "stepDelta": 11.3
+        },
+        {
+          "frame": 721,
+          "path": "app uis/Englify/flow-01/frame-0721.webp",
+          "deltaFromPrevKeyframe": 41.18,
+          "stepDelta": 40.92
+        },
+        {
+          "frame": 722,
+          "path": "app uis/Englify/flow-01/frame-0722.webp",
+          "deltaFromPrevKeyframe": 34.16,
+          "stepDelta": 34.16
+        },
+        {
+          "frame": 727,
+          "path": "app uis/Englify/flow-01/frame-0727.webp",
+          "deltaFromPrevKeyframe": 6.7,
+          "stepDelta": 1.14
+        },
+        {
+          "frame": 729,
+          "path": "app uis/Englify/flow-01/frame-0729.webp",
+          "deltaFromPrevKeyframe": 39.06,
+          "stepDelta": 38.92
+        },
+        {
+          "frame": 730,
+          "path": "app uis/Englify/flow-01/frame-0730.webp",
+          "deltaFromPrevKeyframe": 38.52,
+          "stepDelta": 38.52
+        },
+        {
+          "frame": 731,
+          "path": "app uis/Englify/flow-01/frame-0731.webp",
+          "deltaFromPrevKeyframe": 32.62,
+          "stepDelta": 32.62
+        },
+        {
+          "frame": 732,
+          "path": "app uis/Englify/flow-01/frame-0732.webp",
+          "deltaFromPrevKeyframe": 18.78,
+          "stepDelta": 18.78
+        },
+        {
+          "frame": 735,
+          "path": "app uis/Englify/flow-01/frame-0735.webp",
+          "deltaFromPrevKeyframe": 36.94,
+          "stepDelta": 37.05
+        },
+        {
+          "frame": 736,
+          "path": "app uis/Englify/flow-01/frame-0736.webp",
+          "deltaFromPrevKeyframe": 111.73,
+          "stepDelta": 111.73
+        },
+        {
+          "frame": 737,
+          "path": "app uis/Englify/flow-01/frame-0737.webp",
+          "deltaFromPrevKeyframe": 16.29,
+          "stepDelta": 16.29
+        },
+        {
+          "frame": 740,
+          "path": "app uis/Englify/flow-01/frame-0740.webp",
+          "deltaFromPrevKeyframe": 12.31,
+          "stepDelta": 12.46
+        },
+        {
+          "frame": 741,
+          "path": "app uis/Englify/flow-01/frame-0741.webp",
+          "deltaFromPrevKeyframe": 67.1,
+          "stepDelta": 67.1
+        },
+        {
+          "frame": 742,
+          "path": "app uis/Englify/flow-01/frame-0742.webp",
+          "deltaFromPrevKeyframe": 32.95,
+          "stepDelta": 32.95
+        },
+        {
+          "frame": 744,
+          "path": "app uis/Englify/flow-01/frame-0744.webp",
+          "deltaFromPrevKeyframe": 58.74,
+          "stepDelta": 58.97
+        },
+        {
+          "frame": 745,
+          "path": "app uis/Englify/flow-01/frame-0745.webp",
+          "deltaFromPrevKeyframe": 59.7,
+          "stepDelta": 59.7
+        },
+        {
+          "frame": 746,
+          "path": "app uis/Englify/flow-01/frame-0746.webp",
+          "deltaFromPrevKeyframe": 46.95,
+          "stepDelta": 46.95
+        },
+        {
+          "frame": 747,
+          "path": "app uis/Englify/flow-01/frame-0747.webp",
+          "deltaFromPrevKeyframe": 111.55,
+          "stepDelta": 111.55
+        },
+        {
+          "frame": 748,
+          "path": "app uis/Englify/flow-01/frame-0748.webp",
+          "deltaFromPrevKeyframe": 9.66,
+          "stepDelta": 9.66
+        },
+        {
+          "frame": 749,
+          "path": "app uis/Englify/flow-01/frame-0749.webp",
+          "deltaFromPrevKeyframe": 40.33,
+          "stepDelta": 40.33
+        },
+        {
+          "frame": 750,
+          "path": "app uis/Englify/flow-01/frame-0750.webp",
+          "deltaFromPrevKeyframe": 67.21,
+          "stepDelta": 67.21
+        },
+        {
+          "frame": 751,
+          "path": "app uis/Englify/flow-01/frame-0751.webp",
+          "deltaFromPrevKeyframe": 7.77,
+          "stepDelta": 7.77
+        },
+        {
+          "frame": 758,
+          "path": "app uis/Englify/flow-01/frame-0758.webp",
+          "deltaFromPrevKeyframe": 71.0,
+          "stepDelta": 71.09
+        },
+        {
+          "frame": 761,
+          "path": "app uis/Englify/flow-01/frame-0761.webp",
+          "deltaFromPrevKeyframe": 53.61,
+          "stepDelta": 53.5
+        },
+        {
+          "frame": 762,
+          "path": "app uis/Englify/flow-01/frame-0762.webp",
+          "deltaFromPrevKeyframe": 42.14,
+          "stepDelta": 42.14
+        },
+        {
+          "frame": 763,
+          "path": "app uis/Englify/flow-01/frame-0763.webp",
+          "deltaFromPrevKeyframe": 31.96,
+          "stepDelta": 31.96
+        },
+        {
+          "frame": 764,
+          "path": "app uis/Englify/flow-01/frame-0764.webp",
+          "deltaFromPrevKeyframe": 27.32,
+          "stepDelta": 27.32
+        },
+        {
+          "frame": 765,
+          "path": "app uis/Englify/flow-01/frame-0765.webp",
+          "deltaFromPrevKeyframe": 29.36,
+          "stepDelta": 29.36
+        },
+        {
+          "frame": 766,
+          "path": "app uis/Englify/flow-01/frame-0766.webp",
+          "deltaFromPrevKeyframe": 33.42,
+          "stepDelta": 33.42
+        },
+        {
+          "frame": 767,
+          "path": "app uis/Englify/flow-01/frame-0767.webp",
+          "deltaFromPrevKeyframe": 27.54,
+          "stepDelta": 27.54
+        },
+        {
+          "frame": 769,
+          "path": "app uis/Englify/flow-01/frame-0769.webp",
+          "deltaFromPrevKeyframe": 40.49,
+          "stepDelta": 40.05
+        },
+        {
+          "frame": 770,
+          "path": "app uis/Englify/flow-01/frame-0770.webp",
+          "deltaFromPrevKeyframe": 49.96,
+          "stepDelta": 49.96
+        },
+        {
+          "frame": 775,
+          "path": "app uis/Englify/flow-01/frame-0775.webp",
+          "deltaFromPrevKeyframe": 20.99,
+          "stepDelta": 16.99
+        },
+        {
+          "frame": 778,
+          "path": "app uis/Englify/flow-01/frame-0778.webp",
+          "deltaFromPrevKeyframe": 13.57,
+          "stepDelta": 13.54
+        },
+        {
+          "frame": 779,
+          "path": "app uis/Englify/flow-01/frame-0779.webp",
+          "deltaFromPrevKeyframe": 11.92,
+          "stepDelta": 11.92
+        },
+        {
+          "frame": 783,
+          "path": "app uis/Englify/flow-01/frame-0783.webp",
+          "deltaFromPrevKeyframe": 10.78,
+          "stepDelta": 10.26
+        },
+        {
+          "frame": 784,
+          "path": "app uis/Englify/flow-01/frame-0784.webp",
+          "deltaFromPrevKeyframe": 64.17,
+          "stepDelta": 64.17
+        },
+        {
+          "frame": 785,
+          "path": "app uis/Englify/flow-01/frame-0785.webp",
+          "deltaFromPrevKeyframe": 20.16,
+          "stepDelta": 20.16
+        },
+        {
+          "frame": 787,
+          "path": "app uis/Englify/flow-01/frame-0787.webp",
+          "deltaFromPrevKeyframe": 36.14,
+          "stepDelta": 35.75
+        },
+        {
+          "frame": 788,
+          "path": "app uis/Englify/flow-01/frame-0788.webp",
+          "deltaFromPrevKeyframe": 36.97,
+          "stepDelta": 36.97
+        },
+        {
+          "frame": 789,
+          "path": "app uis/Englify/flow-01/frame-0789.webp",
+          "deltaFromPrevKeyframe": 28.86,
+          "stepDelta": 28.86
+        },
+        {
+          "frame": 790,
+          "path": "app uis/Englify/flow-01/frame-0790.webp",
+          "deltaFromPrevKeyframe": 24.68,
+          "stepDelta": 24.68
+        },
+        {
+          "frame": 792,
+          "path": "app uis/Englify/flow-01/frame-0792.webp",
+          "deltaFromPrevKeyframe": 14.63,
+          "stepDelta": 14.59
+        },
+        {
+          "frame": 793,
+          "path": "app uis/Englify/flow-01/frame-0793.webp",
+          "deltaFromPrevKeyframe": 58.94,
+          "stepDelta": 58.94
+        },
+        {
+          "frame": 794,
+          "path": "app uis/Englify/flow-01/frame-0794.webp",
+          "deltaFromPrevKeyframe": 7.11,
+          "stepDelta": 7.11
+        },
+        {
+          "frame": 798,
+          "path": "app uis/Englify/flow-01/frame-0798.webp",
+          "deltaFromPrevKeyframe": 11.54,
+          "stepDelta": 10.46
+        },
+        {
+          "frame": 799,
+          "path": "app uis/Englify/flow-01/frame-0799.webp",
+          "deltaFromPrevKeyframe": 57.64,
+          "stepDelta": 57.64
+        },
+        {
+          "frame": 800,
+          "path": "app uis/Englify/flow-01/frame-0800.webp",
+          "deltaFromPrevKeyframe": 15.08,
+          "stepDelta": 15.08
+        },
+        {
+          "frame": 801,
+          "path": "app uis/Englify/flow-01/frame-0801.webp",
+          "deltaFromPrevKeyframe": 41.05,
+          "stepDelta": 41.05
+        },
+        {
+          "frame": 802,
+          "path": "app uis/Englify/flow-01/frame-0802.webp",
+          "deltaFromPrevKeyframe": 28.91,
+          "stepDelta": 28.91
+        },
+        {
+          "frame": 803,
+          "path": "app uis/Englify/flow-01/frame-0803.webp",
+          "deltaFromPrevKeyframe": 21.49,
+          "stepDelta": 21.49
+        },
+        {
+          "frame": 806,
+          "path": "app uis/Englify/flow-01/frame-0806.webp",
+          "deltaFromPrevKeyframe": 16.46,
+          "stepDelta": 13.39
+        },
+        {
+          "frame": 807,
+          "path": "app uis/Englify/flow-01/frame-0807.webp",
+          "deltaFromPrevKeyframe": 40.33,
+          "stepDelta": 40.33
+        },
+        {
+          "frame": 808,
+          "path": "app uis/Englify/flow-01/frame-0808.webp",
+          "deltaFromPrevKeyframe": 15.12,
+          "stepDelta": 15.12
+        },
+        {
+          "frame": 814,
+          "path": "app uis/Englify/flow-01/frame-0814.webp",
+          "deltaFromPrevKeyframe": 19.4,
+          "stepDelta": 14.92
+        },
+        {
+          "frame": 818,
+          "path": "app uis/Englify/flow-01/frame-0818.webp",
+          "deltaFromPrevKeyframe": 31.34,
+          "stepDelta": 31.85
+        },
+        {
+          "frame": 819,
+          "path": "app uis/Englify/flow-01/frame-0819.webp",
+          "deltaFromPrevKeyframe": 29.46,
+          "stepDelta": 29.46
+        },
+        {
+          "frame": 820,
+          "path": "app uis/Englify/flow-01/frame-0820.webp",
+          "deltaFromPrevKeyframe": 23.15,
+          "stepDelta": 23.15
+        },
+        {
+          "frame": 821,
+          "path": "app uis/Englify/flow-01/frame-0821.webp",
+          "deltaFromPrevKeyframe": 12.9,
+          "stepDelta": 12.9
+        },
+        {
+          "frame": 822,
+          "path": "app uis/Englify/flow-01/frame-0822.webp",
+          "deltaFromPrevKeyframe": 9.61,
+          "stepDelta": 9.61
+        },
+        {
+          "frame": 823,
+          "path": "app uis/Englify/flow-01/frame-0823.webp",
+          "deltaFromPrevKeyframe": 7.75,
+          "stepDelta": 7.75
+        },
+        {
+          "frame": 828,
+          "path": "app uis/Englify/flow-01/frame-0828.webp",
+          "deltaFromPrevKeyframe": 17.18,
+          "stepDelta": 19.14
+        },
+        {
+          "frame": 829,
+          "path": "app uis/Englify/flow-01/frame-0829.webp",
+          "deltaFromPrevKeyframe": 20.3,
+          "stepDelta": 20.3
+        },
+        {
+          "frame": 830,
+          "path": "app uis/Englify/flow-01/frame-0830.webp",
+          "deltaFromPrevKeyframe": 13.96,
+          "stepDelta": 13.96
+        },
+        {
+          "frame": 834,
+          "path": "app uis/Englify/flow-01/frame-0834.webp",
+          "deltaFromPrevKeyframe": 10.61,
+          "stepDelta": 10.54
+        },
+        {
+          "frame": 836,
+          "path": "app uis/Englify/flow-01/frame-0836.webp",
+          "deltaFromPrevKeyframe": 7.45,
+          "stepDelta": 5.55
+        },
+        {
+          "frame": 838,
+          "path": "app uis/Englify/flow-01/frame-0838.webp",
+          "deltaFromPrevKeyframe": 33.21,
+          "stepDelta": 33.18
+        },
+        {
+          "frame": 839,
+          "path": "app uis/Englify/flow-01/frame-0839.webp",
+          "deltaFromPrevKeyframe": 46.95,
+          "stepDelta": 46.95
+        },
+        {
+          "frame": 840,
+          "path": "app uis/Englify/flow-01/frame-0840.webp",
+          "deltaFromPrevKeyframe": 11.94,
+          "stepDelta": 11.94
+        },
+        {
+          "frame": 841,
+          "path": "app uis/Englify/flow-01/frame-0841.webp",
+          "deltaFromPrevKeyframe": 59.19,
+          "stepDelta": 59.19
+        },
+        {
+          "frame": 849,
+          "path": "app uis/Englify/flow-01/frame-0849.webp",
+          "deltaFromPrevKeyframe": 6.52,
+          "stepDelta": 5.77
+        },
+        {
+          "frame": 850,
+          "path": "app uis/Englify/flow-01/frame-0850.webp",
+          "deltaFromPrevKeyframe": 16.37,
+          "stepDelta": 16.37
+        },
+        {
+          "frame": 851,
+          "path": "app uis/Englify/flow-01/frame-0851.webp",
+          "deltaFromPrevKeyframe": 8.79,
+          "stepDelta": 8.79
+        },
+        {
+          "frame": 852,
+          "path": "app uis/Englify/flow-01/frame-0852.webp",
+          "deltaFromPrevKeyframe": 9.05,
+          "stepDelta": 9.05
+        },
+        {
+          "frame": 854,
+          "path": "app uis/Englify/flow-01/frame-0854.webp",
+          "deltaFromPrevKeyframe": 6.99,
+          "stepDelta": 2.48
+        },
+        {
+          "frame": 855,
+          "path": "app uis/Englify/flow-01/frame-0855.webp",
+          "deltaFromPrevKeyframe": 6.88,
+          "stepDelta": 6.88
+        },
+        {
+          "frame": 857,
+          "path": "app uis/Englify/flow-01/frame-0857.webp",
+          "deltaFromPrevKeyframe": 7.75,
+          "stepDelta": 7.57
+        },
+        {
+          "frame": 858,
+          "path": "app uis/Englify/flow-01/frame-0858.webp",
+          "deltaFromPrevKeyframe": 9.73,
+          "stepDelta": 9.73
+        },
+        {
+          "frame": 859,
+          "path": "app uis/Englify/flow-01/frame-0859.webp",
+          "deltaFromPrevKeyframe": 9.93,
+          "stepDelta": 9.93
+        },
+        {
+          "frame": 860,
+          "path": "app uis/Englify/flow-01/frame-0860.webp",
+          "deltaFromPrevKeyframe": 10.39,
+          "stepDelta": 10.39
+        },
+        {
+          "frame": 861,
+          "path": "app uis/Englify/flow-01/frame-0861.webp",
+          "deltaFromPrevKeyframe": 8.07,
+          "stepDelta": 8.07
+        },
+        {
+          "frame": 862,
+          "path": "app uis/Englify/flow-01/frame-0862.webp",
+          "deltaFromPrevKeyframe": 8.1,
+          "stepDelta": 8.1
+        },
+        {
+          "frame": 863,
+          "path": "app uis/Englify/flow-01/frame-0863.webp",
+          "deltaFromPrevKeyframe": 7.45,
+          "stepDelta": 7.45
+        },
+        {
+          "frame": 864,
+          "path": "app uis/Englify/flow-01/frame-0864.webp",
+          "deltaFromPrevKeyframe": 8.47,
+          "stepDelta": 8.47
+        },
+        {
+          "frame": 865,
+          "path": "app uis/Englify/flow-01/frame-0865.webp",
+          "deltaFromPrevKeyframe": 10.34,
+          "stepDelta": 10.34
+        },
+        {
+          "frame": 866,
+          "path": "app uis/Englify/flow-01/frame-0866.webp",
+          "deltaFromPrevKeyframe": 8.59,
+          "stepDelta": 8.59
+        },
+        {
+          "frame": 867,
+          "path": "app uis/Englify/flow-01/frame-0867.webp",
+          "deltaFromPrevKeyframe": 8.67,
+          "stepDelta": 8.67
+        },
+        {
+          "frame": 868,
+          "path": "app uis/Englify/flow-01/frame-0868.webp",
+          "deltaFromPrevKeyframe": 6.7,
+          "stepDelta": 6.7
+        },
+        {
+          "frame": 873,
+          "path": "app uis/Englify/flow-01/frame-0873.webp",
+          "deltaFromPrevKeyframe": 8.18,
+          "stepDelta": 7.76
+        },
+        {
+          "frame": 874,
+          "path": "app uis/Englify/flow-01/frame-0874.webp",
+          "deltaFromPrevKeyframe": 9.77,
+          "stepDelta": 9.77
+        },
+        {
+          "frame": 877,
+          "path": "app uis/Englify/flow-01/frame-0877.webp",
+          "deltaFromPrevKeyframe": 9.45,
+          "stepDelta": 8.64
+        },
+        {
+          "frame": 878,
+          "path": "app uis/Englify/flow-01/frame-0878.webp",
+          "deltaFromPrevKeyframe": 9.34,
+          "stepDelta": 9.34
+        },
+        {
+          "frame": 879,
+          "path": "app uis/Englify/flow-01/frame-0879.webp",
+          "deltaFromPrevKeyframe": 7.72,
+          "stepDelta": 7.72
+        },
+        {
+          "frame": 880,
+          "path": "app uis/Englify/flow-01/frame-0880.webp",
+          "deltaFromPrevKeyframe": 17.08,
+          "stepDelta": 17.08
+        },
+        {
+          "frame": 881,
+          "path": "app uis/Englify/flow-01/frame-0881.webp",
+          "deltaFromPrevKeyframe": 17.07,
+          "stepDelta": 17.07
+        },
+        {
+          "frame": 882,
+          "path": "app uis/Englify/flow-01/frame-0882.webp",
+          "deltaFromPrevKeyframe": 20.27,
+          "stepDelta": 20.27
+        },
+        {
+          "frame": 883,
+          "path": "app uis/Englify/flow-01/frame-0883.webp",
+          "deltaFromPrevKeyframe": 14.18,
+          "stepDelta": 14.18
+        },
+        {
+          "frame": 890,
+          "path": "app uis/Englify/flow-01/frame-0890.webp",
+          "deltaFromPrevKeyframe": 16.72,
+          "stepDelta": 16.54
+        },
+        {
+          "frame": 892,
+          "path": "app uis/Englify/flow-01/frame-0892.webp",
+          "deltaFromPrevKeyframe": 26.22,
+          "stepDelta": 24.13
+        },
+        {
+          "frame": 898,
+          "path": "app uis/Englify/flow-01/frame-0898.webp",
+          "deltaFromPrevKeyframe": 19.11,
+          "stepDelta": 19.5
+        },
+        {
+          "frame": 899,
+          "path": "app uis/Englify/flow-01/frame-0899.webp",
+          "deltaFromPrevKeyframe": 11.23,
+          "stepDelta": 11.23
+        },
+        {
+          "frame": 901,
+          "path": "app uis/Englify/flow-01/frame-0901.webp",
+          "deltaFromPrevKeyframe": 12.38,
+          "stepDelta": 11.37
+        },
+        {
+          "frame": 905,
+          "path": "app uis/Englify/flow-01/frame-0905.webp",
+          "deltaFromPrevKeyframe": 13.09,
+          "stepDelta": 10.58
+        },
+        {
+          "frame": 907,
+          "path": "app uis/Englify/flow-01/frame-0907.webp",
+          "deltaFromPrevKeyframe": 16.89,
+          "stepDelta": 14.94
+        },
+        {
+          "frame": 908,
+          "path": "app uis/Englify/flow-01/frame-0908.webp",
+          "deltaFromPrevKeyframe": 32.39,
+          "stepDelta": 32.39
+        },
+        {
+          "frame": 909,
+          "path": "app uis/Englify/flow-01/frame-0909.webp",
+          "deltaFromPrevKeyframe": 22.68,
+          "stepDelta": 22.68
+        },
+        {
+          "frame": 913,
+          "path": "app uis/Englify/flow-01/frame-0913.webp",
+          "deltaFromPrevKeyframe": 41.05,
+          "stepDelta": 41.47
+        },
+        {
+          "frame": 939,
+          "path": "app uis/Englify/flow-01/frame-0939.webp",
+          "deltaFromPrevKeyframe": 18.72,
+          "stepDelta": 17.84
+        },
+        {
+          "frame": 953,
+          "path": "app uis/Englify/flow-01/frame-0953.webp",
+          "deltaFromPrevKeyframe": 58.78,
+          "stepDelta": 58.22
+        },
+        {
+          "frame": 954,
+          "path": "app uis/Englify/flow-01/frame-0954.webp",
+          "deltaFromPrevKeyframe": 51.66,
+          "stepDelta": 51.66
+        },
+        {
+          "frame": 957,
+          "path": "app uis/Englify/flow-01/frame-0957.webp",
+          "deltaFromPrevKeyframe": 27.0,
+          "stepDelta": 26.88
+        },
+        {
+          "frame": 958,
+          "path": "app uis/Englify/flow-01/frame-0958.webp",
+          "deltaFromPrevKeyframe": 74.26,
+          "stepDelta": 74.26
+        },
+        {
+          "frame": 959,
+          "path": "app uis/Englify/flow-01/frame-0959.webp",
+          "deltaFromPrevKeyframe": 45.1,
+          "stepDelta": 45.1
+        },
+        {
+          "frame": 962,
+          "path": "app uis/Englify/flow-01/frame-0962.webp",
+          "deltaFromPrevKeyframe": 7.96,
+          "stepDelta": 8.05
+        },
+        {
+          "frame": 963,
+          "path": "app uis/Englify/flow-01/frame-0963.webp",
+          "deltaFromPrevKeyframe": 13.59,
+          "stepDelta": 13.59
+        },
+        {
+          "frame": 964,
+          "path": "app uis/Englify/flow-01/frame-0964.webp",
+          "deltaFromPrevKeyframe": 8.43,
+          "stepDelta": 8.43
+        },
+        {
+          "frame": 969,
+          "path": "app uis/Englify/flow-01/frame-0969.webp",
+          "deltaFromPrevKeyframe": 12.56,
+          "stepDelta": 12.03
+        },
+        {
+          "frame": 972,
+          "path": "app uis/Englify/flow-01/frame-0972.webp",
+          "deltaFromPrevKeyframe": 16.88,
+          "stepDelta": 14.58
+        },
+        {
+          "frame": 982,
+          "path": "app uis/Englify/flow-01/frame-0982.webp",
+          "deltaFromPrevKeyframe": 8.32,
+          "stepDelta": 7.36
+        },
+        {
+          "frame": 983,
+          "path": "app uis/Englify/flow-01/frame-0983.webp",
+          "deltaFromPrevKeyframe": 13.68,
+          "stepDelta": 13.68
+        },
+        {
+          "frame": 984,
+          "path": "app uis/Englify/flow-01/frame-0984.webp",
+          "deltaFromPrevKeyframe": 19.66,
+          "stepDelta": 19.66
+        },
+        {
+          "frame": 985,
+          "path": "app uis/Englify/flow-01/frame-0985.webp",
+          "deltaFromPrevKeyframe": 9.99,
+          "stepDelta": 9.99
+        },
+        {
+          "frame": 987,
+          "path": "app uis/Englify/flow-01/frame-0987.webp",
+          "deltaFromPrevKeyframe": 20.85,
+          "stepDelta": 20.74
+        },
+        {
+          "frame": 988,
+          "path": "app uis/Englify/flow-01/frame-0988.webp",
+          "deltaFromPrevKeyframe": 10.8,
+          "stepDelta": 10.8
+        },
+        {
+          "frame": 991,
+          "path": "app uis/Englify/flow-01/frame-0991.webp",
+          "deltaFromPrevKeyframe": 23.91,
+          "stepDelta": 24.02
+        },
+        {
+          "frame": 994,
+          "path": "app uis/Englify/flow-01/frame-0994.webp",
+          "deltaFromPrevKeyframe": 19.82,
+          "stepDelta": 15.34
+        },
+        {
+          "frame": 1008,
+          "path": "app uis/Englify/flow-01/frame-1008.webp",
+          "deltaFromPrevKeyframe": 236.79,
+          "stepDelta": 235.45
+        },
+        {
+          "frame": 1052,
+          "path": "app uis/Englify/flow-01/frame-1052.webp",
+          "deltaFromPrevKeyframe": 244.6,
+          "stepDelta": 244.6
+        },
+        {
+          "frame": 1055,
+          "path": "app uis/Englify/flow-01/frame-1055.webp",
+          "deltaFromPrevKeyframe": 19.24,
+          "stepDelta": 18.19
+        },
+        {
+          "frame": 1056,
+          "path": "app uis/Englify/flow-01/frame-1056.webp",
+          "deltaFromPrevKeyframe": 11.25,
+          "stepDelta": 11.25
+        },
+        {
+          "frame": 1079,
+          "path": "app uis/Englify/flow-01/frame-1079.webp",
+          "deltaFromPrevKeyframe": 9.37,
+          "stepDelta": 8.57
+        },
+        {
+          "frame": 1080,
+          "path": "app uis/Englify/flow-01/frame-1080.webp",
+          "deltaFromPrevKeyframe": 31.51,
+          "stepDelta": 31.51
+        },
+        {
+          "frame": 1084,
+          "path": "app uis/Englify/flow-01/frame-1084.webp",
+          "deltaFromPrevKeyframe": 81.88,
+          "stepDelta": 82.89
+        },
+        {
+          "frame": 1085,
+          "path": "app uis/Englify/flow-01/frame-1085.webp",
+          "deltaFromPrevKeyframe": 29.78,
+          "stepDelta": 29.78
+        },
+        {
+          "frame": 1088,
+          "path": "app uis/Englify/flow-01/frame-1088.webp",
+          "deltaFromPrevKeyframe": 48.21,
+          "stepDelta": 48.24
+        },
+        {
+          "frame": 1089,
+          "path": "app uis/Englify/flow-01/frame-1089.webp",
+          "deltaFromPrevKeyframe": 108.92,
+          "stepDelta": 108.92
+        },
+        {
+          "frame": 1090,
+          "path": "app uis/Englify/flow-01/frame-1090.webp",
+          "deltaFromPrevKeyframe": 22.57,
+          "stepDelta": 22.57
+        },
+        {
+          "frame": 1103,
+          "path": "app uis/Englify/flow-01/frame-1103.webp",
+          "deltaFromPrevKeyframe": 16.69,
+          "stepDelta": 18.73
+        },
+        {
+          "frame": 1104,
+          "path": "app uis/Englify/flow-01/frame-1104.webp",
+          "deltaFromPrevKeyframe": 20.22,
+          "stepDelta": 20.22
+        },
+        {
+          "frame": 1108,
+          "path": "app uis/Englify/flow-01/frame-1108.webp",
+          "deltaFromPrevKeyframe": 83.57,
+          "stepDelta": 84.12
+        },
+        {
+          "frame": 1109,
+          "path": "app uis/Englify/flow-01/frame-1109.webp",
+          "deltaFromPrevKeyframe": 22.81,
+          "stepDelta": 22.81
+        },
+        {
+          "frame": 1112,
+          "path": "app uis/Englify/flow-01/frame-1112.webp",
+          "deltaFromPrevKeyframe": 26.71,
+          "stepDelta": 26.61
+        },
+        {
+          "frame": 1113,
+          "path": "app uis/Englify/flow-01/frame-1113.webp",
+          "deltaFromPrevKeyframe": 73.85,
+          "stepDelta": 73.85
+        },
+        {
+          "frame": 1114,
+          "path": "app uis/Englify/flow-01/frame-1114.webp",
+          "deltaFromPrevKeyframe": 31.16,
+          "stepDelta": 31.16
+        },
+        {
+          "frame": 1115,
+          "path": "app uis/Englify/flow-01/frame-1115.webp",
+          "deltaFromPrevKeyframe": 17.58,
+          "stepDelta": 17.58
+        },
+        {
+          "frame": 1118,
+          "path": "app uis/Englify/flow-01/frame-1118.webp",
+          "deltaFromPrevKeyframe": 18.19,
+          "stepDelta": 17.4
+        },
+        {
+          "frame": 1119,
+          "path": "app uis/Englify/flow-01/frame-1119.webp",
+          "deltaFromPrevKeyframe": 13.43,
+          "stepDelta": 13.43
+        },
+        {
+          "frame": 1125,
+          "path": "app uis/Englify/flow-01/frame-1125.webp",
+          "deltaFromPrevKeyframe": 30.84,
+          "stepDelta": 29.96
+        },
+        {
+          "frame": 1126,
+          "path": "app uis/Englify/flow-01/frame-1126.webp",
+          "deltaFromPrevKeyframe": 18.33,
+          "stepDelta": 18.33
+        },
+        {
+          "frame": 1129,
+          "path": "app uis/Englify/flow-01/frame-1129.webp",
+          "deltaFromPrevKeyframe": 12.37,
+          "stepDelta": 13.21
+        },
+        {
+          "frame": 1130,
+          "path": "app uis/Englify/flow-01/frame-1130.webp",
+          "deltaFromPrevKeyframe": 17.65,
+          "stepDelta": 17.65
+        },
+        {
+          "frame": 1132,
+          "path": "app uis/Englify/flow-01/frame-1132.webp",
+          "deltaFromPrevKeyframe": 17.85,
+          "stepDelta": 16.1
+        },
+        {
+          "frame": 1136,
+          "path": "app uis/Englify/flow-01/frame-1136.webp",
+          "deltaFromPrevKeyframe": 11.12,
+          "stepDelta": 8.89
+        },
+        {
+          "frame": 1137,
+          "path": "app uis/Englify/flow-01/frame-1137.webp",
+          "deltaFromPrevKeyframe": 13.42,
+          "stepDelta": 13.42
+        },
+        {
+          "frame": 1140,
+          "path": "app uis/Englify/flow-01/frame-1140.webp",
+          "deltaFromPrevKeyframe": 16.69,
+          "stepDelta": 12.3
+        },
+        {
+          "frame": 1152,
+          "path": "app uis/Englify/flow-01/frame-1152.webp",
+          "deltaFromPrevKeyframe": 34.63,
+          "stepDelta": 33.41
+        },
+        {
+          "frame": 1153,
+          "path": "app uis/Englify/flow-01/frame-1153.webp",
+          "deltaFromPrevKeyframe": 75.92,
+          "stepDelta": 75.92
+        },
+        {
+          "frame": 1156,
+          "path": "app uis/Englify/flow-01/frame-1156.webp",
+          "deltaFromPrevKeyframe": 33.23,
+          "stepDelta": 34.35
+        },
+        {
+          "frame": 1157,
+          "path": "app uis/Englify/flow-01/frame-1157.webp",
+          "deltaFromPrevKeyframe": 84.65,
+          "stepDelta": 84.65
+        },
+        {
+          "frame": 1158,
+          "path": "app uis/Englify/flow-01/frame-1158.webp",
+          "deltaFromPrevKeyframe": 29.33,
+          "stepDelta": 29.33
+        },
+        {
+          "frame": 1160,
+          "path": "app uis/Englify/flow-01/frame-1160.webp",
+          "deltaFromPrevKeyframe": 6.9,
+          "stepDelta": 6.43
+        },
+        {
+          "frame": 1182,
+          "path": "app uis/Englify/flow-01/frame-1182.webp",
+          "deltaFromPrevKeyframe": 56.98,
+          "stepDelta": 55.92
+        },
+        {
+          "frame": 1183,
+          "path": "app uis/Englify/flow-01/frame-1183.webp",
+          "deltaFromPrevKeyframe": 59.81,
+          "stepDelta": 59.81
+        },
+        {
+          "frame": 1186,
+          "path": "app uis/Englify/flow-01/frame-1186.webp",
+          "deltaFromPrevKeyframe": 56.11,
+          "stepDelta": 57.09
+        },
+        {
+          "frame": 1187,
+          "path": "app uis/Englify/flow-01/frame-1187.webp",
+          "deltaFromPrevKeyframe": 94.13,
+          "stepDelta": 94.13
+        },
+        {
+          "frame": 1191,
+          "path": "app uis/Englify/flow-01/frame-1191.webp",
+          "deltaFromPrevKeyframe": 8.91,
+          "stepDelta": 8.44
+        },
+        {
+          "frame": 1192,
+          "path": "app uis/Englify/flow-01/frame-1192.webp",
+          "deltaFromPrevKeyframe": 9.36,
+          "stepDelta": 9.36
+        },
+        {
+          "frame": 1193,
+          "path": "app uis/Englify/flow-01/frame-1193.webp",
+          "deltaFromPrevKeyframe": 11.34,
+          "stepDelta": 11.34
+        },
+        {
+          "frame": 1194,
+          "path": "app uis/Englify/flow-01/frame-1194.webp",
+          "deltaFromPrevKeyframe": 12.7,
+          "stepDelta": 12.7
+        },
+        {
+          "frame": 1198,
+          "path": "app uis/Englify/flow-01/frame-1198.webp",
+          "deltaFromPrevKeyframe": 16.97,
+          "stepDelta": 16.45
+        },
+        {
+          "frame": 1199,
+          "path": "app uis/Englify/flow-01/frame-1199.webp",
+          "deltaFromPrevKeyframe": 20.79,
+          "stepDelta": 20.79
+        },
+        {
+          "frame": 1200,
+          "path": "app uis/Englify/flow-01/frame-1200.webp",
+          "deltaFromPrevKeyframe": 25.72,
+          "stepDelta": 25.72
+        },
+        {
+          "frame": 1201,
+          "path": "app uis/Englify/flow-01/frame-1201.webp",
+          "deltaFromPrevKeyframe": 31.21,
+          "stepDelta": 31.21
+        },
+        {
+          "frame": 1208,
+          "path": "app uis/Englify/flow-01/frame-1208.webp",
+          "deltaFromPrevKeyframe": 16.81,
+          "stepDelta": 17.29
+        },
+        {
+          "frame": 1210,
+          "path": "app uis/Englify/flow-01/frame-1210.webp",
+          "deltaFromPrevKeyframe": 52.41,
+          "stepDelta": 52.45
+        },
+        {
+          "frame": 1214,
+          "path": "app uis/Englify/flow-01/frame-1214.webp",
+          "deltaFromPrevKeyframe": 56.15,
+          "stepDelta": 55.77
+        },
+        {
+          "frame": 1215,
+          "path": "app uis/Englify/flow-01/frame-1215.webp",
+          "deltaFromPrevKeyframe": 12.04,
+          "stepDelta": 12.04
+        },
+        {
+          "frame": 1217,
+          "path": "app uis/Englify/flow-01/frame-1217.webp",
+          "deltaFromPrevKeyframe": 33.69,
+          "stepDelta": 33.47
+        },
+        {
+          "frame": 1218,
+          "path": "app uis/Englify/flow-01/frame-1218.webp",
+          "deltaFromPrevKeyframe": 51.18,
+          "stepDelta": 51.18
+        },
+        {
+          "frame": 1220,
+          "path": "app uis/Englify/flow-01/frame-1220.webp",
+          "deltaFromPrevKeyframe": 35.96,
+          "stepDelta": 34.0
+        },
+        {
+          "frame": 1221,
+          "path": "app uis/Englify/flow-01/frame-1221.webp",
+          "deltaFromPrevKeyframe": 30.55,
+          "stepDelta": 30.55
+        },
+        {
+          "frame": 1224,
+          "path": "app uis/Englify/flow-01/frame-1224.webp",
+          "deltaFromPrevKeyframe": 8.2,
+          "stepDelta": 6.05
+        },
+        {
+          "frame": 1235,
+          "path": "app uis/Englify/flow-01/frame-1235.webp",
+          "deltaFromPrevKeyframe": 29.87,
+          "stepDelta": 27.52
+        },
+        {
+          "frame": 1236,
+          "path": "app uis/Englify/flow-01/frame-1236.webp",
+          "deltaFromPrevKeyframe": 8.05,
+          "stepDelta": 8.05
+        },
+        {
+          "frame": 1237,
+          "path": "app uis/Englify/flow-01/frame-1237.webp",
+          "deltaFromPrevKeyframe": 22.0,
+          "stepDelta": 22.0
+        },
+        {
+          "frame": 1239,
+          "path": "app uis/Englify/flow-01/frame-1239.webp",
+          "deltaFromPrevKeyframe": 60.08,
+          "stepDelta": 60.4
+        },
+        {
+          "frame": 1240,
+          "path": "app uis/Englify/flow-01/frame-1240.webp",
+          "deltaFromPrevKeyframe": 12.77,
+          "stepDelta": 12.77
+        },
+        {
+          "frame": 1241,
+          "path": "app uis/Englify/flow-01/frame-1241.webp",
+          "deltaFromPrevKeyframe": 6.96,
+          "stepDelta": 6.96
+        },
+        {
+          "frame": 1246,
+          "path": "app uis/Englify/flow-01/frame-1246.webp",
+          "deltaFromPrevKeyframe": 208.27,
+          "stepDelta": 208.41
+        },
+        {
+          "frame": 1255,
+          "path": "app uis/Englify/flow-01/frame-1255.webp",
+          "deltaFromPrevKeyframe": 7.34,
+          "stepDelta": 7.47
+        },
+        {
+          "frame": 1261,
+          "path": "app uis/Englify/flow-01/frame-1261.webp",
+          "deltaFromPrevKeyframe": 7.38,
+          "stepDelta": 7.38
+        },
+        {
+          "frame": 1306,
+          "path": "app uis/Englify/flow-01/frame-1306.webp",
+          "deltaFromPrevKeyframe": 99.71,
+          "stepDelta": 97.51
+        },
+        {
+          "frame": 1308,
+          "path": "app uis/Englify/flow-01/frame-1308.webp",
+          "deltaFromPrevKeyframe": 55.01,
+          "stepDelta": 55.01
+        },
+        {
+          "frame": 1309,
+          "path": "app uis/Englify/flow-01/frame-1309.webp",
+          "deltaFromPrevKeyframe": 21.86,
+          "stepDelta": 21.86
+        },
+        {
+          "frame": 1311,
+          "path": "app uis/Englify/flow-01/frame-1311.webp",
+          "deltaFromPrevKeyframe": 12.03,
+          "stepDelta": 12.04
+        },
+        {
+          "frame": 1312,
+          "path": "app uis/Englify/flow-01/frame-1312.webp",
+          "deltaFromPrevKeyframe": 9.99,
+          "stepDelta": 9.99
+        },
+        {
+          "frame": 1313,
+          "path": "app uis/Englify/flow-01/frame-1313.webp",
+          "deltaFromPrevKeyframe": 8.27,
+          "stepDelta": 8.27
+        },
+        {
+          "frame": 1314,
+          "path": "app uis/Englify/flow-01/frame-1314.webp",
+          "deltaFromPrevKeyframe": 10.95,
+          "stepDelta": 10.95
+        },
+        {
+          "frame": 1316,
+          "path": "app uis/Englify/flow-01/frame-1316.webp",
+          "deltaFromPrevKeyframe": 7.87,
+          "stepDelta": 3.56
+        },
+        {
+          "frame": 1320,
+          "path": "app uis/Englify/flow-01/frame-1320.webp",
+          "deltaFromPrevKeyframe": 19.49,
+          "stepDelta": 18.94
+        },
+        {
+          "frame": 1321,
+          "path": "app uis/Englify/flow-01/frame-1321.webp",
+          "deltaFromPrevKeyframe": 13.48,
+          "stepDelta": 13.48
+        },
+        {
+          "frame": 1322,
+          "path": "app uis/Englify/flow-01/frame-1322.webp",
+          "deltaFromPrevKeyframe": 7.96,
+          "stepDelta": 7.96
+        },
+        {
+          "frame": 1324,
+          "path": "app uis/Englify/flow-01/frame-1324.webp",
+          "deltaFromPrevKeyframe": 7.31,
+          "stepDelta": 5.57
+        },
+        {
+          "frame": 1326,
+          "path": "app uis/Englify/flow-01/frame-1326.webp",
+          "deltaFromPrevKeyframe": 7.14,
+          "stepDelta": 2.51
+        },
+        {
+          "frame": 1328,
+          "path": "app uis/Englify/flow-01/frame-1328.webp",
+          "deltaFromPrevKeyframe": 7.4,
+          "stepDelta": 7.23
+        },
+        {
+          "frame": 1330,
+          "path": "app uis/Englify/flow-01/frame-1330.webp",
+          "deltaFromPrevKeyframe": 7.27,
+          "stepDelta": 6.18
+        },
+        {
+          "frame": 1332,
+          "path": "app uis/Englify/flow-01/frame-1332.webp",
+          "deltaFromPrevKeyframe": 8.77,
+          "stepDelta": 7.37
+        },
+        {
+          "frame": 1333,
+          "path": "app uis/Englify/flow-01/frame-1333.webp",
+          "deltaFromPrevKeyframe": 6.94,
+          "stepDelta": 6.94
+        },
+        {
+          "frame": 1334,
+          "path": "app uis/Englify/flow-01/frame-1334.webp",
+          "deltaFromPrevKeyframe": 8.45,
+          "stepDelta": 8.45
+        },
+        {
+          "frame": 1335,
+          "path": "app uis/Englify/flow-01/frame-1335.webp",
+          "deltaFromPrevKeyframe": 9.48,
+          "stepDelta": 9.48
+        },
+        {
+          "frame": 1338,
+          "path": "app uis/Englify/flow-01/frame-1338.webp",
+          "deltaFromPrevKeyframe": 121.28,
+          "stepDelta": 121.59
+        },
+        {
+          "frame": 1339,
+          "path": "app uis/Englify/flow-01/frame-1339.webp",
+          "deltaFromPrevKeyframe": 45.11,
+          "stepDelta": 45.11
+        },
+        {
+          "frame": 1340,
+          "path": "app uis/Englify/flow-01/frame-1340.webp",
+          "deltaFromPrevKeyframe": 9.89,
+          "stepDelta": 9.89
+        },
+        {
+          "frame": 1343,
+          "path": "app uis/Englify/flow-01/frame-1343.webp",
+          "deltaFromPrevKeyframe": 74.54,
+          "stepDelta": 73.75
+        },
+        {
+          "frame": 1344,
+          "path": "app uis/Englify/flow-01/frame-1344.webp",
+          "deltaFromPrevKeyframe": 20.8,
+          "stepDelta": 20.8
+        },
+        {
+          "frame": 1348,
+          "path": "app uis/Englify/flow-01/frame-1348.webp",
+          "deltaFromPrevKeyframe": 18.59,
+          "stepDelta": 16.76
+        },
+        {
+          "frame": 1349,
+          "path": "app uis/Englify/flow-01/frame-1349.webp",
+          "deltaFromPrevKeyframe": 41.62,
+          "stepDelta": 41.62
+        },
+        {
+          "frame": 1350,
+          "path": "app uis/Englify/flow-01/frame-1350.webp",
+          "deltaFromPrevKeyframe": 58.16,
+          "stepDelta": 58.16
+        },
+        {
+          "frame": 1351,
+          "path": "app uis/Englify/flow-01/frame-1351.webp",
+          "deltaFromPrevKeyframe": 61.7,
+          "stepDelta": 61.7
+        },
+        {
+          "frame": 1353,
+          "path": "app uis/Englify/flow-01/frame-1353.webp",
+          "deltaFromPrevKeyframe": 70.43,
+          "stepDelta": 70.43
+        },
+        {
+          "frame": 1354,
+          "path": "app uis/Englify/flow-01/frame-1354.webp",
+          "deltaFromPrevKeyframe": 48.15,
+          "stepDelta": 48.15
+        },
+        {
+          "frame": 1355,
+          "path": "app uis/Englify/flow-01/frame-1355.webp",
+          "deltaFromPrevKeyframe": 45.33,
+          "stepDelta": 45.33
+        },
+        {
+          "frame": 1356,
+          "path": "app uis/Englify/flow-01/frame-1356.webp",
+          "deltaFromPrevKeyframe": 10.06,
+          "stepDelta": 10.06
+        },
+        {
+          "frame": 1357,
+          "path": "app uis/Englify/flow-01/frame-1357.webp",
+          "deltaFromPrevKeyframe": 38.72,
+          "stepDelta": 38.72
+        },
+        {
+          "frame": 1358,
+          "path": "app uis/Englify/flow-01/frame-1358.webp",
+          "deltaFromPrevKeyframe": 76.97,
+          "stepDelta": 76.97
+        },
+        {
+          "frame": 1359,
+          "path": "app uis/Englify/flow-01/frame-1359.webp",
+          "deltaFromPrevKeyframe": 32.6,
+          "stepDelta": 32.6
+        },
+        {
+          "frame": 1360,
+          "path": "app uis/Englify/flow-01/frame-1360.webp",
+          "deltaFromPrevKeyframe": 70.31,
+          "stepDelta": 70.31
+        },
+        {
+          "frame": 1361,
+          "path": "app uis/Englify/flow-01/frame-1361.webp",
+          "deltaFromPrevKeyframe": 59.67,
+          "stepDelta": 59.67
+        },
+        {
+          "frame": 1362,
+          "path": "app uis/Englify/flow-01/frame-1362.webp",
+          "deltaFromPrevKeyframe": 22.63,
+          "stepDelta": 22.63
+        },
+        {
+          "frame": 1364,
+          "path": "app uis/Englify/flow-01/frame-1364.webp",
+          "deltaFromPrevKeyframe": 47.12,
+          "stepDelta": 47.0
+        },
+        {
+          "frame": 1365,
+          "path": "app uis/Englify/flow-01/frame-1365.webp",
+          "deltaFromPrevKeyframe": 74.18,
+          "stepDelta": 74.18
+        },
+        {
+          "frame": 1366,
+          "path": "app uis/Englify/flow-01/frame-1366.webp",
+          "deltaFromPrevKeyframe": 14.0,
+          "stepDelta": 14.0
+        },
+        {
+          "frame": 1367,
+          "path": "app uis/Englify/flow-01/frame-1367.webp",
+          "deltaFromPrevKeyframe": 70.5,
+          "stepDelta": 70.5
+        },
+        {
+          "frame": 1368,
+          "path": "app uis/Englify/flow-01/frame-1368.webp",
+          "deltaFromPrevKeyframe": 56.87,
+          "stepDelta": 56.87
+        },
+        {
+          "frame": 1369,
+          "path": "app uis/Englify/flow-01/frame-1369.webp",
+          "deltaFromPrevKeyframe": 28.28,
+          "stepDelta": 28.28
+        },
+        {
+          "frame": 1370,
+          "path": "app uis/Englify/flow-01/frame-1370.webp",
+          "deltaFromPrevKeyframe": 49.57,
+          "stepDelta": 49.57
+        },
+        {
+          "frame": 1371,
+          "path": "app uis/Englify/flow-01/frame-1371.webp",
+          "deltaFromPrevKeyframe": 7.0,
+          "stepDelta": 7.0
+        },
+        {
+          "frame": 1374,
+          "path": "app uis/Englify/flow-01/frame-1374.webp",
+          "deltaFromPrevKeyframe": 52.64,
+          "stepDelta": 52.52
+        },
+        {
+          "frame": 1381,
+          "path": "app uis/Englify/flow-01/frame-1381.webp",
+          "deltaFromPrevKeyframe": 59.56,
+          "stepDelta": 59.87
+        },
+        {
+          "frame": 1386,
+          "path": "app uis/Englify/flow-01/frame-1386.webp",
+          "deltaFromPrevKeyframe": 26.68,
+          "stepDelta": 26.09
+        },
+        {
+          "frame": 1387,
+          "path": "app uis/Englify/flow-01/frame-1387.webp",
+          "deltaFromPrevKeyframe": 38.69,
+          "stepDelta": 38.69
+        },
+        {
+          "frame": 1388,
+          "path": "app uis/Englify/flow-01/frame-1388.webp",
+          "deltaFromPrevKeyframe": 48.24,
+          "stepDelta": 48.24
+        },
+        {
+          "frame": 1389,
+          "path": "app uis/Englify/flow-01/frame-1389.webp",
+          "deltaFromPrevKeyframe": 58.26,
+          "stepDelta": 58.26
+        },
+        {
+          "frame": 1390,
+          "path": "app uis/Englify/flow-01/frame-1390.webp",
+          "deltaFromPrevKeyframe": 19.33,
+          "stepDelta": 19.33
+        },
+        {
+          "frame": 1391,
+          "path": "app uis/Englify/flow-01/frame-1391.webp",
+          "deltaFromPrevKeyframe": 10.16,
+          "stepDelta": 10.16
+        },
+        {
+          "frame": 1395,
+          "path": "app uis/Englify/flow-01/frame-1395.webp",
+          "deltaFromPrevKeyframe": 143.74,
+          "stepDelta": 143.71
+        },
+        {
+          "frame": 1396,
+          "path": "app uis/Englify/flow-01/frame-1396.webp",
+          "deltaFromPrevKeyframe": 11.02,
+          "stepDelta": 11.02
+        },
+        {
+          "frame": 1397,
+          "path": "app uis/Englify/flow-01/frame-1397.webp",
+          "deltaFromPrevKeyframe": 152.26,
+          "stepDelta": 152.26
+        },
+        {
+          "frame": 1439,
+          "path": "app uis/Englify/flow-01/frame-1439.webp",
+          "deltaFromPrevKeyframe": 12.88,
+          "stepDelta": 12.85
+        },
+        {
+          "frame": 1440,
+          "path": "app uis/Englify/flow-01/frame-1440.webp",
+          "deltaFromPrevKeyframe": 6.68,
+          "stepDelta": 6.68
+        },
+        {
+          "frame": 1456,
+          "path": "app uis/Englify/flow-01/frame-1456.webp",
+          "deltaFromPrevKeyframe": 7.53,
+          "stepDelta": 1.85
+        },
+        {
+          "frame": 1488,
+          "path": "app uis/Englify/flow-01/frame-1488.webp",
+          "deltaFromPrevKeyframe": 7.67,
+          "stepDelta": 3.66
+        }
+      ]
+    }
+  ]
+}

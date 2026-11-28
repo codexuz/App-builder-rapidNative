@@ -1,0 +1,2754 @@
+{
+  "flows": [
+    {
+      "flowId": "flow-01",
+      "sourceVideoId": "09-58-35",
+      "frameCount": 990,
+      "width": 590,
+      "height": 1280,
+      "format": "webp",
+      "beforeZipMB": 187.22,
+      "afterWebpMB": 23.15,
+      "keyframeCount": 129,
+      "keyframes": [
+        {
+          "frame": 1,
+          "path": "app uis/IbratApp/flow-01/frame-0001.webp",
+          "deltaFromPrevKeyframe": 999.0,
+          "stepDelta": 999.0
+        },
+        {
+          "frame": 6,
+          "path": "app uis/IbratApp/flow-01/frame-0006.webp",
+          "deltaFromPrevKeyframe": 7.58,
+          "stepDelta": 7.43
+        },
+        {
+          "frame": 8,
+          "path": "app uis/IbratApp/flow-01/frame-0008.webp",
+          "deltaFromPrevKeyframe": 7.09,
+          "stepDelta": 4.76
+        },
+        {
+          "frame": 17,
+          "path": "app uis/IbratApp/flow-01/frame-0017.webp",
+          "deltaFromPrevKeyframe": 59.34,
+          "stepDelta": 59.91
+        },
+        {
+          "frame": 18,
+          "path": "app uis/IbratApp/flow-01/frame-0018.webp",
+          "deltaFromPrevKeyframe": 25.92,
+          "stepDelta": 25.92
+        },
+        {
+          "frame": 30,
+          "path": "app uis/IbratApp/flow-01/frame-0030.webp",
+          "deltaFromPrevKeyframe": 22.55,
+          "stepDelta": 22.27
+        },
+        {
+          "frame": 31,
+          "path": "app uis/IbratApp/flow-01/frame-0031.webp",
+          "deltaFromPrevKeyframe": 12.48,
+          "stepDelta": 12.48
+        },
+        {
+          "frame": 35,
+          "path": "app uis/IbratApp/flow-01/frame-0035.webp",
+          "deltaFromPrevKeyframe": 20.47,
+          "stepDelta": 20.98
+        },
+        {
+          "frame": 36,
+          "path": "app uis/IbratApp/flow-01/frame-0036.webp",
+          "deltaFromPrevKeyframe": 15.96,
+          "stepDelta": 15.96
+        },
+        {
+          "frame": 37,
+          "path": "app uis/IbratApp/flow-01/frame-0037.webp",
+          "deltaFromPrevKeyframe": 8.18,
+          "stepDelta": 8.18
+        },
+        {
+          "frame": 38,
+          "path": "app uis/IbratApp/flow-01/frame-0038.webp",
+          "deltaFromPrevKeyframe": 6.77,
+          "stepDelta": 6.77
+        },
+        {
+          "frame": 45,
+          "path": "app uis/IbratApp/flow-01/frame-0045.webp",
+          "deltaFromPrevKeyframe": 9.99,
+          "stepDelta": 6.42
+        },
+        {
+          "frame": 50,
+          "path": "app uis/IbratApp/flow-01/frame-0050.webp",
+          "deltaFromPrevKeyframe": 26.06,
+          "stepDelta": 26.17
+        },
+        {
+          "frame": 51,
+          "path": "app uis/IbratApp/flow-01/frame-0051.webp",
+          "deltaFromPrevKeyframe": 60.89,
+          "stepDelta": 60.89
+        },
+        {
+          "frame": 52,
+          "path": "app uis/IbratApp/flow-01/frame-0052.webp",
+          "deltaFromPrevKeyframe": 20.39,
+          "stepDelta": 20.39
+        },
+        {
+          "frame": 53,
+          "path": "app uis/IbratApp/flow-01/frame-0053.webp",
+          "deltaFromPrevKeyframe": 13.4,
+          "stepDelta": 13.4
+        },
+        {
+          "frame": 54,
+          "path": "app uis/IbratApp/flow-01/frame-0054.webp",
+          "deltaFromPrevKeyframe": 10.37,
+          "stepDelta": 10.37
+        },
+        {
+          "frame": 55,
+          "path": "app uis/IbratApp/flow-01/frame-0055.webp",
+          "deltaFromPrevKeyframe": 6.64,
+          "stepDelta": 6.64
+        },
+        {
+          "frame": 65,
+          "path": "app uis/IbratApp/flow-01/frame-0065.webp",
+          "deltaFromPrevKeyframe": 8.5,
+          "stepDelta": 8.92
+        },
+        {
+          "frame": 66,
+          "path": "app uis/IbratApp/flow-01/frame-0066.webp",
+          "deltaFromPrevKeyframe": 47.18,
+          "stepDelta": 47.18
+        },
+        {
+          "frame": 70,
+          "path": "app uis/IbratApp/flow-01/frame-0070.webp",
+          "deltaFromPrevKeyframe": 25.43,
+          "stepDelta": 25.36
+        },
+        {
+          "frame": 87,
+          "path": "app uis/IbratApp/flow-01/frame-0087.webp",
+          "deltaFromPrevKeyframe": 6.87,
+          "stepDelta": 5.42
+        },
+        {
+          "frame": 88,
+          "path": "app uis/IbratApp/flow-01/frame-0088.webp",
+          "deltaFromPrevKeyframe": 22.39,
+          "stepDelta": 22.39
+        },
+        {
+          "frame": 95,
+          "path": "app uis/IbratApp/flow-01/frame-0095.webp",
+          "deltaFromPrevKeyframe": 11.24,
+          "stepDelta": 7.26
+        },
+        {
+          "frame": 96,
+          "path": "app uis/IbratApp/flow-01/frame-0096.webp",
+          "deltaFromPrevKeyframe": 10.26,
+          "stepDelta": 10.26
+        },
+        {
+          "frame": 103,
+          "path": "app uis/IbratApp/flow-01/frame-0103.webp",
+          "deltaFromPrevKeyframe": 15.66,
+          "stepDelta": 14.8
+        },
+        {
+          "frame": 115,
+          "path": "app uis/IbratApp/flow-01/frame-0115.webp",
+          "deltaFromPrevKeyframe": 8.55,
+          "stepDelta": 8.03
+        },
+        {
+          "frame": 116,
+          "path": "app uis/IbratApp/flow-01/frame-0116.webp",
+          "deltaFromPrevKeyframe": 8.29,
+          "stepDelta": 8.29
+        },
+        {
+          "frame": 117,
+          "path": "app uis/IbratApp/flow-01/frame-0117.webp",
+          "deltaFromPrevKeyframe": 7.01,
+          "stepDelta": 7.01
+        },
+        {
+          "frame": 122,
+          "path": "app uis/IbratApp/flow-01/frame-0122.webp",
+          "deltaFromPrevKeyframe": 7.2,
+          "stepDelta": 7.17
+        },
+        {
+          "frame": 123,
+          "path": "app uis/IbratApp/flow-01/frame-0123.webp",
+          "deltaFromPrevKeyframe": 8.59,
+          "stepDelta": 8.59
+        },
+        {
+          "frame": 126,
+          "path": "app uis/IbratApp/flow-01/frame-0126.webp",
+          "deltaFromPrevKeyframe": 8.2,
+          "stepDelta": 7.63
+        },
+        {
+          "frame": 127,
+          "path": "app uis/IbratApp/flow-01/frame-0127.webp",
+          "deltaFromPrevKeyframe": 6.73,
+          "stepDelta": 6.73
+        },
+        {
+          "frame": 128,
+          "path": "app uis/IbratApp/flow-01/frame-0128.webp",
+          "deltaFromPrevKeyframe": 8.77,
+          "stepDelta": 8.77
+        },
+        {
+          "frame": 133,
+          "path": "app uis/IbratApp/flow-01/frame-0133.webp",
+          "deltaFromPrevKeyframe": 11.76,
+          "stepDelta": 11.24
+        },
+        {
+          "frame": 134,
+          "path": "app uis/IbratApp/flow-01/frame-0134.webp",
+          "deltaFromPrevKeyframe": 7.13,
+          "stepDelta": 7.13
+        },
+        {
+          "frame": 161,
+          "path": "app uis/IbratApp/flow-01/frame-0161.webp",
+          "deltaFromPrevKeyframe": 10.93,
+          "stepDelta": 7.88
+        },
+        {
+          "frame": 167,
+          "path": "app uis/IbratApp/flow-01/frame-0167.webp",
+          "deltaFromPrevKeyframe": 8.35,
+          "stepDelta": 2.62
+        },
+        {
+          "frame": 186,
+          "path": "app uis/IbratApp/flow-01/frame-0186.webp",
+          "deltaFromPrevKeyframe": 15.72,
+          "stepDelta": 14.84
+        },
+        {
+          "frame": 188,
+          "path": "app uis/IbratApp/flow-01/frame-0188.webp",
+          "deltaFromPrevKeyframe": 16.0,
+          "stepDelta": 16.15
+        },
+        {
+          "frame": 215,
+          "path": "app uis/IbratApp/flow-01/frame-0215.webp",
+          "deltaFromPrevKeyframe": 9.69,
+          "stepDelta": 8.04
+        },
+        {
+          "frame": 240,
+          "path": "app uis/IbratApp/flow-01/frame-0240.webp",
+          "deltaFromPrevKeyframe": 8.12,
+          "stepDelta": 8.25
+        },
+        {
+          "frame": 253,
+          "path": "app uis/IbratApp/flow-01/frame-0253.webp",
+          "deltaFromPrevKeyframe": 24.07,
+          "stepDelta": 23.71
+        },
+        {
+          "frame": 254,
+          "path": "app uis/IbratApp/flow-01/frame-0254.webp",
+          "deltaFromPrevKeyframe": 6.96,
+          "stepDelta": 6.96
+        },
+        {
+          "frame": 283,
+          "path": "app uis/IbratApp/flow-01/frame-0283.webp",
+          "deltaFromPrevKeyframe": 11.73,
+          "stepDelta": 7.34
+        },
+        {
+          "frame": 301,
+          "path": "app uis/IbratApp/flow-01/frame-0301.webp",
+          "deltaFromPrevKeyframe": 11.61,
+          "stepDelta": 9.05
+        },
+        {
+          "frame": 305,
+          "path": "app uis/IbratApp/flow-01/frame-0305.webp",
+          "deltaFromPrevKeyframe": 9.09,
+          "stepDelta": 9.05
+        },
+        {
+          "frame": 306,
+          "path": "app uis/IbratApp/flow-01/frame-0306.webp",
+          "deltaFromPrevKeyframe": 15.54,
+          "stepDelta": 15.54
+        },
+        {
+          "frame": 312,
+          "path": "app uis/IbratApp/flow-01/frame-0312.webp",
+          "deltaFromPrevKeyframe": 8.73,
+          "stepDelta": 8.34
+        },
+        {
+          "frame": 313,
+          "path": "app uis/IbratApp/flow-01/frame-0313.webp",
+          "deltaFromPrevKeyframe": 9.45,
+          "stepDelta": 9.45
+        },
+        {
+          "frame": 318,
+          "path": "app uis/IbratApp/flow-01/frame-0318.webp",
+          "deltaFromPrevKeyframe": 11.2,
+          "stepDelta": 10.62
+        },
+        {
+          "frame": 319,
+          "path": "app uis/IbratApp/flow-01/frame-0319.webp",
+          "deltaFromPrevKeyframe": 7.38,
+          "stepDelta": 7.38
+        },
+        {
+          "frame": 341,
+          "path": "app uis/IbratApp/flow-01/frame-0341.webp",
+          "deltaFromPrevKeyframe": 7.01,
+          "stepDelta": 2.75
+        },
+        {
+          "frame": 363,
+          "path": "app uis/IbratApp/flow-01/frame-0363.webp",
+          "deltaFromPrevKeyframe": 7.92,
+          "stepDelta": 4.06
+        },
+        {
+          "frame": 373,
+          "path": "app uis/IbratApp/flow-01/frame-0373.webp",
+          "deltaFromPrevKeyframe": 6.62,
+          "stepDelta": 4.94
+        },
+        {
+          "frame": 388,
+          "path": "app uis/IbratApp/flow-01/frame-0388.webp",
+          "deltaFromPrevKeyframe": 7.85,
+          "stepDelta": 8.36
+        },
+        {
+          "frame": 408,
+          "path": "app uis/IbratApp/flow-01/frame-0408.webp",
+          "deltaFromPrevKeyframe": 6.61,
+          "stepDelta": 0.22
+        },
+        {
+          "frame": 421,
+          "path": "app uis/IbratApp/flow-01/frame-0421.webp",
+          "deltaFromPrevKeyframe": 10.54,
+          "stepDelta": 4.69
+        },
+        {
+          "frame": 424,
+          "path": "app uis/IbratApp/flow-01/frame-0424.webp",
+          "deltaFromPrevKeyframe": 14.74,
+          "stepDelta": 15.06
+        },
+        {
+          "frame": 425,
+          "path": "app uis/IbratApp/flow-01/frame-0425.webp",
+          "deltaFromPrevKeyframe": 12.11,
+          "stepDelta": 12.11
+        },
+        {
+          "frame": 427,
+          "path": "app uis/IbratApp/flow-01/frame-0427.webp",
+          "deltaFromPrevKeyframe": 9.58,
+          "stepDelta": 4.38
+        },
+        {
+          "frame": 434,
+          "path": "app uis/IbratApp/flow-01/frame-0434.webp",
+          "deltaFromPrevKeyframe": 14.7,
+          "stepDelta": 14.8
+        },
+        {
+          "frame": 436,
+          "path": "app uis/IbratApp/flow-01/frame-0436.webp",
+          "deltaFromPrevKeyframe": 10.37,
+          "stepDelta": 4.86
+        },
+        {
+          "frame": 444,
+          "path": "app uis/IbratApp/flow-01/frame-0444.webp",
+          "deltaFromPrevKeyframe": 17.31,
+          "stepDelta": 16.65
+        },
+        {
+          "frame": 456,
+          "path": "app uis/IbratApp/flow-01/frame-0456.webp",
+          "deltaFromPrevKeyframe": 6.83,
+          "stepDelta": 1.96
+        },
+        {
+          "frame": 462,
+          "path": "app uis/IbratApp/flow-01/frame-0462.webp",
+          "deltaFromPrevKeyframe": 7.46,
+          "stepDelta": 7.09
+        },
+        {
+          "frame": 466,
+          "path": "app uis/IbratApp/flow-01/frame-0466.webp",
+          "deltaFromPrevKeyframe": 8.91,
+          "stepDelta": 6.55
+        },
+        {
+          "frame": 471,
+          "path": "app uis/IbratApp/flow-01/frame-0471.webp",
+          "deltaFromPrevKeyframe": 8.01,
+          "stepDelta": 8.06
+        },
+        {
+          "frame": 472,
+          "path": "app uis/IbratApp/flow-01/frame-0472.webp",
+          "deltaFromPrevKeyframe": 10.47,
+          "stepDelta": 10.47
+        },
+        {
+          "frame": 502,
+          "path": "app uis/IbratApp/flow-01/frame-0502.webp",
+          "deltaFromPrevKeyframe": 8.74,
+          "stepDelta": 7.05
+        },
+        {
+          "frame": 516,
+          "path": "app uis/IbratApp/flow-01/frame-0516.webp",
+          "deltaFromPrevKeyframe": 8.58,
+          "stepDelta": 8.16
+        },
+        {
+          "frame": 517,
+          "path": "app uis/IbratApp/flow-01/frame-0517.webp",
+          "deltaFromPrevKeyframe": 9.56,
+          "stepDelta": 9.56
+        },
+        {
+          "frame": 521,
+          "path": "app uis/IbratApp/flow-01/frame-0521.webp",
+          "deltaFromPrevKeyframe": 10.18,
+          "stepDelta": 7.33
+        },
+        {
+          "frame": 529,
+          "path": "app uis/IbratApp/flow-01/frame-0529.webp",
+          "deltaFromPrevKeyframe": 7.66,
+          "stepDelta": 7.58
+        },
+        {
+          "frame": 530,
+          "path": "app uis/IbratApp/flow-01/frame-0530.webp",
+          "deltaFromPrevKeyframe": 6.82,
+          "stepDelta": 6.82
+        },
+        {
+          "frame": 549,
+          "path": "app uis/IbratApp/flow-01/frame-0549.webp",
+          "deltaFromPrevKeyframe": 8.17,
+          "stepDelta": 6.5
+        },
+        {
+          "frame": 551,
+          "path": "app uis/IbratApp/flow-01/frame-0551.webp",
+          "deltaFromPrevKeyframe": 6.54,
+          "stepDelta": 0.04
+        },
+        {
+          "frame": 563,
+          "path": "app uis/IbratApp/flow-01/frame-0563.webp",
+          "deltaFromPrevKeyframe": 10.72,
+          "stepDelta": 10.15
+        },
+        {
+          "frame": 567,
+          "path": "app uis/IbratApp/flow-01/frame-0567.webp",
+          "deltaFromPrevKeyframe": 8.57,
+          "stepDelta": 5.86
+        },
+        {
+          "frame": 572,
+          "path": "app uis/IbratApp/flow-01/frame-0572.webp",
+          "deltaFromPrevKeyframe": 9.85,
+          "stepDelta": 11.8
+        },
+        {
+          "frame": 587,
+          "path": "app uis/IbratApp/flow-01/frame-0587.webp",
+          "deltaFromPrevKeyframe": 11.15,
+          "stepDelta": 6.8
+        },
+        {
+          "frame": 591,
+          "path": "app uis/IbratApp/flow-01/frame-0591.webp",
+          "deltaFromPrevKeyframe": 6.59,
+          "stepDelta": 0.32
+        },
+        {
+          "frame": 596,
+          "path": "app uis/IbratApp/flow-01/frame-0596.webp",
+          "deltaFromPrevKeyframe": 13.47,
+          "stepDelta": 13.81
+        },
+        {
+          "frame": 613,
+          "path": "app uis/IbratApp/flow-01/frame-0613.webp",
+          "deltaFromPrevKeyframe": 16.18,
+          "stepDelta": 15.32
+        },
+        {
+          "frame": 659,
+          "path": "app uis/IbratApp/flow-01/frame-0659.webp",
+          "deltaFromPrevKeyframe": 8.33,
+          "stepDelta": 4.81
+        },
+        {
+          "frame": 675,
+          "path": "app uis/IbratApp/flow-01/frame-0675.webp",
+          "deltaFromPrevKeyframe": 11.44,
+          "stepDelta": 10.86
+        },
+        {
+          "frame": 684,
+          "path": "app uis/IbratApp/flow-01/frame-0684.webp",
+          "deltaFromPrevKeyframe": 13.69,
+          "stepDelta": 13.67
+        },
+        {
+          "frame": 701,
+          "path": "app uis/IbratApp/flow-01/frame-0701.webp",
+          "deltaFromPrevKeyframe": 7.31,
+          "stepDelta": 1.39
+        },
+        {
+          "frame": 702,
+          "path": "app uis/IbratApp/flow-01/frame-0702.webp",
+          "deltaFromPrevKeyframe": 13.26,
+          "stepDelta": 13.26
+        },
+        {
+          "frame": 723,
+          "path": "app uis/IbratApp/flow-01/frame-0723.webp",
+          "deltaFromPrevKeyframe": 9.0,
+          "stepDelta": 6.8
+        },
+        {
+          "frame": 729,
+          "path": "app uis/IbratApp/flow-01/frame-0729.webp",
+          "deltaFromPrevKeyframe": 7.43,
+          "stepDelta": 7.07
+        },
+        {
+          "frame": 730,
+          "path": "app uis/IbratApp/flow-01/frame-0730.webp",
+          "deltaFromPrevKeyframe": 6.58,
+          "stepDelta": 6.58
+        },
+        {
+          "frame": 733,
+          "path": "app uis/IbratApp/flow-01/frame-0733.webp",
+          "deltaFromPrevKeyframe": 8.18,
+          "stepDelta": 8.57
+        },
+        {
+          "frame": 736,
+          "path": "app uis/IbratApp/flow-01/frame-0736.webp",
+          "deltaFromPrevKeyframe": 13.56,
+          "stepDelta": 13.65
+        },
+        {
+          "frame": 743,
+          "path": "app uis/IbratApp/flow-01/frame-0743.webp",
+          "deltaFromPrevKeyframe": 10.45,
+          "stepDelta": 7.01
+        },
+        {
+          "frame": 755,
+          "path": "app uis/IbratApp/flow-01/frame-0755.webp",
+          "deltaFromPrevKeyframe": 8.72,
+          "stepDelta": 7.53
+        },
+        {
+          "frame": 756,
+          "path": "app uis/IbratApp/flow-01/frame-0756.webp",
+          "deltaFromPrevKeyframe": 9.05,
+          "stepDelta": 9.05
+        },
+        {
+          "frame": 759,
+          "path": "app uis/IbratApp/flow-01/frame-0759.webp",
+          "deltaFromPrevKeyframe": 8.97,
+          "stepDelta": 8.87
+        },
+        {
+          "frame": 768,
+          "path": "app uis/IbratApp/flow-01/frame-0768.webp",
+          "deltaFromPrevKeyframe": 9.56,
+          "stepDelta": 10.12
+        },
+        {
+          "frame": 769,
+          "path": "app uis/IbratApp/flow-01/frame-0769.webp",
+          "deltaFromPrevKeyframe": 7.37,
+          "stepDelta": 7.37
+        },
+        {
+          "frame": 790,
+          "path": "app uis/IbratApp/flow-01/frame-0790.webp",
+          "deltaFromPrevKeyframe": 9.47,
+          "stepDelta": 7.08
+        },
+        {
+          "frame": 794,
+          "path": "app uis/IbratApp/flow-01/frame-0794.webp",
+          "deltaFromPrevKeyframe": 11.94,
+          "stepDelta": 7.82
+        },
+        {
+          "frame": 797,
+          "path": "app uis/IbratApp/flow-01/frame-0797.webp",
+          "deltaFromPrevKeyframe": 11.74,
+          "stepDelta": 10.6
+        },
+        {
+          "frame": 805,
+          "path": "app uis/IbratApp/flow-01/frame-0805.webp",
+          "deltaFromPrevKeyframe": 7.23,
+          "stepDelta": 1.44
+        },
+        {
+          "frame": 806,
+          "path": "app uis/IbratApp/flow-01/frame-0806.webp",
+          "deltaFromPrevKeyframe": 12.77,
+          "stepDelta": 12.77
+        },
+        {
+          "frame": 812,
+          "path": "app uis/IbratApp/flow-01/frame-0812.webp",
+          "deltaFromPrevKeyframe": 8.85,
+          "stepDelta": 6.77
+        },
+        {
+          "frame": 857,
+          "path": "app uis/IbratApp/flow-01/frame-0857.webp",
+          "deltaFromPrevKeyframe": 8.03,
+          "stepDelta": 7.34
+        },
+        {
+          "frame": 858,
+          "path": "app uis/IbratApp/flow-01/frame-0858.webp",
+          "deltaFromPrevKeyframe": 8.69,
+          "stepDelta": 8.69
+        },
+        {
+          "frame": 861,
+          "path": "app uis/IbratApp/flow-01/frame-0861.webp",
+          "deltaFromPrevKeyframe": 8.22,
+          "stepDelta": 8.08
+        },
+        {
+          "frame": 865,
+          "path": "app uis/IbratApp/flow-01/frame-0865.webp",
+          "deltaFromPrevKeyframe": 7.65,
+          "stepDelta": 6.09
+        },
+        {
+          "frame": 869,
+          "path": "app uis/IbratApp/flow-01/frame-0869.webp",
+          "deltaFromPrevKeyframe": 12.98,
+          "stepDelta": 12.37
+        },
+        {
+          "frame": 870,
+          "path": "app uis/IbratApp/flow-01/frame-0870.webp",
+          "deltaFromPrevKeyframe": 67.15,
+          "stepDelta": 67.15
+        },
+        {
+          "frame": 871,
+          "path": "app uis/IbratApp/flow-01/frame-0871.webp",
+          "deltaFromPrevKeyframe": 35.68,
+          "stepDelta": 35.68
+        },
+        {
+          "frame": 880,
+          "path": "app uis/IbratApp/flow-01/frame-0880.webp",
+          "deltaFromPrevKeyframe": 7.68,
+          "stepDelta": 2.78
+        },
+        {
+          "frame": 883,
+          "path": "app uis/IbratApp/flow-01/frame-0883.webp",
+          "deltaFromPrevKeyframe": 6.93,
+          "stepDelta": 3.66
+        },
+        {
+          "frame": 884,
+          "path": "app uis/IbratApp/flow-01/frame-0884.webp",
+          "deltaFromPrevKeyframe": 8.23,
+          "stepDelta": 8.23
+        },
+        {
+          "frame": 899,
+          "path": "app uis/IbratApp/flow-01/frame-0899.webp",
+          "deltaFromPrevKeyframe": 99.02,
+          "stepDelta": 98.5
+        },
+        {
+          "frame": 900,
+          "path": "app uis/IbratApp/flow-01/frame-0900.webp",
+          "deltaFromPrevKeyframe": 23.71,
+          "stepDelta": 23.71
+        },
+        {
+          "frame": 901,
+          "path": "app uis/IbratApp/flow-01/frame-0901.webp",
+          "deltaFromPrevKeyframe": 9.09,
+          "stepDelta": 9.09
+        },
+        {
+          "frame": 907,
+          "path": "app uis/IbratApp/flow-01/frame-0907.webp",
+          "deltaFromPrevKeyframe": 8.53,
+          "stepDelta": 2.51
+        },
+        {
+          "frame": 931,
+          "path": "app uis/IbratApp/flow-01/frame-0931.webp",
+          "deltaFromPrevKeyframe": 37.35,
+          "stepDelta": 36.93
+        },
+        {
+          "frame": 939,
+          "path": "app uis/IbratApp/flow-01/frame-0939.webp",
+          "deltaFromPrevKeyframe": 40.12,
+          "stepDelta": 40.9
+        },
+        {
+          "frame": 944,
+          "path": "app uis/IbratApp/flow-01/frame-0944.webp",
+          "deltaFromPrevKeyframe": 24.96,
+          "stepDelta": 23.16
+        },
+        {
+          "frame": 945,
+          "path": "app uis/IbratApp/flow-01/frame-0945.webp",
+          "deltaFromPrevKeyframe": 78.88,
+          "stepDelta": 78.88
+        },
+        {
+          "frame": 966,
+          "path": "app uis/IbratApp/flow-01/frame-0966.webp",
+          "deltaFromPrevKeyframe": 67.14,
+          "stepDelta": 66.86
+        },
+        {
+          "frame": 967,
+          "path": "app uis/IbratApp/flow-01/frame-0967.webp",
+          "deltaFromPrevKeyframe": 59.92,
+          "stepDelta": 59.92
+        },
+        {
+          "frame": 987,
+          "path": "app uis/IbratApp/flow-01/frame-0987.webp",
+          "deltaFromPrevKeyframe": 120.22,
+          "stepDelta": 120.86
+        },
+        {
+          "frame": 988,
+          "path": "app uis/IbratApp/flow-01/frame-0988.webp",
+          "deltaFromPrevKeyframe": 7.0,
+          "stepDelta": 7.0
+        },
+        {
+          "frame": 989,
+          "path": "app uis/IbratApp/flow-01/frame-0989.webp",
+          "deltaFromPrevKeyframe": 8.64,
+          "stepDelta": 8.64
+        }
+      ]
+    },
+    {
+      "flowId": "flow-02",
+      "sourceVideoId": "09-58-44",
+      "frameCount": 1163,
+      "width": 590,
+      "height": 1280,
+      "format": "webp",
+      "beforeZipMB": 209.15,
+      "afterWebpMB": 26.59,
+      "keyframeCount": 325,
+      "keyframes": [
+        {
+          "frame": 1,
+          "path": "app uis/IbratApp/flow-02/frame-0001.webp",
+          "deltaFromPrevKeyframe": 999.0,
+          "stepDelta": 999.0
+        },
+        {
+          "frame": 4,
+          "path": "app uis/IbratApp/flow-02/frame-0004.webp",
+          "deltaFromPrevKeyframe": 33.47,
+          "stepDelta": 33.47
+        },
+        {
+          "frame": 11,
+          "path": "app uis/IbratApp/flow-02/frame-0011.webp",
+          "deltaFromPrevKeyframe": 20.79,
+          "stepDelta": 20.72
+        },
+        {
+          "frame": 12,
+          "path": "app uis/IbratApp/flow-02/frame-0012.webp",
+          "deltaFromPrevKeyframe": 21.43,
+          "stepDelta": 21.43
+        },
+        {
+          "frame": 13,
+          "path": "app uis/IbratApp/flow-02/frame-0013.webp",
+          "deltaFromPrevKeyframe": 13.95,
+          "stepDelta": 13.95
+        },
+        {
+          "frame": 15,
+          "path": "app uis/IbratApp/flow-02/frame-0015.webp",
+          "deltaFromPrevKeyframe": 16.99,
+          "stepDelta": 16.96
+        },
+        {
+          "frame": 16,
+          "path": "app uis/IbratApp/flow-02/frame-0016.webp",
+          "deltaFromPrevKeyframe": 12.65,
+          "stepDelta": 12.65
+        },
+        {
+          "frame": 17,
+          "path": "app uis/IbratApp/flow-02/frame-0017.webp",
+          "deltaFromPrevKeyframe": 8.38,
+          "stepDelta": 8.38
+        },
+        {
+          "frame": 18,
+          "path": "app uis/IbratApp/flow-02/frame-0018.webp",
+          "deltaFromPrevKeyframe": 7.14,
+          "stepDelta": 7.14
+        },
+        {
+          "frame": 31,
+          "path": "app uis/IbratApp/flow-02/frame-0031.webp",
+          "deltaFromPrevKeyframe": 6.57,
+          "stepDelta": 6.64
+        },
+        {
+          "frame": 37,
+          "path": "app uis/IbratApp/flow-02/frame-0037.webp",
+          "deltaFromPrevKeyframe": 6.78,
+          "stepDelta": 5.45
+        },
+        {
+          "frame": 38,
+          "path": "app uis/IbratApp/flow-02/frame-0038.webp",
+          "deltaFromPrevKeyframe": 6.91,
+          "stepDelta": 6.91
+        },
+        {
+          "frame": 52,
+          "path": "app uis/IbratApp/flow-02/frame-0052.webp",
+          "deltaFromPrevKeyframe": 50.43,
+          "stepDelta": 50.19
+        },
+        {
+          "frame": 53,
+          "path": "app uis/IbratApp/flow-02/frame-0053.webp",
+          "deltaFromPrevKeyframe": 30.09,
+          "stepDelta": 30.09
+        },
+        {
+          "frame": 74,
+          "path": "app uis/IbratApp/flow-02/frame-0074.webp",
+          "deltaFromPrevKeyframe": 31.9,
+          "stepDelta": 31.93
+        },
+        {
+          "frame": 75,
+          "path": "app uis/IbratApp/flow-02/frame-0075.webp",
+          "deltaFromPrevKeyframe": 49.72,
+          "stepDelta": 49.72
+        },
+        {
+          "frame": 79,
+          "path": "app uis/IbratApp/flow-02/frame-0079.webp",
+          "deltaFromPrevKeyframe": 16.07,
+          "stepDelta": 16.04
+        },
+        {
+          "frame": 80,
+          "path": "app uis/IbratApp/flow-02/frame-0080.webp",
+          "deltaFromPrevKeyframe": 16.27,
+          "stepDelta": 16.27
+        },
+        {
+          "frame": 82,
+          "path": "app uis/IbratApp/flow-02/frame-0082.webp",
+          "deltaFromPrevKeyframe": 9.15,
+          "stepDelta": 7.52
+        },
+        {
+          "frame": 83,
+          "path": "app uis/IbratApp/flow-02/frame-0083.webp",
+          "deltaFromPrevKeyframe": 6.95,
+          "stepDelta": 6.95
+        },
+        {
+          "frame": 86,
+          "path": "app uis/IbratApp/flow-02/frame-0086.webp",
+          "deltaFromPrevKeyframe": 16.71,
+          "stepDelta": 16.73
+        },
+        {
+          "frame": 87,
+          "path": "app uis/IbratApp/flow-02/frame-0087.webp",
+          "deltaFromPrevKeyframe": 26.8,
+          "stepDelta": 26.8
+        },
+        {
+          "frame": 88,
+          "path": "app uis/IbratApp/flow-02/frame-0088.webp",
+          "deltaFromPrevKeyframe": 31.15,
+          "stepDelta": 31.15
+        },
+        {
+          "frame": 89,
+          "path": "app uis/IbratApp/flow-02/frame-0089.webp",
+          "deltaFromPrevKeyframe": 33.72,
+          "stepDelta": 33.72
+        },
+        {
+          "frame": 90,
+          "path": "app uis/IbratApp/flow-02/frame-0090.webp",
+          "deltaFromPrevKeyframe": 22.31,
+          "stepDelta": 22.31
+        },
+        {
+          "frame": 92,
+          "path": "app uis/IbratApp/flow-02/frame-0092.webp",
+          "deltaFromPrevKeyframe": 25.43,
+          "stepDelta": 25.7
+        },
+        {
+          "frame": 93,
+          "path": "app uis/IbratApp/flow-02/frame-0093.webp",
+          "deltaFromPrevKeyframe": 17.11,
+          "stepDelta": 17.11
+        },
+        {
+          "frame": 94,
+          "path": "app uis/IbratApp/flow-02/frame-0094.webp",
+          "deltaFromPrevKeyframe": 12.78,
+          "stepDelta": 12.78
+        },
+        {
+          "frame": 95,
+          "path": "app uis/IbratApp/flow-02/frame-0095.webp",
+          "deltaFromPrevKeyframe": 13.3,
+          "stepDelta": 13.3
+        },
+        {
+          "frame": 96,
+          "path": "app uis/IbratApp/flow-02/frame-0096.webp",
+          "deltaFromPrevKeyframe": 22.17,
+          "stepDelta": 22.17
+        },
+        {
+          "frame": 102,
+          "path": "app uis/IbratApp/flow-02/frame-0102.webp",
+          "deltaFromPrevKeyframe": 6.7,
+          "stepDelta": 0.82
+        },
+        {
+          "frame": 103,
+          "path": "app uis/IbratApp/flow-02/frame-0103.webp",
+          "deltaFromPrevKeyframe": 38.76,
+          "stepDelta": 38.76
+        },
+        {
+          "frame": 104,
+          "path": "app uis/IbratApp/flow-02/frame-0104.webp",
+          "deltaFromPrevKeyframe": 27.92,
+          "stepDelta": 27.92
+        },
+        {
+          "frame": 107,
+          "path": "app uis/IbratApp/flow-02/frame-0107.webp",
+          "deltaFromPrevKeyframe": 10.07,
+          "stepDelta": 9.95
+        },
+        {
+          "frame": 109,
+          "path": "app uis/IbratApp/flow-02/frame-0109.webp",
+          "deltaFromPrevKeyframe": 7.2,
+          "stepDelta": 5.53
+        },
+        {
+          "frame": 110,
+          "path": "app uis/IbratApp/flow-02/frame-0110.webp",
+          "deltaFromPrevKeyframe": 11.15,
+          "stepDelta": 11.15
+        },
+        {
+          "frame": 130,
+          "path": "app uis/IbratApp/flow-02/frame-0130.webp",
+          "deltaFromPrevKeyframe": 33.06,
+          "stepDelta": 33.13
+        },
+        {
+          "frame": 131,
+          "path": "app uis/IbratApp/flow-02/frame-0131.webp",
+          "deltaFromPrevKeyframe": 8.81,
+          "stepDelta": 8.81
+        },
+        {
+          "frame": 137,
+          "path": "app uis/IbratApp/flow-02/frame-0137.webp",
+          "deltaFromPrevKeyframe": 30.39,
+          "stepDelta": 30.42
+        },
+        {
+          "frame": 142,
+          "path": "app uis/IbratApp/flow-02/frame-0142.webp",
+          "deltaFromPrevKeyframe": 15.88,
+          "stepDelta": 15.16
+        },
+        {
+          "frame": 152,
+          "path": "app uis/IbratApp/flow-02/frame-0152.webp",
+          "deltaFromPrevKeyframe": 10.55,
+          "stepDelta": 9.95
+        },
+        {
+          "frame": 153,
+          "path": "app uis/IbratApp/flow-02/frame-0153.webp",
+          "deltaFromPrevKeyframe": 22.31,
+          "stepDelta": 22.31
+        },
+        {
+          "frame": 154,
+          "path": "app uis/IbratApp/flow-02/frame-0154.webp",
+          "deltaFromPrevKeyframe": 15.7,
+          "stepDelta": 15.7
+        },
+        {
+          "frame": 155,
+          "path": "app uis/IbratApp/flow-02/frame-0155.webp",
+          "deltaFromPrevKeyframe": 14.48,
+          "stepDelta": 14.48
+        },
+        {
+          "frame": 156,
+          "path": "app uis/IbratApp/flow-02/frame-0156.webp",
+          "deltaFromPrevKeyframe": 15.17,
+          "stepDelta": 15.17
+        },
+        {
+          "frame": 157,
+          "path": "app uis/IbratApp/flow-02/frame-0157.webp",
+          "deltaFromPrevKeyframe": 17.68,
+          "stepDelta": 17.68
+        },
+        {
+          "frame": 160,
+          "path": "app uis/IbratApp/flow-02/frame-0160.webp",
+          "deltaFromPrevKeyframe": 12.47,
+          "stepDelta": 12.33
+        },
+        {
+          "frame": 161,
+          "path": "app uis/IbratApp/flow-02/frame-0161.webp",
+          "deltaFromPrevKeyframe": 16.84,
+          "stepDelta": 16.84
+        },
+        {
+          "frame": 162,
+          "path": "app uis/IbratApp/flow-02/frame-0162.webp",
+          "deltaFromPrevKeyframe": 22.14,
+          "stepDelta": 22.14
+        },
+        {
+          "frame": 163,
+          "path": "app uis/IbratApp/flow-02/frame-0163.webp",
+          "deltaFromPrevKeyframe": 16.18,
+          "stepDelta": 16.18
+        },
+        {
+          "frame": 165,
+          "path": "app uis/IbratApp/flow-02/frame-0165.webp",
+          "deltaFromPrevKeyframe": 28.43,
+          "stepDelta": 28.43
+        },
+        {
+          "frame": 166,
+          "path": "app uis/IbratApp/flow-02/frame-0166.webp",
+          "deltaFromPrevKeyframe": 28.12,
+          "stepDelta": 28.12
+        },
+        {
+          "frame": 167,
+          "path": "app uis/IbratApp/flow-02/frame-0167.webp",
+          "deltaFromPrevKeyframe": 29.39,
+          "stepDelta": 29.39
+        },
+        {
+          "frame": 168,
+          "path": "app uis/IbratApp/flow-02/frame-0168.webp",
+          "deltaFromPrevKeyframe": 30.3,
+          "stepDelta": 30.3
+        },
+        {
+          "frame": 171,
+          "path": "app uis/IbratApp/flow-02/frame-0171.webp",
+          "deltaFromPrevKeyframe": 18.65,
+          "stepDelta": 17.75
+        },
+        {
+          "frame": 172,
+          "path": "app uis/IbratApp/flow-02/frame-0172.webp",
+          "deltaFromPrevKeyframe": 33.13,
+          "stepDelta": 33.13
+        },
+        {
+          "frame": 173,
+          "path": "app uis/IbratApp/flow-02/frame-0173.webp",
+          "deltaFromPrevKeyframe": 24.2,
+          "stepDelta": 24.2
+        },
+        {
+          "frame": 174,
+          "path": "app uis/IbratApp/flow-02/frame-0174.webp",
+          "deltaFromPrevKeyframe": 25.72,
+          "stepDelta": 25.72
+        },
+        {
+          "frame": 175,
+          "path": "app uis/IbratApp/flow-02/frame-0175.webp",
+          "deltaFromPrevKeyframe": 6.58,
+          "stepDelta": 6.58
+        },
+        {
+          "frame": 176,
+          "path": "app uis/IbratApp/flow-02/frame-0176.webp",
+          "deltaFromPrevKeyframe": 18.45,
+          "stepDelta": 18.45
+        },
+        {
+          "frame": 177,
+          "path": "app uis/IbratApp/flow-02/frame-0177.webp",
+          "deltaFromPrevKeyframe": 18.79,
+          "stepDelta": 18.79
+        },
+        {
+          "frame": 178,
+          "path": "app uis/IbratApp/flow-02/frame-0178.webp",
+          "deltaFromPrevKeyframe": 13.75,
+          "stepDelta": 13.75
+        },
+        {
+          "frame": 183,
+          "path": "app uis/IbratApp/flow-02/frame-0183.webp",
+          "deltaFromPrevKeyframe": 12.93,
+          "stepDelta": 12.99
+        },
+        {
+          "frame": 184,
+          "path": "app uis/IbratApp/flow-02/frame-0184.webp",
+          "deltaFromPrevKeyframe": 17.08,
+          "stepDelta": 17.08
+        },
+        {
+          "frame": 185,
+          "path": "app uis/IbratApp/flow-02/frame-0185.webp",
+          "deltaFromPrevKeyframe": 25.28,
+          "stepDelta": 25.28
+        },
+        {
+          "frame": 186,
+          "path": "app uis/IbratApp/flow-02/frame-0186.webp",
+          "deltaFromPrevKeyframe": 20.84,
+          "stepDelta": 20.84
+        },
+        {
+          "frame": 193,
+          "path": "app uis/IbratApp/flow-02/frame-0193.webp",
+          "deltaFromPrevKeyframe": 10.07,
+          "stepDelta": 10.16
+        },
+        {
+          "frame": 194,
+          "path": "app uis/IbratApp/flow-02/frame-0194.webp",
+          "deltaFromPrevKeyframe": 21.67,
+          "stepDelta": 21.67
+        },
+        {
+          "frame": 199,
+          "path": "app uis/IbratApp/flow-02/frame-0199.webp",
+          "deltaFromPrevKeyframe": 20.67,
+          "stepDelta": 19.34
+        },
+        {
+          "frame": 200,
+          "path": "app uis/IbratApp/flow-02/frame-0200.webp",
+          "deltaFromPrevKeyframe": 13.7,
+          "stepDelta": 13.7
+        },
+        {
+          "frame": 201,
+          "path": "app uis/IbratApp/flow-02/frame-0201.webp",
+          "deltaFromPrevKeyframe": 6.7,
+          "stepDelta": 6.7
+        },
+        {
+          "frame": 202,
+          "path": "app uis/IbratApp/flow-02/frame-0202.webp",
+          "deltaFromPrevKeyframe": 8.4,
+          "stepDelta": 8.4
+        },
+        {
+          "frame": 203,
+          "path": "app uis/IbratApp/flow-02/frame-0203.webp",
+          "deltaFromPrevKeyframe": 7.76,
+          "stepDelta": 7.76
+        },
+        {
+          "frame": 204,
+          "path": "app uis/IbratApp/flow-02/frame-0204.webp",
+          "deltaFromPrevKeyframe": 7.9,
+          "stepDelta": 7.9
+        },
+        {
+          "frame": 205,
+          "path": "app uis/IbratApp/flow-02/frame-0205.webp",
+          "deltaFromPrevKeyframe": 7.99,
+          "stepDelta": 7.99
+        },
+        {
+          "frame": 206,
+          "path": "app uis/IbratApp/flow-02/frame-0206.webp",
+          "deltaFromPrevKeyframe": 8.33,
+          "stepDelta": 8.33
+        },
+        {
+          "frame": 212,
+          "path": "app uis/IbratApp/flow-02/frame-0212.webp",
+          "deltaFromPrevKeyframe": 7.53,
+          "stepDelta": 1.18
+        },
+        {
+          "frame": 213,
+          "path": "app uis/IbratApp/flow-02/frame-0213.webp",
+          "deltaFromPrevKeyframe": 25.37,
+          "stepDelta": 25.37
+        },
+        {
+          "frame": 219,
+          "path": "app uis/IbratApp/flow-02/frame-0219.webp",
+          "deltaFromPrevKeyframe": 29.04,
+          "stepDelta": 26.52
+        },
+        {
+          "frame": 220,
+          "path": "app uis/IbratApp/flow-02/frame-0220.webp",
+          "deltaFromPrevKeyframe": 8.11,
+          "stepDelta": 8.11
+        },
+        {
+          "frame": 234,
+          "path": "app uis/IbratApp/flow-02/frame-0234.webp",
+          "deltaFromPrevKeyframe": 33.89,
+          "stepDelta": 36.29
+        },
+        {
+          "frame": 235,
+          "path": "app uis/IbratApp/flow-02/frame-0235.webp",
+          "deltaFromPrevKeyframe": 10.53,
+          "stepDelta": 10.53
+        },
+        {
+          "frame": 237,
+          "path": "app uis/IbratApp/flow-02/frame-0237.webp",
+          "deltaFromPrevKeyframe": 18.77,
+          "stepDelta": 18.7
+        },
+        {
+          "frame": 238,
+          "path": "app uis/IbratApp/flow-02/frame-0238.webp",
+          "deltaFromPrevKeyframe": 29.29,
+          "stepDelta": 29.29
+        },
+        {
+          "frame": 239,
+          "path": "app uis/IbratApp/flow-02/frame-0239.webp",
+          "deltaFromPrevKeyframe": 28.36,
+          "stepDelta": 28.36
+        },
+        {
+          "frame": 240,
+          "path": "app uis/IbratApp/flow-02/frame-0240.webp",
+          "deltaFromPrevKeyframe": 26.44,
+          "stepDelta": 26.44
+        },
+        {
+          "frame": 241,
+          "path": "app uis/IbratApp/flow-02/frame-0241.webp",
+          "deltaFromPrevKeyframe": 14.17,
+          "stepDelta": 14.17
+        },
+        {
+          "frame": 242,
+          "path": "app uis/IbratApp/flow-02/frame-0242.webp",
+          "deltaFromPrevKeyframe": 19.61,
+          "stepDelta": 19.61
+        },
+        {
+          "frame": 243,
+          "path": "app uis/IbratApp/flow-02/frame-0243.webp",
+          "deltaFromPrevKeyframe": 19.65,
+          "stepDelta": 19.65
+        },
+        {
+          "frame": 250,
+          "path": "app uis/IbratApp/flow-02/frame-0250.webp",
+          "deltaFromPrevKeyframe": 9.46,
+          "stepDelta": 7.15
+        },
+        {
+          "frame": 251,
+          "path": "app uis/IbratApp/flow-02/frame-0251.webp",
+          "deltaFromPrevKeyframe": 11.71,
+          "stepDelta": 11.71
+        },
+        {
+          "frame": 252,
+          "path": "app uis/IbratApp/flow-02/frame-0252.webp",
+          "deltaFromPrevKeyframe": 11.71,
+          "stepDelta": 11.71
+        },
+        {
+          "frame": 259,
+          "path": "app uis/IbratApp/flow-02/frame-0259.webp",
+          "deltaFromPrevKeyframe": 85.19,
+          "stepDelta": 85.55
+        },
+        {
+          "frame": 260,
+          "path": "app uis/IbratApp/flow-02/frame-0260.webp",
+          "deltaFromPrevKeyframe": 42.91,
+          "stepDelta": 42.91
+        },
+        {
+          "frame": 263,
+          "path": "app uis/IbratApp/flow-02/frame-0263.webp",
+          "deltaFromPrevKeyframe": 10.65,
+          "stepDelta": 9.23
+        },
+        {
+          "frame": 264,
+          "path": "app uis/IbratApp/flow-02/frame-0264.webp",
+          "deltaFromPrevKeyframe": 47.81,
+          "stepDelta": 47.81
+        },
+        {
+          "frame": 265,
+          "path": "app uis/IbratApp/flow-02/frame-0265.webp",
+          "deltaFromPrevKeyframe": 71.43,
+          "stepDelta": 71.43
+        },
+        {
+          "frame": 267,
+          "path": "app uis/IbratApp/flow-02/frame-0267.webp",
+          "deltaFromPrevKeyframe": 107.28,
+          "stepDelta": 108.18
+        },
+        {
+          "frame": 268,
+          "path": "app uis/IbratApp/flow-02/frame-0268.webp",
+          "deltaFromPrevKeyframe": 16.06,
+          "stepDelta": 16.06
+        },
+        {
+          "frame": 270,
+          "path": "app uis/IbratApp/flow-02/frame-0270.webp",
+          "deltaFromPrevKeyframe": 13.96,
+          "stepDelta": 12.39
+        },
+        {
+          "frame": 271,
+          "path": "app uis/IbratApp/flow-02/frame-0271.webp",
+          "deltaFromPrevKeyframe": 89.56,
+          "stepDelta": 89.56
+        },
+        {
+          "frame": 272,
+          "path": "app uis/IbratApp/flow-02/frame-0272.webp",
+          "deltaFromPrevKeyframe": 30.5,
+          "stepDelta": 30.5
+        },
+        {
+          "frame": 279,
+          "path": "app uis/IbratApp/flow-02/frame-0279.webp",
+          "deltaFromPrevKeyframe": 25.69,
+          "stepDelta": 25.12
+        },
+        {
+          "frame": 284,
+          "path": "app uis/IbratApp/flow-02/frame-0284.webp",
+          "deltaFromPrevKeyframe": 10.58,
+          "stepDelta": 10.69
+        },
+        {
+          "frame": 285,
+          "path": "app uis/IbratApp/flow-02/frame-0285.webp",
+          "deltaFromPrevKeyframe": 9.87,
+          "stepDelta": 9.87
+        },
+        {
+          "frame": 290,
+          "path": "app uis/IbratApp/flow-02/frame-0290.webp",
+          "deltaFromPrevKeyframe": 7.42,
+          "stepDelta": 7.54
+        },
+        {
+          "frame": 291,
+          "path": "app uis/IbratApp/flow-02/frame-0291.webp",
+          "deltaFromPrevKeyframe": 10.98,
+          "stepDelta": 10.98
+        },
+        {
+          "frame": 296,
+          "path": "app uis/IbratApp/flow-02/frame-0296.webp",
+          "deltaFromPrevKeyframe": 9.53,
+          "stepDelta": 8.71
+        },
+        {
+          "frame": 297,
+          "path": "app uis/IbratApp/flow-02/frame-0297.webp",
+          "deltaFromPrevKeyframe": 6.61,
+          "stepDelta": 6.61
+        },
+        {
+          "frame": 300,
+          "path": "app uis/IbratApp/flow-02/frame-0300.webp",
+          "deltaFromPrevKeyframe": 11.31,
+          "stepDelta": 10.04
+        },
+        {
+          "frame": 301,
+          "path": "app uis/IbratApp/flow-02/frame-0301.webp",
+          "deltaFromPrevKeyframe": 25.78,
+          "stepDelta": 25.78
+        },
+        {
+          "frame": 307,
+          "path": "app uis/IbratApp/flow-02/frame-0307.webp",
+          "deltaFromPrevKeyframe": 15.47,
+          "stepDelta": 15.47
+        },
+        {
+          "frame": 308,
+          "path": "app uis/IbratApp/flow-02/frame-0308.webp",
+          "deltaFromPrevKeyframe": 12.57,
+          "stepDelta": 12.57
+        },
+        {
+          "frame": 316,
+          "path": "app uis/IbratApp/flow-02/frame-0316.webp",
+          "deltaFromPrevKeyframe": 6.98,
+          "stepDelta": 2.29
+        },
+        {
+          "frame": 317,
+          "path": "app uis/IbratApp/flow-02/frame-0317.webp",
+          "deltaFromPrevKeyframe": 22.15,
+          "stepDelta": 22.15
+        },
+        {
+          "frame": 320,
+          "path": "app uis/IbratApp/flow-02/frame-0320.webp",
+          "deltaFromPrevKeyframe": 34.83,
+          "stepDelta": 36.9
+        },
+        {
+          "frame": 321,
+          "path": "app uis/IbratApp/flow-02/frame-0321.webp",
+          "deltaFromPrevKeyframe": 7.57,
+          "stepDelta": 7.57
+        },
+        {
+          "frame": 330,
+          "path": "app uis/IbratApp/flow-02/frame-0330.webp",
+          "deltaFromPrevKeyframe": 36.35,
+          "stepDelta": 36.64
+        },
+        {
+          "frame": 332,
+          "path": "app uis/IbratApp/flow-02/frame-0332.webp",
+          "deltaFromPrevKeyframe": 7.88,
+          "stepDelta": 3.45
+        },
+        {
+          "frame": 337,
+          "path": "app uis/IbratApp/flow-02/frame-0337.webp",
+          "deltaFromPrevKeyframe": 18.96,
+          "stepDelta": 16.47
+        },
+        {
+          "frame": 339,
+          "path": "app uis/IbratApp/flow-02/frame-0339.webp",
+          "deltaFromPrevKeyframe": 16.25,
+          "stepDelta": 21.2
+        },
+        {
+          "frame": 341,
+          "path": "app uis/IbratApp/flow-02/frame-0341.webp",
+          "deltaFromPrevKeyframe": 6.7,
+          "stepDelta": 0.58
+        },
+        {
+          "frame": 342,
+          "path": "app uis/IbratApp/flow-02/frame-0342.webp",
+          "deltaFromPrevKeyframe": 8.54,
+          "stepDelta": 8.54
+        },
+        {
+          "frame": 343,
+          "path": "app uis/IbratApp/flow-02/frame-0343.webp",
+          "deltaFromPrevKeyframe": 63.44,
+          "stepDelta": 63.44
+        },
+        {
+          "frame": 347,
+          "path": "app uis/IbratApp/flow-02/frame-0347.webp",
+          "deltaFromPrevKeyframe": 7.28,
+          "stepDelta": 3.79
+        },
+        {
+          "frame": 350,
+          "path": "app uis/IbratApp/flow-02/frame-0350.webp",
+          "deltaFromPrevKeyframe": 6.77,
+          "stepDelta": 1.32
+        },
+        {
+          "frame": 361,
+          "path": "app uis/IbratApp/flow-02/frame-0361.webp",
+          "deltaFromPrevKeyframe": 21.85,
+          "stepDelta": 21.77
+        },
+        {
+          "frame": 362,
+          "path": "app uis/IbratApp/flow-02/frame-0362.webp",
+          "deltaFromPrevKeyframe": 34.48,
+          "stepDelta": 34.48
+        },
+        {
+          "frame": 364,
+          "path": "app uis/IbratApp/flow-02/frame-0364.webp",
+          "deltaFromPrevKeyframe": 15.53,
+          "stepDelta": 15.45
+        },
+        {
+          "frame": 376,
+          "path": "app uis/IbratApp/flow-02/frame-0376.webp",
+          "deltaFromPrevKeyframe": 7.82,
+          "stepDelta": 7.37
+        },
+        {
+          "frame": 377,
+          "path": "app uis/IbratApp/flow-02/frame-0377.webp",
+          "deltaFromPrevKeyframe": 11.55,
+          "stepDelta": 11.55
+        },
+        {
+          "frame": 378,
+          "path": "app uis/IbratApp/flow-02/frame-0378.webp",
+          "deltaFromPrevKeyframe": 9.48,
+          "stepDelta": 9.48
+        },
+        {
+          "frame": 390,
+          "path": "app uis/IbratApp/flow-02/frame-0390.webp",
+          "deltaFromPrevKeyframe": 13.97,
+          "stepDelta": 13.77
+        },
+        {
+          "frame": 391,
+          "path": "app uis/IbratApp/flow-02/frame-0391.webp",
+          "deltaFromPrevKeyframe": 12.9,
+          "stepDelta": 12.9
+        },
+        {
+          "frame": 396,
+          "path": "app uis/IbratApp/flow-02/frame-0396.webp",
+          "deltaFromPrevKeyframe": 7.08,
+          "stepDelta": 9.24
+        },
+        {
+          "frame": 397,
+          "path": "app uis/IbratApp/flow-02/frame-0397.webp",
+          "deltaFromPrevKeyframe": 12.42,
+          "stepDelta": 12.42
+        },
+        {
+          "frame": 398,
+          "path": "app uis/IbratApp/flow-02/frame-0398.webp",
+          "deltaFromPrevKeyframe": 11.1,
+          "stepDelta": 11.1
+        },
+        {
+          "frame": 407,
+          "path": "app uis/IbratApp/flow-02/frame-0407.webp",
+          "deltaFromPrevKeyframe": 8.12,
+          "stepDelta": 8.07
+        },
+        {
+          "frame": 408,
+          "path": "app uis/IbratApp/flow-02/frame-0408.webp",
+          "deltaFromPrevKeyframe": 17.11,
+          "stepDelta": 17.11
+        },
+        {
+          "frame": 409,
+          "path": "app uis/IbratApp/flow-02/frame-0409.webp",
+          "deltaFromPrevKeyframe": 13.1,
+          "stepDelta": 13.1
+        },
+        {
+          "frame": 411,
+          "path": "app uis/IbratApp/flow-02/frame-0411.webp",
+          "deltaFromPrevKeyframe": 16.74,
+          "stepDelta": 20.0
+        },
+        {
+          "frame": 412,
+          "path": "app uis/IbratApp/flow-02/frame-0412.webp",
+          "deltaFromPrevKeyframe": 12.76,
+          "stepDelta": 12.76
+        },
+        {
+          "frame": 421,
+          "path": "app uis/IbratApp/flow-02/frame-0421.webp",
+          "deltaFromPrevKeyframe": 11.3,
+          "stepDelta": 11.06
+        },
+        {
+          "frame": 422,
+          "path": "app uis/IbratApp/flow-02/frame-0422.webp",
+          "deltaFromPrevKeyframe": 14.28,
+          "stepDelta": 14.28
+        },
+        {
+          "frame": 423,
+          "path": "app uis/IbratApp/flow-02/frame-0423.webp",
+          "deltaFromPrevKeyframe": 9.57,
+          "stepDelta": 9.57
+        },
+        {
+          "frame": 425,
+          "path": "app uis/IbratApp/flow-02/frame-0425.webp",
+          "deltaFromPrevKeyframe": 8.33,
+          "stepDelta": 4.25
+        },
+        {
+          "frame": 426,
+          "path": "app uis/IbratApp/flow-02/frame-0426.webp",
+          "deltaFromPrevKeyframe": 25.58,
+          "stepDelta": 25.58
+        },
+        {
+          "frame": 427,
+          "path": "app uis/IbratApp/flow-02/frame-0427.webp",
+          "deltaFromPrevKeyframe": 13.46,
+          "stepDelta": 13.46
+        },
+        {
+          "frame": 435,
+          "path": "app uis/IbratApp/flow-02/frame-0435.webp",
+          "deltaFromPrevKeyframe": 8.3,
+          "stepDelta": 8.01
+        },
+        {
+          "frame": 436,
+          "path": "app uis/IbratApp/flow-02/frame-0436.webp",
+          "deltaFromPrevKeyframe": 17.3,
+          "stepDelta": 17.3
+        },
+        {
+          "frame": 437,
+          "path": "app uis/IbratApp/flow-02/frame-0437.webp",
+          "deltaFromPrevKeyframe": 20.17,
+          "stepDelta": 20.17
+        },
+        {
+          "frame": 438,
+          "path": "app uis/IbratApp/flow-02/frame-0438.webp",
+          "deltaFromPrevKeyframe": 8.88,
+          "stepDelta": 8.88
+        },
+        {
+          "frame": 439,
+          "path": "app uis/IbratApp/flow-02/frame-0439.webp",
+          "deltaFromPrevKeyframe": 33.47,
+          "stepDelta": 33.47
+        },
+        {
+          "frame": 440,
+          "path": "app uis/IbratApp/flow-02/frame-0440.webp",
+          "deltaFromPrevKeyframe": 11.8,
+          "stepDelta": 11.8
+        },
+        {
+          "frame": 449,
+          "path": "app uis/IbratApp/flow-02/frame-0449.webp",
+          "deltaFromPrevKeyframe": 8.82,
+          "stepDelta": 8.6
+        },
+        {
+          "frame": 450,
+          "path": "app uis/IbratApp/flow-02/frame-0450.webp",
+          "deltaFromPrevKeyframe": 15.97,
+          "stepDelta": 15.97
+        },
+        {
+          "frame": 451,
+          "path": "app uis/IbratApp/flow-02/frame-0451.webp",
+          "deltaFromPrevKeyframe": 12.49,
+          "stepDelta": 12.49
+        },
+        {
+          "frame": 453,
+          "path": "app uis/IbratApp/flow-02/frame-0453.webp",
+          "deltaFromPrevKeyframe": 26.67,
+          "stepDelta": 31.45
+        },
+        {
+          "frame": 464,
+          "path": "app uis/IbratApp/flow-02/frame-0464.webp",
+          "deltaFromPrevKeyframe": 19.39,
+          "stepDelta": 19.48
+        },
+        {
+          "frame": 465,
+          "path": "app uis/IbratApp/flow-02/frame-0465.webp",
+          "deltaFromPrevKeyframe": 10.95,
+          "stepDelta": 10.95
+        },
+        {
+          "frame": 476,
+          "path": "app uis/IbratApp/flow-02/frame-0476.webp",
+          "deltaFromPrevKeyframe": 8.79,
+          "stepDelta": 8.53
+        },
+        {
+          "frame": 482,
+          "path": "app uis/IbratApp/flow-02/frame-0482.webp",
+          "deltaFromPrevKeyframe": 7.39,
+          "stepDelta": 7.33
+        },
+        {
+          "frame": 483,
+          "path": "app uis/IbratApp/flow-02/frame-0483.webp",
+          "deltaFromPrevKeyframe": 50.27,
+          "stepDelta": 50.27
+        },
+        {
+          "frame": 485,
+          "path": "app uis/IbratApp/flow-02/frame-0485.webp",
+          "deltaFromPrevKeyframe": 74.7,
+          "stepDelta": 75.61
+        },
+        {
+          "frame": 494,
+          "path": "app uis/IbratApp/flow-02/frame-0494.webp",
+          "deltaFromPrevKeyframe": 57.53,
+          "stepDelta": 57.52
+        },
+        {
+          "frame": 495,
+          "path": "app uis/IbratApp/flow-02/frame-0495.webp",
+          "deltaFromPrevKeyframe": 24.88,
+          "stepDelta": 24.88
+        },
+        {
+          "frame": 501,
+          "path": "app uis/IbratApp/flow-02/frame-0501.webp",
+          "deltaFromPrevKeyframe": 12.72,
+          "stepDelta": 11.11
+        },
+        {
+          "frame": 502,
+          "path": "app uis/IbratApp/flow-02/frame-0502.webp",
+          "deltaFromPrevKeyframe": 37.22,
+          "stepDelta": 37.22
+        },
+        {
+          "frame": 507,
+          "path": "app uis/IbratApp/flow-02/frame-0507.webp",
+          "deltaFromPrevKeyframe": 29.25,
+          "stepDelta": 28.74
+        },
+        {
+          "frame": 508,
+          "path": "app uis/IbratApp/flow-02/frame-0508.webp",
+          "deltaFromPrevKeyframe": 28.65,
+          "stepDelta": 28.65
+        },
+        {
+          "frame": 512,
+          "path": "app uis/IbratApp/flow-02/frame-0512.webp",
+          "deltaFromPrevKeyframe": 7.57,
+          "stepDelta": 6.83
+        },
+        {
+          "frame": 513,
+          "path": "app uis/IbratApp/flow-02/frame-0513.webp",
+          "deltaFromPrevKeyframe": 18.94,
+          "stepDelta": 18.94
+        },
+        {
+          "frame": 514,
+          "path": "app uis/IbratApp/flow-02/frame-0514.webp",
+          "deltaFromPrevKeyframe": 16.32,
+          "stepDelta": 16.32
+        },
+        {
+          "frame": 515,
+          "path": "app uis/IbratApp/flow-02/frame-0515.webp",
+          "deltaFromPrevKeyframe": 15.51,
+          "stepDelta": 15.51
+        },
+        {
+          "frame": 517,
+          "path": "app uis/IbratApp/flow-02/frame-0517.webp",
+          "deltaFromPrevKeyframe": 6.9,
+          "stepDelta": 1.36
+        },
+        {
+          "frame": 518,
+          "path": "app uis/IbratApp/flow-02/frame-0518.webp",
+          "deltaFromPrevKeyframe": 23.66,
+          "stepDelta": 23.66
+        },
+        {
+          "frame": 519,
+          "path": "app uis/IbratApp/flow-02/frame-0519.webp",
+          "deltaFromPrevKeyframe": 124.98,
+          "stepDelta": 124.98
+        },
+        {
+          "frame": 520,
+          "path": "app uis/IbratApp/flow-02/frame-0520.webp",
+          "deltaFromPrevKeyframe": 54.54,
+          "stepDelta": 54.54
+        },
+        {
+          "frame": 524,
+          "path": "app uis/IbratApp/flow-02/frame-0524.webp",
+          "deltaFromPrevKeyframe": 179.44,
+          "stepDelta": 179.86
+        },
+        {
+          "frame": 525,
+          "path": "app uis/IbratApp/flow-02/frame-0525.webp",
+          "deltaFromPrevKeyframe": 20.53,
+          "stepDelta": 20.53
+        },
+        {
+          "frame": 528,
+          "path": "app uis/IbratApp/flow-02/frame-0528.webp",
+          "deltaFromPrevKeyframe": 20.1,
+          "stepDelta": 20.24
+        },
+        {
+          "frame": 531,
+          "path": "app uis/IbratApp/flow-02/frame-0531.webp",
+          "deltaFromPrevKeyframe": 15.11,
+          "stepDelta": 11.66
+        },
+        {
+          "frame": 542,
+          "path": "app uis/IbratApp/flow-02/frame-0542.webp",
+          "deltaFromPrevKeyframe": 15.23,
+          "stepDelta": 13.83
+        },
+        {
+          "frame": 543,
+          "path": "app uis/IbratApp/flow-02/frame-0543.webp",
+          "deltaFromPrevKeyframe": 11.23,
+          "stepDelta": 11.23
+        },
+        {
+          "frame": 551,
+          "path": "app uis/IbratApp/flow-02/frame-0551.webp",
+          "deltaFromPrevKeyframe": 8.3,
+          "stepDelta": 7.77
+        },
+        {
+          "frame": 552,
+          "path": "app uis/IbratApp/flow-02/frame-0552.webp",
+          "deltaFromPrevKeyframe": 9.18,
+          "stepDelta": 9.18
+        },
+        {
+          "frame": 554,
+          "path": "app uis/IbratApp/flow-02/frame-0554.webp",
+          "deltaFromPrevKeyframe": 9.71,
+          "stepDelta": 9.69
+        },
+        {
+          "frame": 557,
+          "path": "app uis/IbratApp/flow-02/frame-0557.webp",
+          "deltaFromPrevKeyframe": 8.26,
+          "stepDelta": 8.2
+        },
+        {
+          "frame": 558,
+          "path": "app uis/IbratApp/flow-02/frame-0558.webp",
+          "deltaFromPrevKeyframe": 7.84,
+          "stepDelta": 7.84
+        },
+        {
+          "frame": 561,
+          "path": "app uis/IbratApp/flow-02/frame-0561.webp",
+          "deltaFromPrevKeyframe": 6.95,
+          "stepDelta": 4.22
+        },
+        {
+          "frame": 566,
+          "path": "app uis/IbratApp/flow-02/frame-0566.webp",
+          "deltaFromPrevKeyframe": 6.78,
+          "stepDelta": 7.92
+        },
+        {
+          "frame": 567,
+          "path": "app uis/IbratApp/flow-02/frame-0567.webp",
+          "deltaFromPrevKeyframe": 7.48,
+          "stepDelta": 7.48
+        },
+        {
+          "frame": 569,
+          "path": "app uis/IbratApp/flow-02/frame-0569.webp",
+          "deltaFromPrevKeyframe": 7.89,
+          "stepDelta": 7.62
+        },
+        {
+          "frame": 570,
+          "path": "app uis/IbratApp/flow-02/frame-0570.webp",
+          "deltaFromPrevKeyframe": 11.81,
+          "stepDelta": 11.81
+        },
+        {
+          "frame": 574,
+          "path": "app uis/IbratApp/flow-02/frame-0574.webp",
+          "deltaFromPrevKeyframe": 63.22,
+          "stepDelta": 61.18
+        },
+        {
+          "frame": 575,
+          "path": "app uis/IbratApp/flow-02/frame-0575.webp",
+          "deltaFromPrevKeyframe": 146.65,
+          "stepDelta": 146.65
+        },
+        {
+          "frame": 576,
+          "path": "app uis/IbratApp/flow-02/frame-0576.webp",
+          "deltaFromPrevKeyframe": 24.07,
+          "stepDelta": 24.07
+        },
+        {
+          "frame": 583,
+          "path": "app uis/IbratApp/flow-02/frame-0583.webp",
+          "deltaFromPrevKeyframe": 10.23,
+          "stepDelta": 9.68
+        },
+        {
+          "frame": 584,
+          "path": "app uis/IbratApp/flow-02/frame-0584.webp",
+          "deltaFromPrevKeyframe": 26.56,
+          "stepDelta": 26.56
+        },
+        {
+          "frame": 585,
+          "path": "app uis/IbratApp/flow-02/frame-0585.webp",
+          "deltaFromPrevKeyframe": 42.08,
+          "stepDelta": 42.08
+        },
+        {
+          "frame": 586,
+          "path": "app uis/IbratApp/flow-02/frame-0586.webp",
+          "deltaFromPrevKeyframe": 34.49,
+          "stepDelta": 34.49
+        },
+        {
+          "frame": 587,
+          "path": "app uis/IbratApp/flow-02/frame-0587.webp",
+          "deltaFromPrevKeyframe": 20.94,
+          "stepDelta": 20.94
+        },
+        {
+          "frame": 589,
+          "path": "app uis/IbratApp/flow-02/frame-0589.webp",
+          "deltaFromPrevKeyframe": 14.11,
+          "stepDelta": 12.25
+        },
+        {
+          "frame": 593,
+          "path": "app uis/IbratApp/flow-02/frame-0593.webp",
+          "deltaFromPrevKeyframe": 55.97,
+          "stepDelta": 56.23
+        },
+        {
+          "frame": 594,
+          "path": "app uis/IbratApp/flow-02/frame-0594.webp",
+          "deltaFromPrevKeyframe": 150.98,
+          "stepDelta": 150.98
+        },
+        {
+          "frame": 596,
+          "path": "app uis/IbratApp/flow-02/frame-0596.webp",
+          "deltaFromPrevKeyframe": 18.32,
+          "stepDelta": 18.0
+        },
+        {
+          "frame": 599,
+          "path": "app uis/IbratApp/flow-02/frame-0599.webp",
+          "deltaFromPrevKeyframe": 7.07,
+          "stepDelta": 2.69
+        },
+        {
+          "frame": 601,
+          "path": "app uis/IbratApp/flow-02/frame-0601.webp",
+          "deltaFromPrevKeyframe": 9.58,
+          "stepDelta": 9.03
+        },
+        {
+          "frame": 602,
+          "path": "app uis/IbratApp/flow-02/frame-0602.webp",
+          "deltaFromPrevKeyframe": 7.01,
+          "stepDelta": 7.01
+        },
+        {
+          "frame": 605,
+          "path": "app uis/IbratApp/flow-02/frame-0605.webp",
+          "deltaFromPrevKeyframe": 10.99,
+          "stepDelta": 9.7
+        },
+        {
+          "frame": 606,
+          "path": "app uis/IbratApp/flow-02/frame-0606.webp",
+          "deltaFromPrevKeyframe": 7.41,
+          "stepDelta": 7.41
+        },
+        {
+          "frame": 629,
+          "path": "app uis/IbratApp/flow-02/frame-0629.webp",
+          "deltaFromPrevKeyframe": 42.05,
+          "stepDelta": 40.36
+        },
+        {
+          "frame": 630,
+          "path": "app uis/IbratApp/flow-02/frame-0630.webp",
+          "deltaFromPrevKeyframe": 23.07,
+          "stepDelta": 23.07
+        },
+        {
+          "frame": 636,
+          "path": "app uis/IbratApp/flow-02/frame-0636.webp",
+          "deltaFromPrevKeyframe": 6.75,
+          "stepDelta": 6.64
+        },
+        {
+          "frame": 637,
+          "path": "app uis/IbratApp/flow-02/frame-0637.webp",
+          "deltaFromPrevKeyframe": 7.43,
+          "stepDelta": 7.43
+        },
+        {
+          "frame": 645,
+          "path": "app uis/IbratApp/flow-02/frame-0645.webp",
+          "deltaFromPrevKeyframe": 44.33,
+          "stepDelta": 42.1
+        },
+        {
+          "frame": 646,
+          "path": "app uis/IbratApp/flow-02/frame-0646.webp",
+          "deltaFromPrevKeyframe": 41.25,
+          "stepDelta": 41.25
+        },
+        {
+          "frame": 649,
+          "path": "app uis/IbratApp/flow-02/frame-0649.webp",
+          "deltaFromPrevKeyframe": 13.95,
+          "stepDelta": 11.28
+        },
+        {
+          "frame": 653,
+          "path": "app uis/IbratApp/flow-02/frame-0653.webp",
+          "deltaFromPrevKeyframe": 6.52,
+          "stepDelta": 9.0
+        },
+        {
+          "frame": 654,
+          "path": "app uis/IbratApp/flow-02/frame-0654.webp",
+          "deltaFromPrevKeyframe": 8.8,
+          "stepDelta": 8.8
+        },
+        {
+          "frame": 660,
+          "path": "app uis/IbratApp/flow-02/frame-0660.webp",
+          "deltaFromPrevKeyframe": 13.57,
+          "stepDelta": 14.23
+        },
+        {
+          "frame": 664,
+          "path": "app uis/IbratApp/flow-02/frame-0664.webp",
+          "deltaFromPrevKeyframe": 10.48,
+          "stepDelta": 10.41
+        },
+        {
+          "frame": 666,
+          "path": "app uis/IbratApp/flow-02/frame-0666.webp",
+          "deltaFromPrevKeyframe": 10.85,
+          "stepDelta": 4.94
+        },
+        {
+          "frame": 671,
+          "path": "app uis/IbratApp/flow-02/frame-0671.webp",
+          "deltaFromPrevKeyframe": 14.97,
+          "stepDelta": 15.6
+        },
+        {
+          "frame": 674,
+          "path": "app uis/IbratApp/flow-02/frame-0674.webp",
+          "deltaFromPrevKeyframe": 8.98,
+          "stepDelta": 8.78
+        },
+        {
+          "frame": 675,
+          "path": "app uis/IbratApp/flow-02/frame-0675.webp",
+          "deltaFromPrevKeyframe": 8.91,
+          "stepDelta": 8.91
+        },
+        {
+          "frame": 686,
+          "path": "app uis/IbratApp/flow-02/frame-0686.webp",
+          "deltaFromPrevKeyframe": 14.53,
+          "stepDelta": 12.0
+        },
+        {
+          "frame": 689,
+          "path": "app uis/IbratApp/flow-02/frame-0689.webp",
+          "deltaFromPrevKeyframe": 7.44,
+          "stepDelta": 6.0
+        },
+        {
+          "frame": 690,
+          "path": "app uis/IbratApp/flow-02/frame-0690.webp",
+          "deltaFromPrevKeyframe": 6.96,
+          "stepDelta": 6.96
+        },
+        {
+          "frame": 691,
+          "path": "app uis/IbratApp/flow-02/frame-0691.webp",
+          "deltaFromPrevKeyframe": 7.3,
+          "stepDelta": 7.3
+        },
+        {
+          "frame": 697,
+          "path": "app uis/IbratApp/flow-02/frame-0697.webp",
+          "deltaFromPrevKeyframe": 11.36,
+          "stepDelta": 12.25
+        },
+        {
+          "frame": 698,
+          "path": "app uis/IbratApp/flow-02/frame-0698.webp",
+          "deltaFromPrevKeyframe": 9.89,
+          "stepDelta": 9.89
+        },
+        {
+          "frame": 701,
+          "path": "app uis/IbratApp/flow-02/frame-0701.webp",
+          "deltaFromPrevKeyframe": 11.21,
+          "stepDelta": 11.52
+        },
+        {
+          "frame": 702,
+          "path": "app uis/IbratApp/flow-02/frame-0702.webp",
+          "deltaFromPrevKeyframe": 8.28,
+          "stepDelta": 8.28
+        },
+        {
+          "frame": 704,
+          "path": "app uis/IbratApp/flow-02/frame-0704.webp",
+          "deltaFromPrevKeyframe": 13.82,
+          "stepDelta": 12.33
+        },
+        {
+          "frame": 705,
+          "path": "app uis/IbratApp/flow-02/frame-0705.webp",
+          "deltaFromPrevKeyframe": 9.9,
+          "stepDelta": 9.9
+        },
+        {
+          "frame": 710,
+          "path": "app uis/IbratApp/flow-02/frame-0710.webp",
+          "deltaFromPrevKeyframe": 8.01,
+          "stepDelta": 6.81
+        },
+        {
+          "frame": 711,
+          "path": "app uis/IbratApp/flow-02/frame-0711.webp",
+          "deltaFromPrevKeyframe": 7.41,
+          "stepDelta": 7.41
+        },
+        {
+          "frame": 713,
+          "path": "app uis/IbratApp/flow-02/frame-0713.webp",
+          "deltaFromPrevKeyframe": 8.44,
+          "stepDelta": 3.52
+        },
+        {
+          "frame": 714,
+          "path": "app uis/IbratApp/flow-02/frame-0714.webp",
+          "deltaFromPrevKeyframe": 14.75,
+          "stepDelta": 14.75
+        },
+        {
+          "frame": 717,
+          "path": "app uis/IbratApp/flow-02/frame-0717.webp",
+          "deltaFromPrevKeyframe": 10.71,
+          "stepDelta": 8.67
+        },
+        {
+          "frame": 721,
+          "path": "app uis/IbratApp/flow-02/frame-0721.webp",
+          "deltaFromPrevKeyframe": 8.33,
+          "stepDelta": 4.87
+        },
+        {
+          "frame": 722,
+          "path": "app uis/IbratApp/flow-02/frame-0722.webp",
+          "deltaFromPrevKeyframe": 12.61,
+          "stepDelta": 12.61
+        },
+        {
+          "frame": 724,
+          "path": "app uis/IbratApp/flow-02/frame-0724.webp",
+          "deltaFromPrevKeyframe": 11.27,
+          "stepDelta": 11.17
+        },
+        {
+          "frame": 725,
+          "path": "app uis/IbratApp/flow-02/frame-0725.webp",
+          "deltaFromPrevKeyframe": 10.56,
+          "stepDelta": 10.56
+        },
+        {
+          "frame": 726,
+          "path": "app uis/IbratApp/flow-02/frame-0726.webp",
+          "deltaFromPrevKeyframe": 10.58,
+          "stepDelta": 10.58
+        },
+        {
+          "frame": 727,
+          "path": "app uis/IbratApp/flow-02/frame-0727.webp",
+          "deltaFromPrevKeyframe": 9.1,
+          "stepDelta": 9.1
+        },
+        {
+          "frame": 728,
+          "path": "app uis/IbratApp/flow-02/frame-0728.webp",
+          "deltaFromPrevKeyframe": 10.67,
+          "stepDelta": 10.67
+        },
+        {
+          "frame": 729,
+          "path": "app uis/IbratApp/flow-02/frame-0729.webp",
+          "deltaFromPrevKeyframe": 7.8,
+          "stepDelta": 7.8
+        },
+        {
+          "frame": 730,
+          "path": "app uis/IbratApp/flow-02/frame-0730.webp",
+          "deltaFromPrevKeyframe": 66.71,
+          "stepDelta": 66.71
+        },
+        {
+          "frame": 731,
+          "path": "app uis/IbratApp/flow-02/frame-0731.webp",
+          "deltaFromPrevKeyframe": 36.84,
+          "stepDelta": 36.84
+        },
+        {
+          "frame": 736,
+          "path": "app uis/IbratApp/flow-02/frame-0736.webp",
+          "deltaFromPrevKeyframe": 6.87,
+          "stepDelta": 6.87
+        },
+        {
+          "frame": 737,
+          "path": "app uis/IbratApp/flow-02/frame-0737.webp",
+          "deltaFromPrevKeyframe": 18.56,
+          "stepDelta": 18.56
+        },
+        {
+          "frame": 738,
+          "path": "app uis/IbratApp/flow-02/frame-0738.webp",
+          "deltaFromPrevKeyframe": 81.49,
+          "stepDelta": 81.49
+        },
+        {
+          "frame": 741,
+          "path": "app uis/IbratApp/flow-02/frame-0741.webp",
+          "deltaFromPrevKeyframe": 8.49,
+          "stepDelta": 8.28
+        },
+        {
+          "frame": 742,
+          "path": "app uis/IbratApp/flow-02/frame-0742.webp",
+          "deltaFromPrevKeyframe": 8.37,
+          "stepDelta": 8.37
+        },
+        {
+          "frame": 744,
+          "path": "app uis/IbratApp/flow-02/frame-0744.webp",
+          "deltaFromPrevKeyframe": 7.32,
+          "stepDelta": 7.01
+        },
+        {
+          "frame": 745,
+          "path": "app uis/IbratApp/flow-02/frame-0745.webp",
+          "deltaFromPrevKeyframe": 7.55,
+          "stepDelta": 7.55
+        },
+        {
+          "frame": 746,
+          "path": "app uis/IbratApp/flow-02/frame-0746.webp",
+          "deltaFromPrevKeyframe": 7.95,
+          "stepDelta": 7.95
+        },
+        {
+          "frame": 747,
+          "path": "app uis/IbratApp/flow-02/frame-0747.webp",
+          "deltaFromPrevKeyframe": 7.07,
+          "stepDelta": 7.07
+        },
+        {
+          "frame": 749,
+          "path": "app uis/IbratApp/flow-02/frame-0749.webp",
+          "deltaFromPrevKeyframe": 10.74,
+          "stepDelta": 10.64
+        },
+        {
+          "frame": 750,
+          "path": "app uis/IbratApp/flow-02/frame-0750.webp",
+          "deltaFromPrevKeyframe": 10.2,
+          "stepDelta": 10.2
+        },
+        {
+          "frame": 752,
+          "path": "app uis/IbratApp/flow-02/frame-0752.webp",
+          "deltaFromPrevKeyframe": 12.11,
+          "stepDelta": 10.34
+        },
+        {
+          "frame": 753,
+          "path": "app uis/IbratApp/flow-02/frame-0753.webp",
+          "deltaFromPrevKeyframe": 9.14,
+          "stepDelta": 9.14
+        },
+        {
+          "frame": 767,
+          "path": "app uis/IbratApp/flow-02/frame-0767.webp",
+          "deltaFromPrevKeyframe": 217.3,
+          "stepDelta": 217.68
+        },
+        {
+          "frame": 771,
+          "path": "app uis/IbratApp/flow-02/frame-0771.webp",
+          "deltaFromPrevKeyframe": 217.54,
+          "stepDelta": 217.49
+        },
+        {
+          "frame": 776,
+          "path": "app uis/IbratApp/flow-02/frame-0776.webp",
+          "deltaFromPrevKeyframe": 93.84,
+          "stepDelta": 93.71
+        },
+        {
+          "frame": 777,
+          "path": "app uis/IbratApp/flow-02/frame-0777.webp",
+          "deltaFromPrevKeyframe": 15.63,
+          "stepDelta": 15.63
+        },
+        {
+          "frame": 779,
+          "path": "app uis/IbratApp/flow-02/frame-0779.webp",
+          "deltaFromPrevKeyframe": 14.83,
+          "stepDelta": 12.94
+        },
+        {
+          "frame": 780,
+          "path": "app uis/IbratApp/flow-02/frame-0780.webp",
+          "deltaFromPrevKeyframe": 42.82,
+          "stepDelta": 42.82
+        },
+        {
+          "frame": 781,
+          "path": "app uis/IbratApp/flow-02/frame-0781.webp",
+          "deltaFromPrevKeyframe": 64.5,
+          "stepDelta": 64.5
+        },
+        {
+          "frame": 785,
+          "path": "app uis/IbratApp/flow-02/frame-0785.webp",
+          "deltaFromPrevKeyframe": 61.53,
+          "stepDelta": 62.0
+        },
+        {
+          "frame": 786,
+          "path": "app uis/IbratApp/flow-02/frame-0786.webp",
+          "deltaFromPrevKeyframe": 110.27,
+          "stepDelta": 110.27
+        },
+        {
+          "frame": 787,
+          "path": "app uis/IbratApp/flow-02/frame-0787.webp",
+          "deltaFromPrevKeyframe": 35.62,
+          "stepDelta": 35.62
+        },
+        {
+          "frame": 788,
+          "path": "app uis/IbratApp/flow-02/frame-0788.webp",
+          "deltaFromPrevKeyframe": 45.55,
+          "stepDelta": 45.55
+        },
+        {
+          "frame": 791,
+          "path": "app uis/IbratApp/flow-02/frame-0791.webp",
+          "deltaFromPrevKeyframe": 101.08,
+          "stepDelta": 101.51
+        },
+        {
+          "frame": 795,
+          "path": "app uis/IbratApp/flow-02/frame-0795.webp",
+          "deltaFromPrevKeyframe": 8.55,
+          "stepDelta": 8.14
+        },
+        {
+          "frame": 796,
+          "path": "app uis/IbratApp/flow-02/frame-0796.webp",
+          "deltaFromPrevKeyframe": 9.71,
+          "stepDelta": 9.71
+        },
+        {
+          "frame": 800,
+          "path": "app uis/IbratApp/flow-02/frame-0800.webp",
+          "deltaFromPrevKeyframe": 13.59,
+          "stepDelta": 14.73
+        },
+        {
+          "frame": 804,
+          "path": "app uis/IbratApp/flow-02/frame-0804.webp",
+          "deltaFromPrevKeyframe": 13.95,
+          "stepDelta": 13.27
+        },
+        {
+          "frame": 811,
+          "path": "app uis/IbratApp/flow-02/frame-0811.webp",
+          "deltaFromPrevKeyframe": 46.91,
+          "stepDelta": 45.88
+        },
+        {
+          "frame": 812,
+          "path": "app uis/IbratApp/flow-02/frame-0812.webp",
+          "deltaFromPrevKeyframe": 61.92,
+          "stepDelta": 61.92
+        },
+        {
+          "frame": 817,
+          "path": "app uis/IbratApp/flow-02/frame-0817.webp",
+          "deltaFromPrevKeyframe": 19.68,
+          "stepDelta": 16.76
+        },
+        {
+          "frame": 818,
+          "path": "app uis/IbratApp/flow-02/frame-0818.webp",
+          "deltaFromPrevKeyframe": 83.47,
+          "stepDelta": 83.47
+        },
+        {
+          "frame": 821,
+          "path": "app uis/IbratApp/flow-02/frame-0821.webp",
+          "deltaFromPrevKeyframe": 21.28,
+          "stepDelta": 21.13
+        },
+        {
+          "frame": 834,
+          "path": "app uis/IbratApp/flow-02/frame-0834.webp",
+          "deltaFromPrevKeyframe": 35.63,
+          "stepDelta": 35.67
+        },
+        {
+          "frame": 845,
+          "path": "app uis/IbratApp/flow-02/frame-0845.webp",
+          "deltaFromPrevKeyframe": 22.73,
+          "stepDelta": 19.03
+        },
+        {
+          "frame": 846,
+          "path": "app uis/IbratApp/flow-02/frame-0846.webp",
+          "deltaFromPrevKeyframe": 14.87,
+          "stepDelta": 14.87
+        },
+        {
+          "frame": 868,
+          "path": "app uis/IbratApp/flow-02/frame-0868.webp",
+          "deltaFromPrevKeyframe": 11.51,
+          "stepDelta": 10.05
+        },
+        {
+          "frame": 869,
+          "path": "app uis/IbratApp/flow-02/frame-0869.webp",
+          "deltaFromPrevKeyframe": 9.46,
+          "stepDelta": 9.46
+        },
+        {
+          "frame": 875,
+          "path": "app uis/IbratApp/flow-02/frame-0875.webp",
+          "deltaFromPrevKeyframe": 7.44,
+          "stepDelta": 3.41
+        },
+        {
+          "frame": 878,
+          "path": "app uis/IbratApp/flow-02/frame-0878.webp",
+          "deltaFromPrevKeyframe": 7.96,
+          "stepDelta": 6.28
+        },
+        {
+          "frame": 900,
+          "path": "app uis/IbratApp/flow-02/frame-0900.webp",
+          "deltaFromPrevKeyframe": 15.72,
+          "stepDelta": 17.08
+        },
+        {
+          "frame": 901,
+          "path": "app uis/IbratApp/flow-02/frame-0901.webp",
+          "deltaFromPrevKeyframe": 9.95,
+          "stepDelta": 9.95
+        },
+        {
+          "frame": 957,
+          "path": "app uis/IbratApp/flow-02/frame-0957.webp",
+          "deltaFromPrevKeyframe": 6.74,
+          "stepDelta": 0.71
+        },
+        {
+          "frame": 964,
+          "path": "app uis/IbratApp/flow-02/frame-0964.webp",
+          "deltaFromPrevKeyframe": 7.05,
+          "stepDelta": 2.16
+        },
+        {
+          "frame": 996,
+          "path": "app uis/IbratApp/flow-02/frame-0996.webp",
+          "deltaFromPrevKeyframe": 6.68,
+          "stepDelta": 1.06
+        },
+        {
+          "frame": 1003,
+          "path": "app uis/IbratApp/flow-02/frame-1003.webp",
+          "deltaFromPrevKeyframe": 6.63,
+          "stepDelta": 1.27
+        },
+        {
+          "frame": 1019,
+          "path": "app uis/IbratApp/flow-02/frame-1019.webp",
+          "deltaFromPrevKeyframe": 6.82,
+          "stepDelta": 2.16
+        },
+        {
+          "frame": 1052,
+          "path": "app uis/IbratApp/flow-02/frame-1052.webp",
+          "deltaFromPrevKeyframe": 8.08,
+          "stepDelta": 2.23
+        },
+        {
+          "frame": 1069,
+          "path": "app uis/IbratApp/flow-02/frame-1069.webp",
+          "deltaFromPrevKeyframe": 7.0,
+          "stepDelta": 1.58
+        },
+        {
+          "frame": 1088,
+          "path": "app uis/IbratApp/flow-02/frame-1088.webp",
+          "deltaFromPrevKeyframe": 10.45,
+          "stepDelta": 9.94
+        },
+        {
+          "frame": 1091,
+          "path": "app uis/IbratApp/flow-02/frame-1091.webp",
+          "deltaFromPrevKeyframe": 17.52,
+          "stepDelta": 13.85
+        },
+        {
+          "frame": 1093,
+          "path": "app uis/IbratApp/flow-02/frame-1093.webp",
+          "deltaFromPrevKeyframe": 6.97,
+          "stepDelta": 1.96
+        },
+        {
+          "frame": 1108,
+          "path": "app uis/IbratApp/flow-02/frame-1108.webp",
+          "deltaFromPrevKeyframe": 10.13,
+          "stepDelta": 8.37
+        },
+        {
+          "frame": 1109,
+          "path": "app uis/IbratApp/flow-02/frame-1109.webp",
+          "deltaFromPrevKeyframe": 7.71,
+          "stepDelta": 7.71
+        },
+        {
+          "frame": 1110,
+          "path": "app uis/IbratApp/flow-02/frame-1110.webp",
+          "deltaFromPrevKeyframe": 11.16,
+          "stepDelta": 11.16
+        },
+        {
+          "frame": 1111,
+          "path": "app uis/IbratApp/flow-02/frame-1111.webp",
+          "deltaFromPrevKeyframe": 10.82,
+          "stepDelta": 10.82
+        },
+        {
+          "frame": 1112,
+          "path": "app uis/IbratApp/flow-02/frame-1112.webp",
+          "deltaFromPrevKeyframe": 11.82,
+          "stepDelta": 11.82
+        },
+        {
+          "frame": 1113,
+          "path": "app uis/IbratApp/flow-02/frame-1113.webp",
+          "deltaFromPrevKeyframe": 9.04,
+          "stepDelta": 9.04
+        },
+        {
+          "frame": 1114,
+          "path": "app uis/IbratApp/flow-02/frame-1114.webp",
+          "deltaFromPrevKeyframe": 10.5,
+          "stepDelta": 10.5
+        },
+        {
+          "frame": 1115,
+          "path": "app uis/IbratApp/flow-02/frame-1115.webp",
+          "deltaFromPrevKeyframe": 9.14,
+          "stepDelta": 9.14
+        },
+        {
+          "frame": 1117,
+          "path": "app uis/IbratApp/flow-02/frame-1117.webp",
+          "deltaFromPrevKeyframe": 7.38,
+          "stepDelta": 7.68
+        },
+        {
+          "frame": 1118,
+          "path": "app uis/IbratApp/flow-02/frame-1118.webp",
+          "deltaFromPrevKeyframe": 7.22,
+          "stepDelta": 7.22
+        },
+        {
+          "frame": 1119,
+          "path": "app uis/IbratApp/flow-02/frame-1119.webp",
+          "deltaFromPrevKeyframe": 7.41,
+          "stepDelta": 7.41
+        },
+        {
+          "frame": 1122,
+          "path": "app uis/IbratApp/flow-02/frame-1122.webp",
+          "deltaFromPrevKeyframe": 6.98,
+          "stepDelta": 2.96
+        },
+        {
+          "frame": 1123,
+          "path": "app uis/IbratApp/flow-02/frame-1123.webp",
+          "deltaFromPrevKeyframe": 9.08,
+          "stepDelta": 9.08
+        },
+        {
+          "frame": 1148,
+          "path": "app uis/IbratApp/flow-02/frame-1148.webp",
+          "deltaFromPrevKeyframe": 27.11,
+          "stepDelta": 25.6
+        },
+        {
+          "frame": 1149,
+          "path": "app uis/IbratApp/flow-02/frame-1149.webp",
+          "deltaFromPrevKeyframe": 120.66,
+          "stepDelta": 120.66
+        },
+        {
+          "frame": 1150,
+          "path": "app uis/IbratApp/flow-02/frame-1150.webp",
+          "deltaFromPrevKeyframe": 73.99,
+          "stepDelta": 73.99
+        },
+        {
+          "frame": 1158,
+          "path": "app uis/IbratApp/flow-02/frame-1158.webp",
+          "deltaFromPrevKeyframe": 43.92,
+          "stepDelta": 43.69
+        },
+        {
+          "frame": 1159,
+          "path": "app uis/IbratApp/flow-02/frame-1159.webp",
+          "deltaFromPrevKeyframe": 39.39,
+          "stepDelta": 39.39
+        },
+        {
+          "frame": 1160,
+          "path": "app uis/IbratApp/flow-02/frame-1160.webp",
+          "deltaFromPrevKeyframe": 80.5,
+          "stepDelta": 80.5
+        },
+        {
+          "frame": 1161,
+          "path": "app uis/IbratApp/flow-02/frame-1161.webp",
+          "deltaFromPrevKeyframe": 8.59,
+          "stepDelta": 8.59
+        },
+        {
+          "frame": 1162,
+          "path": "app uis/IbratApp/flow-02/frame-1162.webp",
+          "deltaFromPrevKeyframe": 10.94,
+          "stepDelta": 10.94
+        }
+      ]
+    }
+  ]
+}
